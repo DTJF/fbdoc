@@ -243,10 +243,9 @@ SUB cppCreateTypNam CDECL(BYVAL P AS Parser PTR)
     IF .NamTok > .TypTok _
       THEN cEmitComments(P, .NamTok[1])
 
-    cppNam(P)
+    IF .NamTok THEN   cppNam(P)
     IF .DimTok THEN   cArrDim(P) 'Code(.Bracket(.DimTok))
     IF .BitTok THEN   Code(.BitIni)
-    'IF .IniTok THEN   Code(.VarIni)
     IF .IniTok THEN   cIni(P)
   END WITH
 END SUB
@@ -301,8 +300,6 @@ SUB cCreateTypNam CDECL(BYVAL P AS Parser PTR)
 
       IF .Co2Tok THEN             Code(" " & .SubStr(.Co2Tok))
       IF .By_Tok ANDALSO *.By_Tok = .TOK_BYRE THEN .PtrCount += 1
-      'FOR i AS INTEGER = 1 TO .PtrCount
-                                  'Code("*") : NEXT
       IF .NamTok THEN Code(" ") ELSE EXIT SUB
     END IF
 
@@ -311,14 +308,12 @@ SUB cCreateTypNam CDECL(BYVAL P AS Parser PTR)
 
     SELECT CASE AS CONST *.StaTok
     CASE .TOK_TYPE, .TOK_DIM, .TOK_RDIM, .TOK_COMM, .TOK_EXRN
-      'IF .FunTok THEN Code("(*") : cNam(P) : Code(")") : EXIT SUB
       IF .FunTok THEN Code("(") : cNam(P) : Code(")") : EXIT SUB
     END SELECT
-    cNam(P)
+    IF .NamTok THEN cNam(P)
     IF .BitTok THEN Code(.BitIni)
     IF .DimTok THEN cArrDim(P) ': Code()
     IF .IniTok THEN cIni(P)
-    'IF .IniTok THEN Code(.VarIni)
   END WITH
 END SUB
 
@@ -342,7 +337,6 @@ SUB cppEntryListParameter CDECL(BYVAL P AS Parser PTR)
 
     IF .FunTok THEN
       IF .By_Tok THEN Code(.SubStr(.By_Tok) & "_")
-      IF .CalTok THEN Code("_" & .SubStr(.CalTok))
       IF .DivTok THEN Code("_" & .SubStr(.DivTok))
       cppCreateFunction(P)
     ELSEIF .TypTok THEN
@@ -624,7 +618,6 @@ SUB c_decl_ CDECL(BYVAL P AS Parser PTR)
       IF 0 = .ListCount THEN Code("VAR ")
                              Code(.SubStr(.NamTok))
       IF .BitTok THEN        Code(.BitIni)
-      'IF .IniTok THEN        Code(.VarIni)
       IF .IniTok THEN        cIni(P)
     END IF
     IF *.CurTok <= .TOK_EOS THEN Code(";") : EXIT SUB
@@ -649,7 +642,6 @@ SUB cEntryBlockENUM CDECL(BYVAL P AS Parser PTR)
 
     IF 0 = .ListCount THEN Code(STRING(.LevelCount * 2, " "))
     Code(.SubStr(.NamTok))
-    'IF .IniTok THEN Code(.VarIni)
     IF .IniTok THEN cIni(P)
     IF *.CurTok <> .TOK_END THEN Code(", ")
   END WITH

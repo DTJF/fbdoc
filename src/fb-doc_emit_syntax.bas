@@ -290,10 +290,6 @@ TYPE Highlighter
 
   UNION
     TYPE 
-      'AS INTEGER _
-        'GenHtml : 1 _ '*< Flag for html output
-       ', GenTex : 1 _ '*< Flag for LaTeX output
-       ', GenXml : 1   '*< Flag for XML output
       AS UBYTE _
         GenHtml      _ '*< Flag for html output
        , GenTex      _ '*< Flag for LaTeX output

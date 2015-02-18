@@ -1188,59 +1188,6 @@ PROPERTY Parser.BitIni() AS STRING EXPORT
   NEXT : RETURN ": " & MID(Buf, a + 1, l)
 END PROPERTY
 
-'/'* \brief The dimension of a variable
-'\returns the name including round or squared brackets
-
-'This property reads the dimension of a variable from the input buffer.
-
-''/
-'PROPERTY Parser.Bracket(BYVAL T AS LONG PTR) AS STRING EXPORT
-  'VAR kl = 0, p = T[1], l = 0
-  'WHILE T < EndTok
-    'SELECT CASE AS CONST *T
-    'CASE TOK_COMMA : IF kl <= 0 THEN l = T[1] - p : EXIT WHILE
-    'CASE TOK_KLOPN, TOK_BROPN : kl += 1
-    'CASE TOK_KLCLO, TOK_BRCLO : kl -= 1
-      'IF kl <= 0 THEN l = T[1] - p  + 1 : EXIT WHILE
-    'END SELECT : T += 3
-  'WEND : RETURN MID(Buf, p + 1, l)
-'END PROPERTY
-
-'/'* \brief The variable initialization
-'\returns the initialiser
-
-'This property reads the initialization of a variable from the input 
-'buffer.
-
-''/
-'PROPERTY Parser.VarIni() AS STRING EXPORT
-  'VAR kl = 0, i = IniTok[1], p = i
-  'DO
-    'i += 1
-    'SELECT CASE AS CONST Buf[i]
-    'CASE 0, ASC(!"\n"), ASC(!"\r"), ASC("'") : EXIT DO
-    '''CASE 0    : EXIT DO
-    '''CASE ASC("'")    : IF kl <= 0 THEN EXIT DO
-    '''CASE ASC(!"\n") : LineNo += 1   : IF kl <= 0 THEN EXIT DO
-    'CASE ASC("_") : IF Buf[i + 1] < ASC("0") THEN EXIT DO
-    '''CASE ASC("_") : IF Buf[i + 1] < ASC("0") THEN IF kl <= 0 THEN EXIT DO
-    'CASE ASC("""")
-      'VAR esc = IIF(Buf[i - 1] = ASC("!"), 1, 0)
-      'DO
-        'i += 1
-        'SELECT CASE AS CONST Buf[i]
-        'CASE 0, ASC(!"\n") : i -= 1 : EXIT DO
-        'CASE ASC("\") : IF esc THEN i += 1
-        'CASE ASC("""") : IF Buf[i + 1] = ASC("""") THEN i += 1 ELSE EXIT DO
-        'END SELECT
-      'LOOP
-    'CASE ASC("("), ASC("{"), ASC("[") : kl += 1
-    'CASE ASC(")"), ASC("}"), ASC("]") : kl -= 1 : IF kl <  0 THEN EXIT DO
-    'CASE ASC(",")                               : IF kl <= 0 THEN EXIT DO
-    'END SELECT
-  'LOOP : RETURN " " & RTRIM(MID(Buf, p + 1, i - p), ANY !" \t\v")
-'END PROPERTY
-
 /'* \brief Context of current token
 \returns the context of the current token
 
