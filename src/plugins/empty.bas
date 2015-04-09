@@ -1,13 +1,8 @@
-/'*
-\file Plugin.bas
-\brief An example 'Code for an external emitter
+/'* \file empty.bas
+\brief Example code for an empty external emitter
 
-This file contains example source 'Code for an external emitter. It 
+This file contains example source code for an external emitter. It 
 isn't used in the fb-doc source tree. See \ref pageExtend for details.
-
-'/
-
-/'*
 
 This emitter generates a list of the function names called via the 
 emitter interface. So when you input some source to fb-doc and use 
@@ -71,7 +66,7 @@ END SUB
 '* \brief Emitter called when the Parser is on top of a function body
 SUB dll_function CDECL(BYVAL P AS Parser PTR)
   WITH *P
-    VAR nam = .SubStr(IIF(.NamTok[3] = .TOK_DOT, .NamTok[6], .NamTok))
+    VAR nam = .SubStr(IIF(.NamTok[3] = .TOK_DOT, .NamTok + 6, .NamTok))
     Code(NL & __FUNCTION__ & ": " & .LineNo & " " & nam)
   END WITH
 END SUB

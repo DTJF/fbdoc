@@ -11,7 +11,7 @@ execution.
 
 
 /'* \brief Emit an error message to STDERR '/
-#DEFINE ERROUT(_T_) PRINT #OPT->Efnr, PROG_NAME & ": " & _T_
+#DEFINE ERROUT(_T_) PRINT #OPT->Efnr, PROJ_NAME & ": " & _T_
 
 /'* \brief Emit a message to STDERR '/
 #DEFINE MSG_LINE(_T_) PRINT #OPT->Efnr, SPC(38 - LEN(_T_)); _T_; " --> ";
@@ -141,7 +141,6 @@ TYPE Options
 #ENDIF '&*/ 
   AS STRING _
        InFiles = "" _ '*< name or pattern of all input file[s]
-    , FileName = "" _ '*< name and path of current input file
    , StartPath = "" _ '*< path at program start
     , FileIncl = "" _ '*< names of \#`INCLUDE` files
      , OutPath = "" _ '*< path for file output (option `--outpath`)
@@ -150,7 +149,7 @@ TYPE Options
        Asterix = 0 _ '*< style for C_Source emitter to export comment blocks
   , AllCallees = 0 _ '*< export external callee names as well (option `--list-mode`)
   , InRecursiv = 0 _ '*< flag set when InFiles should get scaned recursiv in subfolders
-      , InTree = 0 _ '*< flag set when source tree should get scaned
+      , InTree = 0 _ '*< flag set when source tree should get scanned
        , Level = 0 _ '*< counter for \#`INCLUDE`s
         , Efnr = 0 _ '*< file number for error messages (file modes)
         , Ocha = 0   '*< file number for output
@@ -164,8 +163,7 @@ TYPE Options
   DECLARE CONSTRUCTOR()
   DECLARE DESTRUCTOR()
   DECLARE FUNCTION parseCLI() AS RunModes
-  DECLARE FUNCTION parseOptpara(byref Idx AS INTEGER) AS string
-  'DECLARE SUB chooseEmitter(BYREF AS INTEGER)
+  DECLARE FUNCTION parseOptpara(byref Idx AS INTEGER) AS STRING
   DECLARE SUB chooseEmitter(BYREF F AS STRING)
   DECLARE SUB FileModi()
   DECLARE SUB doFile(BYREF AS STRING)

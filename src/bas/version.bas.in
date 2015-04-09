@@ -1,0 +1,16 @@
+/'* \file version.bas
+\brief The global constants for the fb-doc source
+
+See file ../../ReadMe.md for licence information.
+
+\since 3.0
+'/
+
+CONST PROJ_NAME = "@PROJ_NAME@" '*< The project name
+CONST PROJ_DESC = "@PROJ_DESC@" '*< The project description
+CONST PROJ_VERS = "@PROJ_VERS@" '*< The version number
+CONST PROJ_YEAR = "@PROJ_YEAR@" '*< The year of the release
+CONST PROJ_AUTH = "@PROJ_AUTH@" '*< The authors
+CONST PROJ_MAIL = "@PROJ_MAIL@" '*< An email address to get in contact
+CONST PROJ_WEBS = "@PROJ_WEBS@" '*< The website where to find the source
+CONST PROJ_LICE = "@PROJ_LICE@" '*< The licence of the project

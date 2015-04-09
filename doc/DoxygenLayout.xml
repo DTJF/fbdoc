@@ -4,15 +4,15 @@
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
     <tab type="pages" visible="no" title="" intro=""/>
-    <tab type="usergroup" title="Tutorial">
+    <tab type="usergroup" title="Description">
       <tab type="user" url="@ref pageIntro" title="Introduction"/>
       <tab type="user" url="@ref pageInstall" title="Compiling and Installing"/>
       <tab type="user" url="@ref pageUsage" title="How To Use"/>
+      <tab type="user" url="@ref pageExamples" title="Examples"/>
       <tab type="user" url="@ref pageTables" title="Tables"/>
       <tab type="user" url="@ref pageOptionDetails" title="Options in Detail"/>
-      <tab type="user" url="@ref pageEmitterDetails" title="Emitters in Detail"/>
+      <tab type="user" url="@ref ChaEmitter" title="Emitters in Detail"/>
       <tab type="user" url="@ref pageFilesUsed" title="Files and Folders"/>
-      <tab type="user" url="@ref pageExamples" title="Examples"/>
       <tab type="user" url="@ref pageExtend" title="Extending fb-doc"/>
       <tab type="user" url="@ref pageToDo" title="Further Development"/>
     </tab>

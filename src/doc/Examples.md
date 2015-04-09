@@ -2,39 +2,48 @@ Examples  {#pageExamples}
 ========
 \tableofcontents
 
-Here're some examples for using fb-doc and its features.
+This chapter contains some examples on how to use fb-doc and its
+features.
 
 
+Command Line Interface  {#SecExaCli}
+======================
 
-\section sectExaCli Command Line Interface
+As a first step this section contains some exercises to learn how
+fb-doc works. All operations get executed in the package folder.
 
-In a first glance you can execute fb-doc on its own source code in
-folder *src* to learn about its usage. Extract the archive *fb-doc.zip*
-to any folder and compile (`fbc -w all fb-doc.bas`). Then you can
-immediately test the binary in that folder.
+We execute fb-doc with several command line and use its own source code in
+folder *src* as input to learn about its usage. Therefor extract the archive *fb-doc.zip*
+to any folder, change to the source folder and compile.
+
+~~~{.sh}
+cd fb-doc/src/bas
+fbc -w all fb-doc.bas
+~~~
+
+Then you can test the binary by executing in that folder.
 
 \note The following examples are for UNIX like systems. Omit the
        leading `./` when you're on other systems.
 
--# To output the version info and help text execute in a terminal 
+-# To output the version information or help text, execute in a terminal
    ~~~{.sh}
    ./fb-doc --version
    ./fb-doc --help
    ~~~
--# To see the intermediate format for a certain file (fb-doc.bas in this
-   case) execute
+-# To output the intermediate format for a certain file execute
    ~~~{.sh}
    ./fb-doc fb-doc.bas
    ~~~
 -# Instead of watching the output in the terminal you can write it to a
-   file using
+   file by
    ~~~{.sh}
    ./fb-doc fb-doc.bas > fb-doc.c
    ~~~
-   and compare both files. The file *fb-doc.c* contains just a part of
-   the original code (variable declarations, some special comments,
-   \#`INCLUDE`s and an empty function `main()`). Each context is at the
-   same line number.
+   and compare the input and the output files. The file *fb-doc.c*
+   contains just a part of the original code (variable declarations,
+   some special comments, \#`INCLUDE`s and an empty function `main()`).
+   Each content is at the same line number.
 -# To test the output of the emitter `SyntaxHighLighting` execute
    ~~~{.sh}
    ./fb-doc --emitter "SyntaxHighLighting" fb-doc.bas > fb-doc.html
@@ -65,8 +74,7 @@ immediately test the binary in that folder.
    ~~~{.sh}
    ./fb-doc -e "FunctionNames" -t "fb-doc.bas" > fb-doc.lfn
    ~~~
-   This list includes the function names of the fb-doc source tree, but
-   it doesn't contain the function names from the file `Plugin.bas`.
+   This list includes the function names of the fb-doc source tree.
 -# To generate a list of all function names you can specify several
    file patterns and collect the function names of all source files in
    in a single file, like
@@ -84,46 +92,34 @@ immediately test the binary in that folder.
    cd ../doc
    ./src/fb-doc -l
    ~~~
-   fb-doc scans the *Doxyfile* for
-   the `INPUT` path and the `RECURSIV` setting, uses patterns `"*.bas"
-   "*.bi"` to scan for input files and writes the output to the
-   file *fb-doc.lfn* in the current folder (overriding an existing, if
-   any, without warning)
--# When you installed *Doxygen* and *GraphViz* you're ready to generate
-   your first documentation from FB source. Just execute in the folder
-   *doc*
+   fb-doc scans the configuration file *Doxyfile* for the `INPUT` path
+   (first entry only). In this path it scans depending on the
+   `RECURSIV` setting the patterns `"*.bas;*.bi"` to scan for input
+   files, generates the list of function names and writes the output to
+   the file *fb-doc.lfn* in the current folder (overriding an existing,
+   if any, without warning)
+-# When you installed [Doxygen](http://www.doxygen.org/) and
+   [GraphViz](http://www.graphviz.org/) you're ready to generate your
+   first documentation from FB source. Just execute in the folder *doc*
    ~~~{.sh}
    doxygen
    ./src/fb-doc -s
    ~~~
    The first command generates a lot of Doxygen messages (depending on
-   the settings in *Doxyfile*) and will run some seconds. It should end
-   with message '`*** Doxygen has finished`'. The second command makes
-   fb-doc run in \ref subsectOptSyntaxMode and repair the listing
-   sections in the Doxygen output files. After all you should have a
-   new folder *html* (in the folder *doc*) containing your personal
-   version of this documentation. Test it by loading
-   `..doc/html/index.html` in to your browser.
+   the settings in *Doxyfile*). It should end with message '`***
+   Doxygen has finished`'. The second command makes fb-doc run in \ref
+   SubSecOptSyntaxMode and repair the listing sections in the Doxygen
+   output files. After all you should have a new folder *html* (in the
+   folder *doc*) containing your personal version of this
+   documentation. Test it by loading `..doc/html/index.html` in to your
+   browser.
 
-Under the bottom line 1. to 8. are informal examples. You need steps 9.
-and 10. for your personal project. It should have
-
-- well prepared FB source files (supported by `--geany-mode "DoxygenTemplates"`) and
-- a matching Doxyfile (using fb-doc as input filter)
-
-to auto-generate the documentation by executing
-
-~~~{.sh}
-cd ../doc
-fbdoc -l
-doxygen
-fbdoc -s
-~~~
-
-\note This conclusion assumes a complete installation of *fb-doc*, *Doxygen* and *GraphViz*.
+As a summary steps 1. to 8. are informal examples. You need steps 9.
+and 10. for your personal projects.
 
 
-\section sectExaComments Comments (in general)
+Comments (in general)  {#SecExaComments}
+=====================
 
 The C back-ends work on an intermediate format. This format contains
 comments exported from the FB source. fb-doc doesn't export all
@@ -207,7 +203,8 @@ a special comment by starting its context with a magic character
    contains empty lines in that case.
 
 
-\section sectExaDim Variables Declaration
+Variables Declaration  {#SecExaDim}
+=====================
 
 A varible declaration in a FreeBasic source code is in human readable
 words (making it easy to understand the code) and may look like
@@ -247,7 +244,7 @@ CONST_ZSTRING_PTR VarName;
 and will be used as *CONST_ZSTRING_PTR VarName* in the documentation as
 well. In this syntax the FB user can identify the type as an FB
 declaration and easily understand the documentation. See \ref
-sectTabInterForm for more examples.
+SecTabInterForm for more examples.
 
 \note The type name is allways in front of the symbol name, this order
        cannot get swapped as in FB syntax.
@@ -264,7 +261,8 @@ useful to auto-generate C headers from FB source, ie to bind a library
 written in FB in to a C project.
 
 
-\section sectExaTemplates Templates
+Templates  {#sectExaTemplates}
+=========
 
 In an early stage of the project development you'll start to add
 documentation comments to your source code. When targeting the Doxygen
@@ -281,7 +279,8 @@ fb-doc can support this process.
        as keyword (allthough it's inside the code block).
 
 
-\subsection subsectExaGtkdoc Gtk-doc
+Gtk-doc  {#SubSecExaGtkdoc}
+-------
 
 \note This example is based on a system wide installation of fb-doc
        and a setting as Geany custom command with option
@@ -451,7 +450,8 @@ GooAxisType Modus,
 \endverbatim
 
 
-\subsection subsectExaDoxy Doxygen
+Doxygen  {#SubSecExaDoxy}
+-------
 
 \note This example is based on a system wide installation of fb-doc
        and a setting as Geany custom command with option `--geany-mode
@@ -585,3 +585,27 @@ BYVAL_AS_GooAxisType Modus,
 
 \note This output is also visible in the source code browser before the
        listings get repaired by executing `fbdoc -s` in the folder *doc*.
+
+
+
+
+
+
+
+
+
+ They should have
+
+- well prepared FB source files (supported by `--geany-mode "DoxygenTemplates"`) and
+- a matching Doxyfile (using fb-doc as input filter)
+
+to auto-generate the documentation by executing
+
+~~~{.sh}
+cd ../doc
+fbdoc -l
+doxygen
+fbdoc -s
+~~~
+
+\note This conclusion assumes a complete installation of *fb-doc*, *Doxygen* and *GraphViz*.

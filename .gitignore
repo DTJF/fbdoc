@@ -14,8 +14,11 @@ fb-doc.geany
 # Can also ignore all directories and files in a directory.
 
 7z/**/*
+build*/**/*
 test*/**/*
+src/test*/**/*
 doc/html/**/*
 doc/latex/**/*
+cmake/**/*
 CMakeFiles/**/*
 _CPack*/**/*

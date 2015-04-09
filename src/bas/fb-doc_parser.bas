@@ -282,7 +282,7 @@ FUNCTION Parser.demuxTyp(BYVAL DeclMod AS INTEGER = 0) AS INTEGER
     PtrTok = Tk : WHILE *Tk = TOK_PTR : PtrCount += 1 : SKIP : WEND
   ELSE
     IF *FunTok = TOK_FUNC THEN RETURN MSG_ERROR
-  END IF ' !!! ToDo STATIC, EXPORT
+  END IF
 
   IF *Tk = TOK_STAT THEN
     SKIP : IF *Tk = TOK_EXPO THEN SKIP
@@ -1019,7 +1019,6 @@ END FUNCTION
 
 
 /'* \brief Pre-parse all FB source code, search relevant constructs
-\returns the length of the output code, if any
 
 Search the input buffer for a relevant construct. Start detailed 
 parsing on each relevant construct. Otherways skip the current line. 
@@ -1094,14 +1093,15 @@ SUB Parser.File_(BYREF File AS STRING, BYVAL Tree AS INTEGER)
   VAR fnr = FREEFILE
   IF OPEN(File FOR INPUT AS #fnr) _
     THEN ErrMsg = "couldn't read file """ & File & """ " &_
-                  "(ERR = " & ERR & "), currdir=" & curdir : EXIT SUB
+                  "(ERR = " & ERR & "), currdir=" & CURDIR : EXIT SUB
   Buf = STRING(LOF(fnr), 0)
   GET #fnr, , Buf
   CLOSE #fnr
 
   InTree = Tree
   Fin = LEN(Buf) - 1
-  IF OPT->InTree THEN InPath = left(File, instrrev(File, SLASH))
+  IF OPT->InTree THEN InPath = LEFT(File, INSTRREV(File, SLASH))
+  Fnam = File
   pre_parse()
   ErrMsg = "done"
 END SUB
@@ -1131,7 +1131,7 @@ SUB Parser.StdIn()
   Fin = LEN(Buf) - 1
   pre_parse() : IF Tk1 THEN EXIT SUB
 
-  Code(  "'                   " & PROG_NAME & ": no --geany-mode output:" & _
+  Code(  "'                   " & PROJ_NAME & ": no --geany-mode output:" & _
     NL & "'                        select either a line" & _
     NL & "'         DIM, COMMON, CONST, EXTERN, STATIC, DECLARE, #DEFINE" & _
     NL & "'                              or a block" & _
@@ -1238,34 +1238,34 @@ Otherwise a new parser gets started to operate on that file.
 
 '/
 SUB Parser.Include(BYVAL N AS STRING)
-with *OPT
-  IF .RunMode = .GEANY_MODE THEN EXIT SUB
-
-  VAR i = INSTRREV(N, SLASH)
-  VAR fnam = .addPath(InPath, LEFT(N, i)) & MID(N, i + 1)
-  MSG_LINE(fnam)
-  IF DivTok ANDALSO INSTR(.FileIncl, !"\n" & fnam & !"\r") THEN _
-    MSG_END("skipped (already done)") : EXIT SUB
-
-  VAR fnr = FREEFILE
-  IF OPEN(fnam FOR INPUT AS #fnr) THEN _
-    MSG_END("skipped (couldn't open)") : EXIT SUB
-  CLOSE #fnr
-  .FileIncl &= !"\n" & fnam & !"\r"
-
-  VAR pars_old = .Pars : .Pars = NEW Parser(.EmitIF)
-  UserTok = pars_old->UserTok
-
-  MSG_END("working ...")
-  .Level += 1
-  .doFile(fnam)
-  .Level -= 1
-
-  SELECT CASE AS CONST .RunMode
-  CASE .LIST_MODE, .FILE_MODE
-  CASE ELSE : MSG_LINE(fnam) : MSG_END("done")
-  END SELECT
-
-  DELETE .Pars : .Pars = pars_old
-END with
+  WITH *OPT
+    IF .RunMode = .GEANY_MODE THEN EXIT SUB
+  
+    VAR i = INSTRREV(N, SLASH)
+    VAR fnam = .addPath(InPath, LEFT(N, i)) & MID(N, i + 1)
+    MSG_LINE(fnam)
+    IF DivTok ANDALSO INSTR(.FileIncl, !"\n" & fnam & !"\r") THEN _
+      MSG_END("skipped (already done)") : EXIT SUB
+  
+    VAR fnr = FREEFILE
+    IF OPEN(fnam FOR INPUT AS #fnr) THEN _
+      MSG_END("skipped (couldn't open)") : EXIT SUB
+    CLOSE #fnr
+    .FileIncl &= !"\n" & fnam & !"\r"
+  
+    VAR pars_old = .Pars : .Pars = NEW Parser(.EmitIF)
+    UserTok = pars_old->UserTok
+  
+    MSG_END("working ...")
+    .Level += 1
+    .doFile(fnam)
+    .Level -= 1
+  
+    'SELECT CASE AS CONST .RunMode
+    'CASE .LIST_MODE, .FILE_MODE
+    'CASE ELSE : MSG_LINE(fnam) : MSG_END("included")
+    'END SELECT
+  
+    DELETE .Pars : .Pars = pars_old
+  END WITH
 END SUB

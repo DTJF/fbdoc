@@ -78,7 +78,7 @@ surrounding comments. fb-doc exports both in a C-like intermediate
 format as input for the used back-end.
 
 Not all comments get exported. Only comments starting with a magic
-character are used to build the documentation, see \ref sectExaComments
+character are used to build the documentation, see \ref SecExaComments
 for details.
 
 Also, not all FB source code gets exported. The output is reduced to
@@ -101,7 +101,7 @@ folder *src* of the fb-doc package. Beside this you may want to check
 the files in the folder *doc*. configurations for Doxygen to extract
 this pages. A good start may be to use these files and create your
 customized fb-doc documentation and play around with the parameters,
-see \ref sectExaCli.
+see \ref SecExaCli.
 
 To be honest: in some cases this documentation may be a bit 
 overloaded and serve more information than necessary. But one of the 

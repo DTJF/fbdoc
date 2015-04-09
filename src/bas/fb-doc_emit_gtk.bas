@@ -4,7 +4,7 @@
 This file contains the emitter for gtk-doc templates. The emitter is 
 designed to create documentation comment blocks for the gtk-doc 
 back-and and it's designed to be used in Geany mode (see section \ref 
-subsectExaGtkdoc for an example).
+SubSecExaGtkdoc for an example).
 
 The emitter returns all original source code. Relevant lines (or 
 code blocks) get prepended by a multi line block of documentation. 
@@ -86,7 +86,7 @@ SUB gtk_decl_ CDECL(BYVAL P AS Parser PTR)
     Code(GTK_END)
 
     IF 0 = .FunTok THEN EXIT SUB
-    Code("'' " & PROG_NAME & "-hint: consider to document the functions body instead." & NL)
+    Code("'' " & PROJ_NAME & "-hint: consider to document the functions body instead." & NL)
   END WITH
 END SUB
 

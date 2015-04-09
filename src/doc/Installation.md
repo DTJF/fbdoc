@@ -29,7 +29,7 @@ templates.
 Therefor you don't need a complex installation. Just place the compiled
 binary in any of your source folders and execute it there (see \ref
 pageUsage for details). Or you test your fb-doc executable on its own
-source, find some examples in \ref sectExaCli.
+source, find some examples in \ref SecExaCli.
 
 To generate a real documentation &mdash; as mentioned in the
 Introduction, fb-doc is not a complete documentation generator &mdash;

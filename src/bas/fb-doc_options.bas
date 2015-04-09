@@ -2,7 +2,7 @@
 \brief The source code for the \ref Options class
 
 This file contains the source code for the Options class. It's used 
-to scan the command line options and control the execution of fb-doc.
+to scan the command line options and determine the execution of fb-doc.
 
 '/
 
@@ -11,7 +11,7 @@ to scan the command line options and control the execution of fb-doc.
 /'* \brief Read options and parameters from the command line
 
 The constructor scans all command line arguments and checks for 
-options and their parameters (, see \ref sectTabOptions for 
+options and their parameters (, see \ref SecTabOptions for 
 details). Options may be specified in short form (starting with a 
 single minus character) or in human readable LONG form (starting 
 with two minus characters). Some options may have an additinal 
@@ -26,7 +26,7 @@ queue entries in single or double quotes.
 '/
 CONSTRUCTOR Options()
   Efnr = FREEFILE
-  IF OPEN ERR (AS #Efnr) THEN ?PROG_NAME & ": " & "couldn't open STDERR" : EXIT CONSTRUCTOR
+  IF OPEN ERR (AS #Efnr) THEN ?PROJ_NAME & ": " & "couldn't open STDERR" : EXIT CONSTRUCTOR
       Types = FB_STYLE
   CreateFunction = @cppCreateFunction
   CreateVariable = @cppCreateTypNam
@@ -295,8 +295,6 @@ patterns and executes the required operations.
 
 '/
 SUB Options.FileModi()
-  'Efnr = FREEFILE
-  'IF OPEN ERR (AS #Efnr) THEN ?PROG_NAME & ": " & "couldn't open STDERR" : EXIT SUB
   StartPath = CURDIR()
   VAR cupa = StartPath
   EmitIF->CTOR_(Pars)
@@ -334,7 +332,9 @@ SUB Options.FileModi()
     CASE ASC("*"), ASC("?") : inpat = 1
     CASE ASC(SLASH) : inslsh = i
     CASE ASC(!"\n")
-      IF inpat THEN
+      IF 0 = inpat THEN
+        doFile(MID(InFiles, a + 1, i - a))
+      ELSE
         VAR in_pattern = ""
         IF inslsh THEN
           VAR path = MID(InFiles, a + 1, inslsh - a)
@@ -355,14 +355,8 @@ SUB Options.FileModi()
           aa = ee + 1
         WEND
         IF inslsh THEN CHDIR(cupa) : StartPath = cupa : inslsh = 0
-      ELSE
-        FileName = MID(InFiles, a + 1, i - a)
-        doFile(FileName)
-      END IF
-      IF InTree THEN FileIncl = "" : Level = 0
-
-      inpat = 0
-      a = i + 1
+        inpat = 0
+      END IF : a = i + 1
     END SELECT : i += 1
   LOOP
 
@@ -386,16 +380,16 @@ SUB Options.doFile(BYREF Fnam AS STRING)
   CASE DEF_MODE  : Pars->File_(Fnam, InTree) : MSG_LINE(Fnam) : MSG_END(Pars->ErrMsg)
   CASE SYNT_MODE : VAR nix = NEW Highlighter(Pars) : nix->DoDoxy(Fnam) : DELETE nix
   CASE LIST_MODE
-    if lcase(right(Fnam, 4)) = ".bas" orelse _
-       lcase(right(Fnam, 3)) = ".bi" THEN
-      if 0 = Ocha THEN
+    IF LCASE(RIGHT(Fnam, 4)) = ".bas" ORELSE _
+       LCASE(RIGHT(Fnam, 3)) = ".bi" THEN
+      IF 0 = Ocha THEN
         MSG_LINE(OutPath & CALLEES_FILE)
         Ocha = writeLFN(OutPath)
         IF 0 = Ocha THEN MSG_END("error (couldn't write)") : EXIT SUB
         MSG_END("opened")
-      end if
+      END IF
       Pars->File_(Fnam, InTree) : MSG_LINE(Fnam) : MSG_END(Pars->ErrMsg) : EXIT SUB
-    end if
+    END IF
 
     VAR path = addPath(StartPath, LEFT(Fnam, INSTRREV(Fnam, SLASH))) _
       , doxy = NEW Doxyfile(Fnam) _
@@ -405,20 +399,20 @@ SUB Options.doFile(BYREF Fnam AS STRING)
   
     MSG_LINE(Fnam)
     IF 0 = doxy->Length THEN
-      MSG_END(doxy->Errr) : delete doxy
+      MSG_END(doxy->Errr) : DELETE doxy
       MSG_LINE("Doxyfile")
-      if chdir(Fnam) then MSG_END("error (couldn't change directory)") : exit sub
+      IF CHDIR(Fnam) THEN MSG_END("error (couldn't change directory)") : EXIT SUB
       doxy = NEW Doxyfile("Doxyfile")
-      IF 0 = doxy->Length THEN MSG_END(doxy->Errr) : delete doxy : exit sub
-      path = curdir()
+      IF 0 = doxy->Length THEN MSG_END(doxy->Errr) : DELETE doxy : EXIT SUB
+      path = CURDIR()
     END IF
       
     InRecursiv = IIF(doxy->Tag("RECURSIVE") = "YES", 1, 0)
-    var in_path = addPath(path, doxy->Tag("INPUT"))
+    VAR in_path = addPath(path, doxy->Tag("INPUT"))
     DELETE doxy
-    if chdir(in_path) then
+    IF CHDIR(in_path) THEN
       MSG_END("error (couldn't change to " & in_path & ")")
-    else
+    ELSE
       patt = scanFiles("*.bas", "") & scanFiles("*.bi", "")
       IF 0 = LEN(patt) THEN
         MSG_END("error (nothing to do)")
@@ -429,7 +423,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
         Ocha = writeLFN(path)
         IF 0 = Ocha THEN
           MSG_END("error (couldn't write)")
-        else
+        ELSE
           MSG_END("opened")
           VAR a = 1, e = a, l = LEN(patt)
           WHILE a < l
@@ -438,12 +432,12 @@ SUB Options.doFile(BYREF Fnam AS STRING)
             MSG_LINE(MID(patt, a, e - a)) : MSG_END("scanned")
             a = e + 1
           WEND
-          close #Ocha : MSG_LINE(path & CALLEES_FILE) : MSG_END("written")
-        end if
-      end if
-    end if
+          CLOSE #Ocha : MSG_LINE(path & CALLEES_FILE) : MSG_END("written")
+        END IF
+      END IF
+    END IF
 
-    chdir(StartPath)
+    CHDIR(StartPath)
     Ocha = oldo
     InRecursiv = recu
 
@@ -467,7 +461,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
     IF checkDir(path) THEN
       ERROUT("couldn't create directory " & path)
     ELSE
-      out_name = OutPath & out_name & *iif(right(FNam, 3) = ".bi", @"h", @"c")
+      out_name = OutPath & out_name & *IIF(RIGHT(FNam, 3) = ".bi", @"h", @"c")
       Ocha = FREEFILE
       IF OPEN(out_name FOR OUTPUT AS #Ocha) THEN
         ERROUT("couldn't write " & out_name)

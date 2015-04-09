@@ -79,11 +79,11 @@ developing a new emitter). Just specify your emitter and an input file
 like
 
 ~~~{.sh}
-fb-doc --emitter "Plugin" fb-doc.bas
+fb-doc --emitter "empty" fb-doc.bas
 ~~~
 
 and fb-doc operates on the file fb-doc.bas and pipes the output of the
-\em Plugin emitter to the terminal.
+\em empty emitter to the terminal.
 
 Or you can use this mode to generate a C-header for a library,
 collecting the context of several FB headers in one C header. While it
@@ -270,7 +270,8 @@ the extension is one of `.bas` or `.bi`, then fb-doc skips the reading
 of the Doxyfile and operates on the FB source file(s) directly.
 
 
-\subsection subsectOptSyntaxMode Syntax Mode (-s)
+Syntax Mode (-s)  {#SubSecOptSyntaxMode}
+----------------
 
 |       _Summary_ | Syntax Mode                            |
 | --------------: | :------------------------------------- |
@@ -356,7 +357,7 @@ used combination of run mode and emitter.
 
 This options makes the emitter `C_Source` to output an asterix
 character and a white space (like `"* "`) at the start of each line in
-a special multi line comment block, see \ref subsectExaGtkdoc for
+a special multi line comment block, see \ref SubSecExaGtkdoc for
 further examples.
 
 This special format is used in gtk-doc (must have) and can also be used
@@ -379,7 +380,7 @@ special format only in the output for the back-end.
 
 This option makes fb-doc to emit real C types instead of the FB-like
 mangled type names. It also infuences the translation of `TYPE` blocks
-and \#`INCLUDE` lines, see \ref sectTabInterForm for examples.
+and \#`INCLUDE` lines, see \ref SecTabInterForm for examples.
 
 The standard output of the `C_Source` emitter is optimized for best
 matching documentation. Therefor the types in the source code get
@@ -401,7 +402,7 @@ parameter may be surrounded by quotes (single or double), they get
 removed befor further operation.
 
 First, fb-doc searches in the list of internal emitter names (see \ref
-sectTabEmitters). This search gets done non-case-sensitive and
+SecTabEmitter). This search gets done non-case-sensitive and
 partial-matching. Meaning you need not type the complete emitter name
 nor use the right letter cases. Ie *d*, *Dox* or <em>"DOXY"</em> all
 match the full emitter name *DoxygenTemplates*.
@@ -412,13 +413,13 @@ name must exactly match the base file name of the FB source code used
 to build the plugin module. Ie when the plugin was compiled by
 
 ~~~{.sh}
-fbc -dylib Plugin.bas
+fbc -dylib empty.bas
 ~~~
 
-the parameter *emitter name* must be `Plugin` as in
+the parameter *emitter name* must be `empty` as in
 
 ~~~{.sh}
-fbdoc -e "Plugin"
+fbdoc -e "empty"
 ~~~
 
 \note On UNIX-like systems file names are case-sensitive.

@@ -124,11 +124,11 @@ emitter functions via the emitter interface \ref EmitterIF, so it can
 easy get extended by new emitters providing additional features (ie
 support further C tools like <em>source navigator</em>).
 
-The *src* folder of archive *fb-doc.zip* contains a file *Plugin.bas*.
+The *plugins* folder of archive *fb-doc.zip* contains the file empty.bas.
 This file is an example source code for an external emitter modul and
 contains this further information:
 
-\dontinclude Plugin.bas
+\dontinclude empty.bas
 \skipline This emitter generates
 \until endverbatim
 

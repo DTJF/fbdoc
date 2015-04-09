@@ -244,7 +244,7 @@ SUB cppCreateTypNam CDECL(BYVAL P AS Parser PTR)
       THEN cEmitComments(P, .NamTok[1])
 
     IF .NamTok THEN   cppNam(P)
-    IF .DimTok THEN   cArrDim(P) 'Code(.Bracket(.DimTok))
+    IF .DimTok THEN   cArrDim(P)
     IF .BitTok THEN   Code(.BitIni)
     IF .IniTok THEN   cIni(P)
   END WITH
@@ -476,7 +476,6 @@ scanning process.
 
 '/
 SUB c_include CDECL(BYVAL P AS Parser PTR)
-  STATIC AS STRING done
   WITH *P
     cEmitComments(P, .Tk1[1])
     VAR fnam = .SubStr(.NamTok)
@@ -736,9 +735,9 @@ SUB c_error CDECL(BYVAL P AS Parser PTR)
   WITH *P
     SELECT CASE AS CONST OPT->RunMode
     CASE OPT->GEANY_MODE ': EXIT SUB ' or shall we output?
-      Code(NL & "'!!! " & PROG_NAME & .ErrMsg & "!" & NL)
+      Code(NL & "'!!! " & PROJ_NAME & .ErrMsg & "!" & NL)
     CASE ELSE
-      ERROUT("==> " & PROG_NAME & .ErrMsg & "!")
+      ERROUT("==> " & PROJ_NAME & .ErrMsg & "!")
     END SELECT
   END WITH
 END SUB

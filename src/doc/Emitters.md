@@ -1,4 +1,4 @@
-Emitters in Detail  {#pageEmitterDetails}
+Emitters in Detail  {#ChaEmitter}
 ==================
 \tableofcontents
 

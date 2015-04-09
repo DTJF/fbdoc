@@ -11,7 +11,7 @@ It also includes the headers for the modules.
 #DEFINE MSG_HELP _
   "Command line tool for generating documentation from FreeBasic source code." & NL & NL & _
   "Usage" & NL & _
-  "  " & FBDOC_BINARY & " [Options]" & NL & NL & _
+  "  " & FBDOC_BINARY & " [Options] [file specs]" & NL & NL & _
   "Options:" & NL & _
   " -h (--help)    : print this help text and stop" & NL & _
   " -v (--version) : print version information and stop" & NL & _
@@ -39,8 +39,8 @@ It also includes the headers for the modules.
 
 /'* \brief The welcome message, shown when running as a program (option `--file-mode`) '/
 #DEFINE MSG_WELCOME _
-  "version " & PROG_VERS & ", License GPLv3" & NL & _
-  "        Copyright (C) 2012-2014 by Thomas{ At ]Freiherr{ at }gmx[ dOt ]net" & NL
+  "version " & PROJ_VERS & ", License GPLv3" & NL & _
+  "        Copyright (C) 2012-" & PROJ_YEAR & " by " & PROJ_MAIL & NL
 
 /'* \brief The version information for the command line interface (option `--version`) '/
 #DEFINE MSG_VERSION _
@@ -51,12 +51,11 @@ It also includes the headers for the modules.
 /'* \brief The target operation system (used in \ref MSG_VERSION, UNIX version here) '/
  #DEFINE FBDOC_TARGET "UNIX/LINUX"
 /'* \brief The name of the binary (used in \ref MSG_HELP, UNIX version here) '/
- #DEFINE FBDOC_BINARY "./" & PROG_NAME
-/'* \brief The operation system specific slash character (UNIX version here) '/
+ #DEFINE FBDOC_BINARY "./" & PROJ_NAME
 #ELSE
 '&/*
  #DEFINE FBDOC_TARGET "win/dos"
- #DEFINE FBDOC_BINARY PROG_NAME & ".exe"
+ #DEFINE FBDOC_BINARY PROJ_NAME & ".exe"
 '&*/
 #ENDIF
 

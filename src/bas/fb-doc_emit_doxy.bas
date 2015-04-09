@@ -3,7 +3,7 @@
 
 This file contains emitter functions for the \ref EmitterIF to 
 generate template blocks for the Doxygen Back-end. It's designed to 
-be used in Geany mode (see section \ref subsectExaDoxy for an example).
+be used in Geany mode (see section \ref SubSecExaDoxy for an example).
 
 The emitters return all original source code unchanged. Additionally 
 relevant lines (or code blocks) get prepended by a multi line block 
@@ -94,7 +94,7 @@ SUB doxy_decl_ CDECL(BYVAL P AS Parser PTR)
                  ELSE  Code("\var ")
 
       SELECT CASE AS CONST *.StaTok
-      CASE .TOK_CONS,.TOK_STAT, .TOK_COMM, .TOK_EXRN
+      CASE .TOK_CONS, .TOK_STAT, .TOK_COMM, .TOK_EXRN
         IF OPT->Types = OPT->C_STYLE THEN Code(LCASE(.SubStr(.StaTok)) & " ") _
                                      ELSE Code(      .SubStr(.StaTok)  & "_")
       CASE .TOK_TYPE : Code("typedef ")
@@ -111,14 +111,13 @@ SUB doxy_decl_ CDECL(BYVAL P AS Parser PTR)
       IF t THEN Code(NL & "\returns: " & FIXME)
       Code(DOXY_END)
       .SrcBgn = a
-      Code("'' " & PROG_NAME & "-hint: consider to document the functions body instead." & NL)
+      Code("'' " & PROJ_NAME & "-hint: consider to document the functions body instead." & NL)
     ELSEIF .TypTok THEN
       OPT->CreateVariable(P)
       Code(NL & "\brief " & FIXME & DOXY_END)
     ELSE
       IF 0 = .ListCount THEN Code("VAR ")
                              Code(.SubStr(.NamTok))
-      'IF .IniTok THEN        Code(" " & .VarIni)
       IF .IniTok THEN        cIni(P)
       Code(NL & "\brief " & FIXME & DOXY_END)
     END IF

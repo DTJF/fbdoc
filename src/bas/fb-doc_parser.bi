@@ -146,6 +146,7 @@ STRING variables to exchange data with th emitters.
 '/
   AS STRING _
     InPath = "" _ '*< path of current of input file (option `--tree`)
+  , Fnam _        '*< the name of the input file
   , Buf _         '*< the input buffer
   , ErrMsg _      '*< an error message
   , Tok _         '*< the token list (binaries)
@@ -242,10 +243,8 @@ or the position  of the given parameter.
 '/
   DECLARE PROPERTY CurTok() AS LONG PTR
   DECLARE PROPERTY BitIni() AS STRING
-  'DECLARE PROPERTY VarIni() AS STRING
   DECLARE PROPERTY SubStr() AS STRING
   DECLARE PROPERTY SubStr(BYVAL AS LONG PTR) AS STRING
-  'DECLARE PROPERTY Bracket(BYVAL AS LONG PTR) AS STRING
 '* \}
 
 /'* \name Parsers for lists and blocks

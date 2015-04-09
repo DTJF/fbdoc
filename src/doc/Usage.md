@@ -52,8 +52,8 @@ the emitter for the tool-chain in use (\em GtkDocTemplates or \em
 DoxygenTemplates). After loading the source, we select a block of 
 code, send it to fb-doc and we receive the original block, prepended 
 by a customized documentation block. We just need to edit the 
-entries (marked by the text `FIXME`). See \ref subsectExaGtkdoc and 
-\ref subsectExaDoxy for examples.
+entries (marked by the text `FIXME`). See \ref SubSecExaGtkdoc and 
+\ref SubSecExaDoxy for examples.
 
 We can select a single construct and generate the comment blocks 
 one-by-one. Or we select a bunch of statements and fb-doc inserts 
@@ -78,7 +78,7 @@ members or parameters are listed in the comment block, prepended by
 a \@ character and appended by a colon. See the manual
 http://developer.gnome.org/gtk-doc-manual/stable/index.html for
 details. Find an example for a gtk-doc documentation comment in \ref
-subsectExaGtkdoc.
+SubSecExaGtkdoc.
 
 fb-doc helps us by creating such documentation comment blocks (=
 template). We select a piece of code in Geany and send it to the
@@ -134,7 +134,7 @@ documentation block. See
 
  - the manual 
    http://www.stack.nl/~dimitri/doxygen/manual.html for details.
- - \ref subsectExaDoxy for an example for a function comment block
+ - \ref SubSecExaDoxy for an example for a function comment block
  - all fb-doc source code as further examples.
 
 For Doxygen we can also create the pseudo C files in the 
