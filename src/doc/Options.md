@@ -1,4 +1,4 @@
-Options in Detail  {#pageOptionDetails}
+Options in Detail  {#PagOptionDetails}
 =================
 \tableofcontents
 
@@ -43,14 +43,19 @@ fb-doc [mode options] [operational options] <file specifications>
        the standard emitters. ???
 
 
-\section sectOptModes Mode Options
+Mode Options  {#SecOptModes}
+============
 
 The standard mode is the Doxygen-Filter mode. fb-doc operates in this
 mode when no other mode option is set. The only exeption is an empty
 command line (no file specification). In this case fb-doc switches to
-\ref subsectOptHelp.
+\ref SubSecOptHelp.
 
-\subsection sectoptDefaultMode Default Mode
+
+Default Mode  {#SubSecOptDefault}
+------------
+
+This mode is active when none of the other modes is specified.
 
 |       _Summary_ | Standard Mode (Doxygen Filter)                        |
 | --------------: | :---------------------------------------------------- |
@@ -62,12 +67,11 @@ command line (no file specification). In this case fb-doc switches to
 | Ignored Options | -o
 
 In standard mode fb-doc reads input from files and sends output to
-STDOUT. The default emitter is `C_Source` in default mode. The file
-specification may contain a single file name, a path and afile name, a
-file pattern or a path and a file pattern. Several file specifications
-can be used in any combination, separated by a white space character.
-The emitter output for each file gets collected and send in a single
-stream to STDOUT.
+STDOUT. The default emitter is `C_Source`. The file specification may
+contain a single file name, a path and a file name, a file pattern or a
+path and a file pattern. Several file specifications can be used in any
+combination, separated by a white space character. The emitter output
+for each file gets collected and send in a single stream to STDOUT.
 
 The standard mode is designed to be used as a filter for Doxygen. In
 that case a single file name (including a path, if any) is passed at
@@ -111,7 +115,8 @@ Then edit all `FIXME` entries in MyFile_abc.txt and include the file in
 to your Doxygen file tree.
 
 
-\subsection subsectOptFileMode File Mode (-f)
+--file-mode (-f)  {#SubSecOptFile}
+----------------
 
 |       _Summary_ | File Mode                                    |
 | --------------: | :------------------------------------------- |
@@ -180,7 +185,8 @@ fb-doc --file-mode --asterix --cstyle $@
        command line settings.
 
 
-\subsection subsectOptGeanyMode Geany Mode (-g)
+--geany-mode (-g)  {#SubSecOptGeany}
+-----------------
 
 |       _Summary_ |  Mode                               |
 | --------------: | :---------------------------------- |
@@ -193,7 +199,7 @@ fb-doc --file-mode --asterix --cstyle $@
 
 The geany mode is designed to generate templates for the
 documentational comments in the source code, see section \ref
-sectInstallGeany for details. Usually a code section gets selected in
+SecInsGeany for details. Usually a code section gets selected in
 the editor and then sent to fb-doc via STDIN pipe. fb-doc extracts the
 relevant symbols and generates a matching comment block for this piece
 of code. Both, the comment block and the original code block, get
@@ -215,7 +221,7 @@ The following example lists all function names from file test.bas in
 the terminal
 
 ~~~{.sh}
-fb-doc --geany "FunctionNames" < test.bas
+fb-doc --geany-mode "FunctionNames" < test.bas
 ~~~
 
 \note The output may contain error messages from fb-doc. Those are send
@@ -229,12 +235,13 @@ in to a single one. The following example collects the C-translations of
 the declarations from two FB headers in the file C_Header.h
 
 ~~~{.sh}
-fb-doc --geany "C_Source" --c-style < file1.bi > C_Header.h
-fb-doc --geany "C_Source" --c-style < file2.bi >> C_Header.h
+fb-doc --geany-mode "C_Source" --c-style < file1.bi > C_Header.h
+fb-doc --geany-mode "C_Source" --c-style < file2.bi >> C_Header.h
 ~~~
 
 
-\subsection subsectOptListMode List Mode (-l)
+--list-mode (-l)  {#SubSecOptList}
+----------------
 
 |       _Summary_ |  Mode                                        |
 | --------------: | :------------------------------------------- |
@@ -270,8 +277,8 @@ the extension is one of `.bas` or `.bi`, then fb-doc skips the reading
 of the Doxyfile and operates on the FB source file(s) directly.
 
 
-Syntax Mode (-s)  {#SubSecOptSyntaxMode}
-----------------
+--syntax-mode (-s)  {#SubSecOptSyntax}
+------------------
 
 |       _Summary_ | Syntax Mode                            |
 | --------------: | :------------------------------------- |
@@ -303,7 +310,8 @@ sense to use it with an alternative emitter (but fb-doc doesn't block
 this scenario).
 
 
-\subsection subsectOptHelp Help (-h)
+--help (-h)  {#SubSecOptHelp}
+-----------
 
 |       _Summary_ | Help Mode             |
 | --------------: | :-------------------- |
@@ -322,7 +330,8 @@ information. (It's not mentioned to be a complete documentation.)
 \note In help mode all other options have no effect.
 
 
-\subsection subsectOptVersion Version (-v)
+--version (-v)  {#SubSecOptVersion}
+--------------
 
 |       _Summary_ | Version Mode         |
 | --------------: | :------------------- |
@@ -341,13 +350,16 @@ compiler.
 \note In version mode all other options have no effect.
 
 
-\section sectOptOperaOptions Operational Options
+Operational Options  {#SecOptOperations}
+===================
 
 Operational options control the fb-doc operations or the output of an
 emitter. In special cases they may have no effect, depending on the
 used combination of run mode and emitter.
 
-\subsection subsectOptAsterix Asterix (-a)
+
+--asterix (-a)  {#SubSecOptAsterix}
+--------------
 
 |            `-a` | `--asterix`          |
 | --------------: | :------------------- |
@@ -370,7 +382,8 @@ feature to edit the documentation context in plain text and add the
 special format only in the output for the back-end.
 
 
-\subsection subsectOptCstyle CStyle (-c)
+--cstyle (-c)  {#SubSecOptCStyle}
+-------------
 
 |            `-c` | `--cstyle`                     |
 | --------------: | :----------------------------- |
@@ -388,7 +401,8 @@ fantasy names, similar to the FB keywords declaring them. Use this
 option to switch form FB sytle to real C type names.
 
 
-\subsection subsectOptEmitters Emitter (-e)
+--emitter (-e)  {#SubSecOptEmitter}
+--------------
 
 |            `-e` | `--emitter`          |
 | --------------: | :------------------- |
@@ -427,7 +441,8 @@ fbdoc -e "empty"
        file (not the context of the string \ref EmitterIF::Nam).
 
 
-\subsection subsectOptOutpath Outpath (-o)
+--outpath (-o)  {#SubSecOptPath}
+--------------
 
 |            `-o` | `--outpath`                  |
 | --------------: | :--------------------------- |
@@ -462,7 +477,8 @@ directory and its subfolder(s).
        directories above the outpath.
 
 
-\subsection subsectOptRecursiv Recursiv (-r)
+--recursiv (-r)  {#SubSecOptRecursiv}
+---------------
 
 |            `-r` | `--recursiv`         |
 | --------------: | :------------------- |
@@ -498,7 +514,8 @@ fbdoc -r "../src/*.bas" "../src/*.bi"
       quotation marks (like in the example above).
 
 
-\subsection subsectOptTree Tree (-t)
+--tree (-t)  {#SubSecOptTree}
+-----------
 
 |            `-t` | `--tree`             |
 | --------------: | :------------------- |
@@ -518,7 +535,8 @@ files as if they were specified as input files on the command line.
       get started. Not all emitters do support this.
 
 
-\section sectOptFileSpec File Specifications
+File Specifications  {#SecOptFileSpec}
+===================
 
 A file specification is used to determine one or more file(s) for
 fb-doc file input (so not for `--geany-mode` where fb-doc gets input

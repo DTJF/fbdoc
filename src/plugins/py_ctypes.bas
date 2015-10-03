@@ -9,9 +9,9 @@ compiled in FB.
 
 '/
 
-
 #INCLUDE ONCE "../bas/fb-doc_emitters.bi" ' declaration of the emitter interface
 #INCLUDE ONCE "../bas/fb-doc_parser.bi"   ' declaration of the Parser members (not used here)
+
 
 #DEFINE NEW_ENTRY Code(!"\n\n# " & MID(.Fnam, 23) & ": " & .LineNo)
 DIM SHARED AS STRING T0, T1, T2, CLASSES, LIBRARY
@@ -330,27 +330,29 @@ SUB py_DTOR CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-' Setting the EmitterIF pointer (delete un-needed rows here, the string literal is optional)
-WITH_NEW_EMITTER("py_ctypes")
-    .Decl_ = @py_declare
-    .Func_ = @py_function
-    .Enum_ = @py_enum
-    .Unio_ = @py_union
-    .Clas_ = @py_class
-    .Defi_ = @py_define
-    .Incl_ = @py_include
-    '.Init_ = @py_init
-   '.Error_ = @py_error
-   '.Empty_ = @py_empty
-    '.Exit_ = @py_exit
-    '.CTOR_ = @py_CTOR
-    .DTOR_ = @py_DTOR
+' place the handlers in the emitter interface
+WITH_NEW_EMITTER(EmitterTypes.EXTERNAL)
+    .Nam = "py_ctypes"
+  .Decl_ = @py_declare
+  .Func_ = @py_function
+  .Enum_ = @py_enum
+  .Unio_ = @py_union
+  .Clas_ = @py_class
+  .Defi_ = @py_define
+  .Incl_ = @py_include
+  '.Init_ = @py_init
+ '.Error_ = @py_error
+ '.Empty_ = @py_empty
+  '.Exit_ = @py_exit
+  '.CTOR_ = @py_CTOR
+  .DTOR_ = @py_DTOR
 END WITH
 
 
 '* \brief Function called by fb-doc to get the \ref EmitterIF
 FUNCTION EmitterInit CDECL() AS EmitterIF PTR EXPORT
   'PRINT __FUNCTION__
-  RETURN Emitters(0)
+  'RETURN Emitters(0)
+  RETURN Emitters(EmitterTypes.EXTERNAL)
 END FUNCTION
 

@@ -1,14 +1,14 @@
 /'* \file fb-doc_emit_gtk.bas
 \brief Emitter for gtk-doc templates
 
-This file contains the emitter for gtk-doc templates. The emitter is 
-designed to create documentation comment blocks for the gtk-doc 
-back-and and it's designed to be used in Geany mode (see section \ref 
+This file contains the emitter for gtk-doc templates. The emitter is
+designed to create documentation comment blocks for the gtk-doc
+back-and and it's designed to be used in Geany mode (see section \ref
 SubSecExaGtkdoc for an example).
 
-The emitter returns all original source code. Relevant lines (or 
-code blocks) get prepended by a multi line block of documentation. 
-This works for `SUB`s/`FUNCTION`s, `TYPE, UNION` and `ENUM` blocks and 
+The emitter returns all original source code. Relevant lines (or
+code blocks) get prepended by a multi line block of documentation.
+This works for `SUB`s/`FUNCTION`s, `TYPE, UNION` and `ENUM` blocks and
 \#`DEFINE`s / \#`MACRO`s.
 
 The first line of the comment block contains the name of the
@@ -17,10 +17,15 @@ leading @ character (parameters in case of a `SUB  FUNCTION` or
 member variables in case of a block). The block ends by a `FIXME`
 text and a line with a since keyword.
 
-When an empty line is send by Geany, a comment block template to 
+When an empty line is send by Geany, a comment block template to
 describe the file gets emitted.
 
 '/
+
+#INCLUDE ONCE "fb-doc_parser.bi"
+#INCLUDE ONCE "fb-doc.bi"
+#INCLUDE ONCE "fb-doc_options.bi"
+#INCLUDE ONCE "fb-doc_version.bi"
 
 
 CONST _
@@ -35,8 +40,8 @@ CONST _
 /'* \brief Emitter to generate a name line
 \param P the parser calling this emitter
 
-Generate a name for a gtk-doc template. Used in lists (parameters or 
-variable declarations) or blocks (`ENUM, TYPE, UNION`). It generates a 
+Generate a name for a gtk-doc template. Used in lists (parameters or
+variable declarations) or blocks (`ENUM, TYPE, UNION`). It generates a
 line to document the variable and sends it to the output stream.
 
 '/
@@ -50,8 +55,8 @@ END SUB
 /'* \brief Emitter to generate a macro template
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds a macro (\#`DEFINE` / 
-\#`MACRO`). It generates a template to document the macro and sends it 
+This emitter gets called when the parser finds a macro (\#`DEFINE` /
+\#`MACRO`). It generates a template to document the macro and sends it
 to the output stream.
 
 '/
@@ -66,8 +71,8 @@ END SUB
 /'* \brief Emitter to generate a template for a declaration
 \param P the parser calling this emitter
 
-This emitter gets called when the parser is in a declaration (`VAR 
-DIM  CONST  COMMON  EXTERN  STATIC`). It generates a line for 
+This emitter gets called when the parser is in a declaration (`VAR
+DIM  CONST  COMMON  EXTERN  STATIC`). It generates a line for
 each variable name and sends it (them) to the output stream.
 
 '/
@@ -94,9 +99,9 @@ END SUB
 /'* \brief Emitter to generate a template for a function
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds a function (`SUB 
-FUNCTION  PROPERTY  CONSTRUCTOR  DESTRUCTOR`). It generates a 
-template to document the function and its parameter list and 
+This emitter gets called when the parser finds a function (`SUB
+FUNCTION  PROPERTY  CONSTRUCTOR  DESTRUCTOR`). It generates a
+template to document the function and its parameter list and
 sends it to the output stream.
 
 '/
@@ -123,8 +128,8 @@ END SUB
 /'* \brief Emitter to generate a line for a block entry
 \param P the parser calling this emitter
 
-This emitter gets called when the parser is in a block (`TYPE  ENUM 
-UNION`). It generates a line for each member and sends it (them) to 
+This emitter gets called when the parser is in a block (`TYPE  ENUM
+UNION`). It generates a line for each member and sends it (them) to
 the output stream.
 
 '/
@@ -148,8 +153,8 @@ END SUB
 /'* \brief Emitter to generate templates for blocks
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds a block (`TYPE  UNION 
-ENUM`). It generates a template to document the block with one line 
+This emitter gets called when the parser finds a block (`TYPE  UNION
+ENUM`). It generates a template to document the block with one line
 for each member and sends it to the output stream.
 
 '/
@@ -196,17 +201,19 @@ SUB gtk_empty CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-WITH_NEW_EMITTER("GtkDocTemplates")
-   .Error_ = @c_error  '*< we use the standard error emitter here
-  
-    .Func_ = @gtk_func_
-    .Decl_ = @gtk_decl_
-    .Defi_ = @gtk_defi_
-    .Enum_ = @gtk_Block
-    .Unio_ = @gtk_Block
-    .Clas_ = @gtk_Block
-    .Init_ = @geanyInit
-    .Exit_ = @geanyExit
-   .Empty_ = @gtk_empty
+' place the handlers in the emitter interface
+WITH_NEW_EMITTER(EmitterTypes.GTK_DOC_TEMPLATES)
+     .Nam = "GtkDocTemplates"
+  .Error_ = @c_error  '*< we use the standard error emitter here
+
+   .Func_ = @gtk_func_
+   .Decl_ = @gtk_decl_
+   .Defi_ = @gtk_defi_
+   .Enum_ = @gtk_Block
+   .Unio_ = @gtk_Block
+   .Clas_ = @gtk_Block
+   .Init_ = @geanyInit
+   .Exit_ = @geanyExit
+  .Empty_ = @gtk_empty
 END WITH
 

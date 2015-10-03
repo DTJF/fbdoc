@@ -5,17 +5,19 @@
     <tab type="mainpage" visible="yes" title=""/>
     <tab type="pages" visible="no" title="" intro=""/>
     <tab type="usergroup" title="Description">
-      <tab type="user" url="@ref pageIntro" title="Introduction"/>
-      <tab type="user" url="@ref pageInstall" title="Compiling and Installing"/>
-      <tab type="user" url="@ref pageUsage" title="How To Use"/>
-      <tab type="user" url="@ref pageExamples" title="Examples"/>
-      <tab type="user" url="@ref pageTables" title="Tables"/>
-      <tab type="user" url="@ref pageOptionDetails" title="Options in Detail"/>
-      <tab type="user" url="@ref ChaEmitter" title="Emitters in Detail"/>
-      <tab type="user" url="@ref pageFilesUsed" title="Files and Folders"/>
-      <tab type="user" url="@ref pageExtend" title="Extending fb-doc"/>
-      <tab type="user" url="@ref pageToDo" title="Further Development"/>
+      <tab type="user" url="@ref PagIntro" title="Introduction"/>
+      <tab type="user" url="@ref PagInstall" title="Preparation"/>
+      <tab type="user" url="@ref PagUsage" title="How To Use"/>
+      <tab type="user" url="@ref PagExamples" title="Examples"/>
+      <tab type="user" url="@ref PagTables" title="Tables"/>
+      <tab type="user" url="@ref PagRunModi" title="Run Modi"/>
+      <tab type="user" url="@ref PagOptionDetails" title="Options in Detail"/>
+      <tab type="user" url="@ref PagEmitter" title="Emitters in Detail"/>
+      <tab type="user" url="@ref PagFiles" title="Files and Folders"/>
+      <tab type="user" url="@ref PagExtend" title="Extending fb-doc"/>
+      <tab type="user" url="@ref PagChangeLog" title="Changelog &amp; Credits"/>
     </tab>
+
     <tab type="modules" visible="no" title="" intro=""/>
     <tab type="namespaces" visible="no" title="">
       <tab type="namespacelist" visible="yes" title="" intro=""/>
@@ -23,7 +25,7 @@
     </tab>
     <tab type="classes" visible="yes" title="">
       <tab type="classlist" visible="no" title="" intro=""/>
-      <tab type="classindex" visible="$ALPHABETICAL_INDEX" title=""/> 
+      <tab type="classindex" visible="$ALPHABETICAL_INDEX" title=""/>
       <tab type="hierarchy" visible="yes" title="" intro=""/>
       <tab type="classmembers" visible="yes" title="" intro=""/>
     </tab>
@@ -31,7 +33,7 @@
       <tab type="filelist" visible="yes" title="" intro=""/>
       <tab type="globals" visible="yes" title="" intro=""/>
     </tab>
-    <tab type="examples" visible="no" title="" intro=""/>  
+    <tab type="examples" visible="no" title="" intro=""/>
   </navindex>
 
   <!-- Layout definition for a class page -->

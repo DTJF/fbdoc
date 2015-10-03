@@ -1,28 +1,32 @@
 /'* \file fb-doc_emitters.bas
 \brief Default emitter to create pseudo C source, \#`INCLUDE`s the other emitters
 
-This file is the main file for emitters. It contains some helper 
-functions to extract original source code and comments. And it 
-contains the standard emitter to translate the FB source to pseudo C 
+This file is the main file for emitters. It contains some helper
+functions to extract original source code and comments. And it
+contains the standard emitter to translate the FB source to pseudo C
 source.
 
-The pseudo C emitter is designed to create C source out of the FB 
-code including the documentation comments. Comments may be multi 
-line comment blocks or line end comments. The emitter tries to place 
-the comments similar as in the FB source (but a comment inside a 
+The pseudo C emitter is designed to create C source out of the FB
+code including the documentation comments. Comments may be multi
+line comment blocks or line end comments. The emitter tries to place
+the comments similar as in the FB source (but a comment inside a
 statement will be placed at the end of the corresponding C statement).
 
-The emitter is designed to be used to generate output for the 
-documentation tool-chain back-end. This may be written to the STDOUT 
-pipe (default) or to one or more files (option `--fileoutout`). It 
-also can be used to translate an FB header to C syntax by unsing 
+The emitter is designed to be used to generate output for the
+documentation tool-chain back-end. This may be written to the STDOUT
+pipe (default) or to one or more files (option `--fileoutout`). It
+also can be used to translate an FB header to C syntax by unsing
 option `--cstyle`.
 
 '/
 
 #INCLUDE ONCE "fb-doc_emitters.bi"
+#INCLUDE ONCE "fb-doc_parser.bi"
+#INCLUDE ONCE "fb-doc_options.bi"
+#INCLUDE ONCE "fb-doc_version.bi"
 
-DIM SHARED AS STRING LOFN
+
+COMMON SHARED AS STRING LOFN
 
 /'* \brief Handler for exporting comments
 \param P the parser calling this handler
@@ -76,7 +80,7 @@ END SUB
 /'* \brief Export the name (including double colons for member functions)
 \param P the parser calling this emitter
 
-This property reads the name of a construct from the input buffer 
+This property reads the name of a construct from the input buffer
 and emits all words, concatenated by double colons.
 
 \returns the name including dots (colons)
@@ -101,7 +105,7 @@ END SUB
 /'* \brief Export the name (including dots for member functions)
 \param P the parser calling this emitter
 
-This sub reads the name of a construct from the input buffer 
+This sub reads the name of a construct from the input buffer
 and emits all words as in the original source.
 
 \returns the name including dots (colons)
@@ -206,19 +210,19 @@ END SUB
 /'* \brief Create pseude C declaration
 \param P the parser calling this emitter
 
-Create a declaration for the construct at the current parser 
-position using FB style. All FB keywords gets mangled to a single 
+Create a declaration for the construct at the current parser
+position using FB style. All FB keywords gets mangled to a single
 word to get a FreeBasic look-and-feel in the documentation. Ie we emit
 
  - "SUB Name();" (instead of "void Name(void);")
  - "INTEGER varnam" (instead of "int varname")
  - "BYREF_AS_STRING strng" (instead of "char** strng")
- - "FUNCTION_CDECL_AS_SINGLE xyz CDECL(BYVAL_AS_BYTE C)" (instead of 
+ - "FUNCTION_CDECL_AS_SINGLE xyz CDECL(BYVAL_AS_BYTE C)" (instead of
    "float xyz(char C)")
  - ...
 
-The C lexer of the back-end (gtk-doc or Doxygen) interprets this 
-single word as a C type declaration (or macro) and can handle FB 
+The C lexer of the back-end (gtk-doc or Doxygen) interprets this
+single word as a C type declaration (or macro) and can handle FB
 source code that way.
 
 Exeptions handled in this SUB:
@@ -254,20 +258,20 @@ END SUB
 /'* \brief Create C declaration
 \param P the parser calling this emitter
 
-Create a C declaration for the construct at the current parser 
-position. All FB keywords gets translated to their C expressions. Ie 
+Create a C declaration for the construct at the current parser
+position. All FB keywords gets translated to their C expressions. Ie
 we emit
 
  - "void Name(void);" (instead of "SUB Name();")
  - "int varname" (instead of "INTEGER varnam")
- - "char** strng" (instead of "BYREF_AS_STRING strng") 
- - "float xyz(char C)" (instead of "FUNCTION_CDECL_AS_SINGLE 
+ - "char** strng" (instead of "BYREF_AS_STRING strng")
+ - "float xyz(char C)" (instead of "FUNCTION_CDECL_AS_SINGLE
     xyz CDECL(BYVAL_AS_BYTE C)")
  - ...
 
-The C source code is very useful when you use a library compiled 
-with FreeBasic in a other language like C or C++. fb-doc can 
-auto-generate the header files (just check initializers and array 
+The C source code is very useful when you use a library compiled
+with FreeBasic in a other language like C or C++. fb-doc can
+auto-generate the header files (just check initializers and array
 dimensioning manually).
 
 Exeptions handled in this SUB:
@@ -318,16 +322,15 @@ SUB cCreateTypNam CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-DECLARE SUB cppCreateFunction CDECL(BYVAL AS Parser PTR)
 /'* \brief Handler for a parameter declaration
 \param P the parser calling this handler
 
-Generate a declaration for a parameter list. The declaration may be 
-empty (), may have no name (prototype declaration) or may by an 
+Generate a declaration for a parameter list. The declaration may be
+empty (), may have no name (prototype declaration) or may by an
 ellipsis ( ... ). Initializers get emitted "as-is".
 
-We emit a space in front and a comma behind the parameter. When done 
-the first space gets replaced by a '(' and the last comma gets 
+We emit a space in front and a comma behind the parameter. When done
+the first space gets replaced by a '(' and the last comma gets
 replaced by a ')'.
 
 '/
@@ -353,18 +356,17 @@ SUB cppEntryListParameter CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-DECLARE SUB cCreateFunction CDECL(BYVAL AS Parser PTR)
 /'* \brief Handler for a parameter declaration
 \param P the parser calling this handler
 
-Generate a declaration for a parameter list. The declaration may be 
-empty (), may have no name (prototype declaration) or may by an 
-ellipsis ( ... ). Initializers get emitted "as-is", this means you 
+Generate a declaration for a parameter list. The declaration may be
+empty (), may have no name (prototype declaration) or may by an
+ellipsis ( ... ). Initializers get emitted "as-is", this means you
 have to check if they contain FB keywords (and translate manually, if
 so).
 
-We emit a space in front and a comma behind the parameter. When done 
-the first space gets replaced by a '(' and the last comma gets 
+We emit a space in front and a comma behind the parameter. When done
+the first space gets replaced by a '(' and the last comma gets
 replaced by a ')'.
 
 '/
@@ -391,7 +393,7 @@ END SUB
 /'* \brief Create a function declaration
 \param P the parser calling this handler
 
-Generate a declaration for a function (SUB, FUNCTION, DESTRUCTOR, 
+Generate a declaration for a function (SUB, FUNCTION, DESTRUCTOR,
 CONSTRUCTOR, PROPERTY). We emit a type, a name and a parameter list.
 
 Exceptions:
@@ -410,7 +412,7 @@ SUB cppCreateFunction CDECL(BYVAL P AS Parser PTR)
     CASE .TOK_DTOR
       IF .NamTok THEN Code(.SubStr(.NamTok) & "::~" & .SubStr(.NamTok)) ELSE _
                       Code("~" & .BlockNam)
-    CASE ELSE 
+    CASE ELSE
                       Code(.SubStr(.FunTok))
       IF .CalTok THEN Code("_" & .SubStr(.CalTok))
       IF .AliTok THEN Code("_" & .SubStr(.AliTok))
@@ -430,7 +432,7 @@ END SUB
 /'* \brief Create a function declaration
 \param P the parser calling this handler
 
-Generate a declaration for a function (SUB, FUNCTION, DESTRUCTOR, 
+Generate a declaration for a function (SUB, FUNCTION, DESTRUCTOR,
 CONSTRUCTOR, PROPERTY). We emit a type, a name and the parameter list.
 
 Exceptions:
@@ -452,7 +454,7 @@ SUB cCreateFunction CDECL(BYVAL P AS Parser PTR)
       Code(.SubStr(.FunTok) & " ")
       IF .NamTok THEN Code(.SubStr(.NamTok) & "." & .SubStr(.NamTok)) _
                  ELSE Code(.BlockNam)
-    CASE ELSE 
+    CASE ELSE
       IF 0 = .TypTok THEN Code("void ")
       cCreateTypNam(P)
     END SELECT : IF 0 = .ParTok THEN Code("(void)") : EXIT SUB
@@ -468,10 +470,10 @@ END SUB
 /'* \brief Emitter to generate an \#`INCLUDE` translation
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds an \#`INCLUDE` 
-statement. It creates a C translation and sends it to the output 
-stream. When option `--tree` is given it checks if the file has 
-been done already. If not, it creates a new #Parser and starts its 
+This emitter gets called when the parser finds an \#`INCLUDE`
+statement. It creates a C translation and sends it to the output
+stream. When option `--tree` is given it checks if the file has
+been done already. If not, it creates a new #Parser and starts its
 scanning process.
 
 '/
@@ -494,8 +496,8 @@ END SUB
 /'* \brief Emitter to generate a macro translation
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds a macro (\#`DEFINE` 
-\#`MACRO`). It generates a C translation of the macro and sends it 
+This emitter gets called when the parser finds a macro (\#`DEFINE`
+\#`MACRO`). It generates a C translation of the macro and sends it
 to the output stream.
 
 '/
@@ -518,17 +520,17 @@ SUB c_defi_ CDECL(BYVAL P AS Parser PTR)
       IF l > 0 then Code(" /* " & MID(.Buf, a + 1, e - a) & " */")
     END IF
     .SrcBgn = e
-  END WITH 
+  END WITH
 END SUB
 
 
 /'* \brief Emitter to generate a function translation
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds a function (SUB / 
-FUNCTION / PROPERTY / CONSTRUCTOR / DESTRUCTOR). It translates a 
-function and its parameter list to C-like code and sends it to the 
-output stream. The function body is either empty or contains pseudo 
+This emitter gets called when the parser finds a function (SUB /
+FUNCTION / PROPERTY / CONSTRUCTOR / DESTRUCTOR). It translates a
+function and its parameter list to C-like code and sends it to the
+output stream. The function body is either empty or contains pseudo
 calls.
 
 '/
@@ -563,7 +565,7 @@ SUB c_func_ CDECL(BYVAL P AS Parser PTR) ' ToDo: internal function calls for dia
                     IF INSTRREV(LOFN, "." & .SubStr(t - 3) & !"\n", i) THEN EXIT FOR
                   CASE ELSE : EXIT WHILE
                   END SELECT
-                CASE ELSE : EXIT WHILE 
+                CASE ELSE : EXIT WHILE
                 END SELECT
 
                 cEmitComments(P, a)
@@ -587,12 +589,12 @@ END SUB
 /'* \brief Emitter to generate a declaration translation
 \param P the parser calling this emitter
 
-This emitter gets called when the parser is in a declaration (VAR / 
-DIM / CONST / COMMON / EXTERN / STATIC). It generates a C 
-translation for each variable name and sends it (them) to the output 
-stream. Documantation comments get emitted at the appropriate place. 
-Each declaration get a single line, even if the original source code 
-is a comma-separated list. (This may destroy line synchonisation, so 
+This emitter gets called when the parser is in a declaration (VAR /
+DIM / CONST / COMMON / EXTERN / STATIC). It generates a C
+translation for each variable name and sends it (them) to the output
+stream. Documantation comments get emitted at the appropriate place.
+Each declaration get a single line, even if the original source code
+is a comma-separated list. (This may destroy line synchonisation, so
 it's better to place each declaration in a single line.)
 
 '/
@@ -623,15 +625,15 @@ SUB c_decl_ CDECL(BYVAL P AS Parser PTR)
     IF .NamTok > .TypTok _
       THEN Code(", ") _
       ELSE Code("; ")
-  END WITH 
+  END WITH
 END SUB
 
 
 /'* \brief Handler for an enumerator entry (inside ENUM block)
 \param P the parser calling this handler
 
-Generate an enumerator in an enum block. Name, initializers and 
-documentation comments are emitted. Logical operators like SHL or 
+Generate an enumerator in an enum block. Name, initializers and
+documentation comments are emitted. Logical operators like SHL or
 AND are not handled jet.
 
 '/
@@ -647,13 +649,13 @@ SUB cEntryBlockENUM CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-DECLARE SUB c_Block CDECL(BYVAL AS Parser PTR)
+'DECLARE SUB c_Block CDECL(BYVAL AS Parser PTR)
 
 /'* \brief Handler for a context line (TYPE / UNION block)
 \param P the parser calling this handler
 
-Generate a line in an struct or union block. Type, name, 
-initializers and documentation comments are emitted. Logical 
+Generate a line in an struct or union block. Type, name,
+initializers and documentation comments are emitted. Logical
 operators like SHL or AND are not handled jet.
 
 '/
@@ -681,8 +683,8 @@ END SUB
 /'* \brief Emitter to generate a block translation
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds a block (TYPE / UNION 
-/ ENUM). It generates a C translation of the block and sends it to 
+This emitter gets called when the parser finds a block (TYPE / UNION
+/ ENUM). It generates a C translation of the block and sends it to
 the output stream.
 
 Nested blocks get parsed recursivly.
@@ -725,9 +727,9 @@ END SUB
 /'* \brief Emitter for an error message
 \param P the parser calling this handler
 
-Generate an error output. When the parser detects an error it calls 
-this function. Depending on the run-mode we do or do not emit an 
-information. In mode `--geany-mode` the error message gets shown in the 
+Generate an error output. When the parser detects an error it calls
+this function. Depending on the run-mode we do or do not emit an
+information. In mode `--geany-mode` the error message gets shown in the
 status line (or in the debug window).
 
 '/
@@ -746,7 +748,7 @@ END SUB
 /'* \brief Emitter to be called before parsing
 \param P the parser calling this emitter
 
-This emitter gets called before the parser starts its parsing 
+This emitter gets called before the parser starts its parsing
 process. It initializes the FB source code emission.
 
 '/
@@ -758,7 +760,7 @@ END SUB
 /'* \brief Emitter to be called after parsing
 \param P the parser calling this emitter
 
-This emitter gets called after the parser ends its parsing process. 
+This emitter gets called after the parser ends its parsing process.
 It sends the rest of the FB source code to the output stream.
 
 '/
@@ -786,21 +788,21 @@ END SUB
 
 
 ' place the handlers in the emitter interface
-WITH_NEW_EMITTER("C_Source")
+WITH_NEW_EMITTER(EmitterTypes.C_SOURCE)
+     .Nam = "C_Source"
+  .Error_ = @c_error
 
-   .Error_ = @c_error
-  
-    .Defi_ = @c_defi_
-    .Incl_ = @c_include
-    .Func_ = @c_func_
-    .Decl_ = @c_decl_
-    .Enum_ = @c_Block
-    .Unio_ = @c_Block
-    .Clas_ = @c_Block
-  
-    .Init_ = @c_Init
-    .Exit_ = @c_exit
-    .CTOR_ = @c_CTOR
+   .Defi_ = @c_defi_
+   .Incl_ = @c_include
+   .Func_ = @c_func_
+   .Decl_ = @c_decl_
+   .Enum_ = @c_Block
+   .Unio_ = @c_Block
+   .Clas_ = @c_Block
+
+   .Init_ = @c_Init
+   .Exit_ = @c_exit
+   .CTOR_ = @c_CTOR
 END WITH
 
 
@@ -827,7 +829,7 @@ END SUB
 /'* \brief Handler for initialize the export of source code
 \param P the parser calling this handler
 
-This emitter gets called before the parser starts its parsing 
+This emitter gets called before the parser starts its parsing
 process. It initializes the FB source code emission.
 
 '/
@@ -839,7 +841,7 @@ END SUB
 /'* \brief Handler for finalize the export of source code
 \param P the parser calling this handler
 
-This emitter gets called after the parser ends its parsing process. 
+This emitter gets called after the parser ends its parsing process.
 It sends the rest of the FB source code to the output stream.
 
 '/
@@ -850,8 +852,6 @@ SUB geanyExit CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-' Take care that the order of includes matches Options.EmitterTypes
-#INCLUDE ONCE "fb-doc_emit_callees.bas"
-#INCLUDE ONCE "fb-doc_emit_gtk.bas"
-#INCLUDE ONCE "fb-doc_emit_doxy.bas"
-#INCLUDE ONCE "fb-doc_emit_syntax.bas"
+'/'* \brief An empty emitter to initialize the interface
+'\param P the parser calling this handler '/
+SUB null_emitter CDECL(BYVAL P AS Parser PTR) : END SUB

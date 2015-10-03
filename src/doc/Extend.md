@@ -1,4 +1,4 @@
-Extending fb-doc  {#pageExtend}
+Extending fb-doc  {#PagExtend}
 ================
 \tableofcontents
 
@@ -13,7 +13,9 @@ loaded at runtime. The fb-doc project and the plugin are independend
 projects. In worst case the external modul has to get recompiled when
 the used headers were changed in fb-doc.
 
-\section sectExtInternals Internals
+
+Internals  {#SecExtInternals}
+=========
 
 Before we can extend fb-doc we should first understand some internals
 on how it works and how it serves the handlers in the \ref EmitterIF.
@@ -88,7 +90,7 @@ several variable declarations:
 - \ref Parser::parseListNam evaluate a list of names
 - \ref Parser::parseListNamTyp evaluate a list of declarations (name and type)
 - \ref Parser::parseListPara evaluate a parameter list
-- \ref Parser::parseBlockEnum 
+- \ref Parser::parseBlockEnum
 
 As paratmeter these helpers get a function pointer to an \ref EmitFunc
 handler. This handler gets called on each member of the list. Each
@@ -107,9 +109,11 @@ handler has to deal with all this kind of stuff. Find examples in any
 \ref EmitterIF::Clas_ handler, ie in the handler \ref c_Block().
 
 
-\section sectExtFlow Control Flow
 
-When loading an external emitter plugin fb-doc first calls the function
+Control Flow  {#SecExtFlow}
+============
+
+When loading an external emitter plugin, fb-doc first calls the function
 \ref EmitterInit to receive the pointer to the external \ref EmitterIF.
 This gets done right after parsing the command line and before a \ref
 Parser UDT is created.
@@ -117,7 +121,8 @@ Parser UDT is created.
 ???
 
 
-\section sectExtPlugin Example Plugin.bas
+Example Plugin.bas  {#SecExtExample}
+==================
 
 Enough of theory, let's switch to practise. The fb-doc parser calls
 emitter functions via the emitter interface \ref EmitterIF, so it can

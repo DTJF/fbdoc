@@ -1,4 +1,4 @@
-Tables  {#pageTables}
+Tables  {#PagTables}
 ======
 \tableofcontents
 
@@ -26,9 +26,9 @@ Emitter  {#SecTabEmitter}
 =======
 
 fb-doc has five inbuild emitters to generate different kinds of output.
-By setting a run mode (\ref sectOptModes) a default emitter gets
+By setting a run mode (\ref SecOptModes) a default emitter gets
 specified. Use option `--emitter` (`-e`) after the run mode option to
-override the default setting. See chapter \ref ChaEmitter for details.
+override the default setting. See chapter \ref PagEmitter for details.
 
 \note Only one emitter can be in use at a time.
 
@@ -39,28 +39,28 @@ override the default setting. See chapter \ref ChaEmitter for details.
 <th> Function
 </th>
 <tr>
-<td> [C_Source](\ref sectEmitterCSource)
+<td> \ref SecEmmCSource
 <td> default mode (Doxy-Filter) and `--file-mode`
 <td> Translate FB source and documentational comments in intermediate format.
 <tr>
-<td> [GtkDocTemplates](\ref sectEmitterGtkTempl)
+<td> [GtkDocTemplates](\ref SecEmmGtk)
 <td> `--geany-mode`
 <td> Emit original source code and prepend documentation relevant
      constructs by templates for gtk-doc. Prefered usage in
      `--geany-mode`.
 <tr>
-<td> [DoxygenTemplates](\ref sectEmitterDoxyTempl)
+<td> [DoxygenTemplates](\ref SecEmmDoxy)
 <td> none
 <td> Emit original source code and prepend documentation relevant
      constructs by templates for Doxygen. Prefered usage in
      `--geany-mode`.
 <tr>
-<td> [FunctionNames](\ref sectEmitterLfn)
+<td> \ref SecEmmLfn
 <td> `--list-mode`
 <td> Emit a list of all function names. Prefered usage in `--list-mode`
      to generate the file *fb-doc.lfn*.
 <tr>
-<td> [SyntaxHighLighting](\ref sectEmitterSyntax)
+<td> \ref SecEmmSyntax
 <td> `--syntax-mode`
 <td> Emit all source code encapsulated by syntax highlighting tags.
      Prefered usage in `--syntax-mode` (for Doxygen output in
@@ -75,7 +75,7 @@ Run Mode  {#SecTabRunModi}
 The data flow, that is where to get input from and where to write
 output at, gets specified by the run mode. The following table shows
 the relations between run mode and input / output targets, See \ref
-sectOptModes for details.
+SecOptModes for details.
 
 <table>
 <tr>
@@ -86,27 +86,27 @@ sectOptModes for details.
 </th>
 <tr>
 <td> none (Doxy-Filter-Mode)
-<td> [C_Source](\ref sectEmitterCSource)
+<td> \ref SecEmmCSource
 <td> one file
 <td> stream to STDOUT
 <tr>
 <td> `-f` *or* `--file-mode`
-<td> [C_Source](\ref sectEmitterCSource)
+<td> \ref SecEmmCSource
 <td> controlled by file specification[s]
 <td> *.\em c and *.\em h files
 <tr>
 <td> `-g` *or* `--geany-mode`
-<td> [GtkDocTemplates](\ref sectEmitterGtkTempl)
+<td> [GtkDocTemplates](\ref SecEmmGtk)
 <td> stream from STDIN
 <td> stream to STDOUT
 <tr>
 <td> `-l` *or* `--list-mode`
-<td> [FunctionNames](\ref sectEmitterLfn)
+<td> \ref SecEmmLfn
 <td> controlled by file specification[s]
 <td> file \em fb-doc.lfn
 <tr>
 <td> `-s` *or* `--syntax-mode`
-<td> [SyntaxHighLighting](\ref sectEmitterSyntax)
+<td> \ref SecEmmSyntax
 <td> Doxyfile (+ files *.\em bas, *.\em bi, *.\em html, *.\em tex or *.\em xml)
 <td> files *.\em html, *.\em tex or *.\em xml
 <tr>
@@ -121,7 +121,7 @@ sectOptModes for details.
 <td> stream to STDOUT
 </table>
 
-\note The default mode is the Doxygen filter mode, since Doxygen 
+\note The default mode is the Doxygen filter mode, since Doxygen
       doesn't allow to send further options (directly).
 
 \note The modi `--help` (`-h`) and `--version` (`-v`) are not related
@@ -139,71 +139,71 @@ pair of words (LONG form). Both forms have the same meaning.
 Some options expect an additional parameter, separated by a whitespace
 character. Each further word in the command line (without the leading
 '-' character) gets interpreted as a file name or pattern, see \ref
-pageOptionDetails .
+PagOptionDetails .
 
 <table>
 <tr>
 <th> Option (short) <th> Parameter <th> Description
 <tr>
-<td> [--asterix (-a)](\ref subsectOptAsterix)
+<td> \ref SubSecOptAsterix
 <td> none
 <td> The C_Source emitter generates lines in a multi line comment block
      with leading '* ' characters (gtk-doc style).
 <tr>
-<td> [--cstyle (-c)](\ref subsectOptCstyle)
+<td> \ref SubSecOptCStyle
 <td> none
 <td> The C_Source emitter generates types in real C syntax
      (instead of FB styled pseudo C syntax). Also used in emitter
      `DoxygenTemplates`.
 <tr>
-<td> [--emitter (-e)](\ref subsectOptEmitters)
+<td> \ref SubSecOptEmitter
 <td> Emitter name
 <td> Customized emitter selection. fb-doc compares the parameter with
      the names of the internal emitters. In case of no match it tries to
      find and load an external with this name.
 <tr>
-<td> [--file-mode (-f)](\ref subsectOptFileMode)
+<td> \ref SubSecOptFile
 <td> none
 <td> Read FB source files and write output to similar named files
      (overriding existend, if any).
 <tr>
-<td> [--geany-mode (-g)](\ref subsectOptGeanyMode)
+<td> \ref SubSecOptGeany
 <td> Emitter name
 <td> Read input from STDIN and write to STDOUT. The parameter is optional. (No file specs.)
 <tr>
-<td> [--help (-h)](\ref subsectOptHelp)
+<td> \ref SubSecOptHelp
 <td> none
 <td> Print the help text and quit.
 <tr>
-<td> [--list-mode (-l)](\ref subsectOptListMode)
+<td> \ref SubSecOptList
 <td> none
 <td> Read FB source files and write output to file *fb-doc.lfn*.
 <tr>
-<td> [--outpath (-o)](\ref subsectOptOutpath)
+<td> \ref SubSecOptPath
 <td> path
 <td> Set folder for file output.
 <tr>
-<td> [--recursiv (-r)](\ref subsectOptRecursiv)
+<td> \ref SubSecOptRecursiv
 <td> none
 <td> Scan for input files in the working folder and all subfolders.
      Works only in combination with file patterns.
 <tr>
-<td> [--syntax-mode (-s)](\ref SubSecOptSyntaxMode)
+<td> \ref SubSecOptSyntax
 <td> none
 <td> Scan a Doxyfile (or multiple) for its output and fix syntax
      highlighting.
 <tr>
-<td> [--tree (-t)](\ref subsectOptTree)
+<td> \ref SubSecOptTree
 <td> none
 <td> Follow the \#`INCLUDE` statements in the source tree (if
-     possible -- not available in \ref subsectOptGeanyMode).
+     possible -- not available in run mode \ref SubSecOptGeany).
 <tr>
-<td> [--version (-v)](\ref subsectOptVersion)
+<td> \ref SubSecOptVersion
 <td> none
 <td> Print the version information and quit.
 </table>
 
-\note An empty command line makes fb-doc to output the help text 
+\note An empty command line makes fb-doc to output the help text
       (as if option `--help` was given).
 
 \note Multiple run modes raise an error message, only one run mode is
@@ -232,10 +232,10 @@ run mode, fb-doc operates in different ways:
 <td> load file, emit output to STDOUT
 <td> load all files matching the pattern, emit output to STDOUT
 <tr>
-<td> -f *or* --file-mode <td> load all *.\em bas and *.\em 
-     bi files, emit output for each file to a *.\em c or *.\em h file 
+<td> -f *or* --file-mode <td> load all *.\em bas and *.\em
+     bi files, emit output for each file to a *.\em c or *.\em h file
 <td> load file, emit output to a *.\em c or *.\em h file
-<td> load all files matching the pattern, emit output for each file 
+<td> load all files matching the pattern, emit output for each file
      to a *.\em c or *.\em h file
 <tr>
 <td> `-g` *or* `--geany-mode`
@@ -244,7 +244,7 @@ run mode, fb-doc operates in different ways:
 <td> ignored
 <tr>
 <td> `-l` *or* `--list-mode` <td> load all *.\em bas and *.
-     \em bi files, emit output to one file named \em fb-doc.lfn 
+     \em bi files, emit output to one file named \em fb-doc.lfn
 <td> load file, emit output to one file named \em fb-doc.lfn</td>
 <td> load all files matching the file spec, emit output to one file
      named \em fb-doc.lfn</td>
@@ -252,10 +252,10 @@ run mode, fb-doc operates in different ways:
 
 \note A file name may be prepended by a relative or an absolute path.
 
-\note File names or paths including a space character have to be 
+\note File names or paths including a space character have to be
       enclosed by single or double quotes.
 
-\note Multiple file names get separated by a space character or by a 
+\note Multiple file names get separated by a space character or by a
       ; character.
 
 \note Multiple file specs (names and patterns) can get specified in the
@@ -265,7 +265,7 @@ run mode, fb-doc operates in different ways:
       on the extension of the input file: *.\em bas gets *.\em c and
       *.\em bi gets *.\em h.
 
-\note A file name cannot start with a minus character and cannot 
+\note A file name cannot start with a minus character and cannot
       include single or double quote characters.
 
 \note On UNIX like systems usually the shell (bash) expands the file
@@ -312,6 +312,96 @@ on the emitted TYPEs and file names of include files.
 
 Files  {#SecTabFiles}
 =====
+
+The source files of this project are listed and described in detail in
+this documentation. The following tables give an overview on file types
+used by fb-doc and additional files not listed in the file browser.
+
+
+File Types  {#SubSecFileTypes}
+----------
+
+Different file types are used by fb-doc as input and output. The input
+depends on the emitter in use, the output depends on the run mode and
+the emitter.
+
+<table>
+<tr>
+<th> Type
+<th> Direction
+<th> Emitter
+<th> Function
+</th>
+<tr>
+<td> \ref SubSecBasBi
+<td> in
+<td> *ALL*
+<td> Source code to parse
+<tr>
+<td> \ref SubSecInLfn
+<td> in
+<td> \ref SecEmmCSource
+<td> List of function names
+<tr>
+<td> \ref SubSecDoxyfile
+<td> in
+<td> \ref SecEmmLfn and \ref SecEmmSyntax
+<td> Parameters for reading source code
+<tr>
+<td> \ref SubSecInHtml
+<td> in
+<td> \ref SecEmmSyntax
+<td> Header, footer and links
+<tr>
+<td> \ref SubSecInTex
+<td> in
+<td> \ref SecEmmSyntax
+<td> Header, footer and links
+<tr>
+<td> \ref SubSecInXml
+<td> in
+<td> \ref SecEmmSyntax
+<td> Header, footer and links
+<tr>
+<td> \ref SubSecInModules
+<td> in
+<td> *CUSTOM*
+<td> Executable binary
+<tr>
+<td> \ref SubSecOutCH
+<td> out
+<td> \ref SecEmmCSource
+<td> Transformed C-like output
+<tr>
+<td> \ref SubSecOutLfn
+<td> out
+<td> \ref SecEmmCSource
+<td> List of function names
+<tr>
+<td> \ref SubSecOutLfn
+<td> out
+<td> \ref SecEmmLfn
+<td> List of function names
+<tr>
+<td> \ref SubSecOutHtml
+<td> out
+<td> \ref SecEmmSyntax
+<td> Source listing with corrected syntax highlighting
+<tr>
+<td> \ref SubSecOutTex
+<td> out
+<td> \ref SecEmmSyntax
+<td> Source listing with corrected syntax highlighting
+<tr>
+<td> \ref SubSecOutXml
+<td> out
+<td> \ref SecEmmSyntax
+<td> Source listing with corrected syntax highlighting
+</table>
+
+
+Undocumented files  {#SubSecFileUnDocu}
+------------------
 
 The folder *doc* contains configuration files to build this
 documentation by executing Doxygen in this folder, check its manual for

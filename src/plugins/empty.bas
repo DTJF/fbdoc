@@ -1,15 +1,15 @@
 /'* \file empty.bas
 \brief Example code for an empty external emitter
 
-This file contains example source code for an external emitter. It 
-isn't used in the fb-doc source tree. See \ref pageExtend for details.
+This file contains example source code for an external emitter. It
+isn't used in the fb-doc source tree. See \ref PagExtend for details.
 
-This emitter generates a list of the function names called via the 
-emitter interface. So when you input some source to fb-doc and use 
-this emitter, the output is a list of the functions called by the 
+This emitter generates a list of the function names called via the
+emitter interface. So when you input some source to fb-doc and use
+this emitter, the output is a list of the functions called by the
 parser for this input.
 
-Before you can use this emitter, you have to compile it first, using 
+Before you can use this emitter, you have to compile it first, using
 the command
 
 \code fbc -dylib Plugin.bas \endcode
@@ -18,12 +18,12 @@ The result is a binary called
 
   - libdll_emitter.so  (LINUX)
   - libdll_emitter.dll (windows)
-  
-There's no way to compile or use an external emitter on DOS since 
+
+There's no way to compile or use an external emitter on DOS since
 DOS doesn't support dynamic linked libraries.
 
-To use this emitter in fb-doc set its name (without the suffix .bas) 
-just as an internal name (,so don't name your customized emitter 
+To use this emitter in fb-doc set its name (without the suffix .bas)
+just as an internal name (,so don't name your customized emitter
 similar to an internal emitter name).
 
 Ie. the emitter output for the context of this file can be viewed in
@@ -54,9 +54,9 @@ DLL_EXIT
 
 '/
 
-
 #INCLUDE ONCE "fb-doc_emitters.bi" ' declaration of the emitter interface
 #INCLUDE ONCE "fb-doc_parser.bi"   ' declaration of the Parser members (not used here)
+
 
 '* \brief Emitter called when the Parser is at a variable declaration
 SUB dll_declare CDECL(BYVAL P AS Parser PTR)
@@ -131,21 +131,22 @@ SUB dll_DTOR CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-' Setting the EmitterIF pointer (delete un-needed rows here, the string literal is optional)
-WITH_NEW_EMITTER("Plugin")
-    .Decl_ = @dll_declare
-    .Func_ = @dll_function
-    .Enum_ = @dll_enum
-    .Unio_ = @dll_union
-    .Clas_ = @dll_class
-    .Defi_ = @dll_define
-    .Incl_ = @dll_include
-    .Init_ = @dll_init
-   .Error_ = @dll_error
-   .Empty_ = @dll_empty
-    .Exit_ = @dll_exit   
-    .CTOR_ = @dll_CTOR
-    .DTOR_ = @dll_DTOR
+' place the handlers in the emitter interface
+WITH_NEW_EMITTER(EmitterTypes.EXTERNAL)
+    .Nam = "Plugin"
+  .Decl_ = @dll_declare
+  .Func_ = @dll_function
+  .Enum_ = @dll_enum
+  .Unio_ = @dll_union
+  .Clas_ = @dll_class
+  .Defi_ = @dll_define
+  .Incl_ = @dll_include
+  .Init_ = @dll_init
+ .Error_ = @dll_error
+ .Empty_ = @dll_empty
+  .Exit_ = @dll_exit
+  .CTOR_ = @dll_CTOR
+  .DTOR_ = @dll_DTOR
 END WITH
 
 

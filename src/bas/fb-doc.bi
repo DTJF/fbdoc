@@ -1,8 +1,8 @@
 /'* \file fb-doc.bi
 \brief Header for the main source file
 
-This file contains \#`DEFINE`s for the user communication at the 
-command prompt and adjusts some operation system specific settings. 
+This file contains \#`DEFINE`s for the user communication at the
+command prompt and adjusts some operation system specific settings.
 It also includes the headers for the modules.
 
 '/
@@ -26,15 +26,15 @@ It also includes the headers for the modules.
   " -o (--outpath) : specify output directory" & NL & _
   " -r (--recursiv): scan input files also in subfolders" & NL & _
   " -t (--tree)    : scan source tree (follow #INCLUDEs)" & NL & _
-  "Example:" & NL & _
+  "Examples:" & NL & _
   "  " & FBDOC_BINARY & " --geany-mode" & NL & _
   "      Get input from STDIN, prepend a matching comment block, emit to STDOUT" & NL & _
   "      (emits gtk-doc templates for ENUM, UNION, TYPE, SUB, FUNCTION, PROPERTY)" & NL & _
   "  " & FBDOC_BINARY & " -f -t MyProject.bas" & NL & _
-  "      Load MyProject.bas in current folder and follow source tree" & NL & _
+  "      Load MyProject.bas from current folder and follow source tree" & NL & _
   "      emit pseudo C code in ../doc/c_src" & NL & _
   "For details see file 'ReadMe.txt' or visit:" & NL & _
-  "  http://www.freebasic-portal.de/downloads/ressourcencompiler/fb-doc-229.html (de)" & NL & _
+  "  http://www.freebasic-portal.de/downloads/ressourcenc ompiler/fb-doc-229.html (de)" & NL & _
   "  http://www.freebasic.net/forum/viewtopic.php?f=8&t=19810 (en)" & NL
 
 /'* \brief The welcome message, shown when running as a program (option `--file-mode`) '/
@@ -58,10 +58,6 @@ It also includes the headers for the modules.
  #DEFINE FBDOC_BINARY PROJ_NAME & ".exe"
 '&*/
 #ENDIF
-
-#INCLUDE ONCE "fb-doc_emitters.bi"
-#INCLUDE ONCE "fb-doc_parser.bi"
-#INCLUDE ONCE "fb-doc_options.bi"
 
 CONST _
   COMM_END = NL & NL & "'/" & NL, _ '*< the end of an FB comment block (in templates)

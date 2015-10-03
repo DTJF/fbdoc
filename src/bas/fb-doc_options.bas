@@ -1,33 +1,39 @@
 /'* \file fb-doc_options.bas
 \brief The source code for the \ref Options class
 
-This file contains the source code for the Options class. It's used 
-to scan the command line options and determine the execution of fb-doc.
+This file contains the source code for the Options class. It's used
+to scan the command line options and control the execution of fb-doc.
 
 '/
 
 #INCLUDE ONCE "fb-doc_options.bi"
+#INCLUDE ONCE "fb-doc_version.bi"
+#INCLUDE ONCE "fb-doc_emitters.bi"
+#INCLUDE ONCE "fb-doc_emit_syntax.bi"
+#INCLUDE ONCE "fb-doc_emit_callees.bi"
+#INCLUDE ONCE "fb-doc_doxyfile.bi"
+
 
 /'* \brief Read options and parameters from the command line
 
-The constructor scans all command line arguments and checks for 
-options and their parameters (, see \ref SecTabOptions for 
-details). Options may be specified in short form (starting with a 
-single minus character) or in human readable LONG form (starting 
-with two minus characters). Some options may have an additinal 
+The constructor scans all command line arguments and checks for
+options and their parameters (, see \ref SecTabOptions for
+details). Options may be specified in short form (starting with a
+single minus character) or in human readable LONG form (starting
+with two minus characters). Some options may have an additinal
 parameter.
 
-Each command line argument that is neither an option nor its parameter 
-gets interpreted as a file name or pattern. fb-doc collects them in 
-a queue and operates on this queue afterwards. The queue may have 
-mixed entries (names and patterns). It's recommended to specify 
+Each command line argument that is neither an option nor its parameter
+gets interpreted as a file name or pattern. fb-doc collects them in
+a queue and operates on this queue afterwards. The queue may have
+mixed entries (names and patterns). It's recommended to specify
 queue entries in single or double quotes.
 
 '/
 CONSTRUCTOR Options()
   Efnr = FREEFILE
   IF OPEN ERR (AS #Efnr) THEN ?PROJ_NAME & ": " & "couldn't open STDERR" : EXIT CONSTRUCTOR
-      Types = FB_STYLE
+           Types = FB_STYLE
   CreateFunction = @cppCreateFunction
   CreateVariable = @cppCreateTypNam
 END CONSTRUCTOR
@@ -35,7 +41,7 @@ END CONSTRUCTOR
 
 /'* \brief The destructor
 
-Delete the memory used for an external emitter (if any) and for the 
+Delete the memory used for an external emitter (if any) and for the
 Parser.
 
 '/
@@ -107,27 +113,27 @@ FUNCTION Options.parseCLI() AS RunModes
         IF RunMode <> DEF_MODE THEN Errr &= ", multiple run modes" : RETURN ERROR_MESSAGE
         RunMode = SYNT_MODE
         EmitTyp = SYNTAX_REPAIR
-  
+
       CASE "-a", "--asterix" : Asterix = 1
       CASE "-c", "--cstyle"
             Types = C_STYLE
         CreateFunction = @cCreateFunction
         CreateVariable = @cCreateTypNam
       CASE "-t", "--tree" : InTree = 1
-  
+
       CASE "-e", "--emitter"
-        IF LEN(emi) THEN Errr &= ", multiple emitter setting" : RETURN ERROR_MESSAGE
+        IF LEN(emi) THEN      Errr &= ", multiple emitter setting" : RETURN ERROR_MESSAGE
         emi = parseOptpara(i)
-        IF 0 = LEN(emi) THEN Errr &= ", invalid emitter setting" : RETURN ERROR_MESSAGE
+        IF 0 = LEN(emi) THEN   Errr &= ", invalid emitter setting" : RETURN ERROR_MESSAGE
       CASE "-o", "--outpath"
-        IF LEN(OutPath) THEN Errr &= ", multiple outpaths" : RETURN ERROR_MESSAGE
+        IF LEN(OutPath) THEN         Errr &= ", multiple outpaths" : RETURN ERROR_MESSAGE
         OutPath = parseOptpara(i)
-        IF 0 = LEN(OutPath) THEN Errr &= ", invalid outpath" : RETURN ERROR_MESSAGE
+        IF 0 = LEN(OutPath) THEN       Errr &= ", invalid outpath" : RETURN ERROR_MESSAGE
       CASE "-r", "--recursiv" : InRecursiv = 1
-  
+
       CASE "-h", "--help" : RETURN HELP_MESSAGE
       CASE "-v", "--version" : RETURN VERSION_MESSAGE
-  
+
       CASE ELSE
         ERROUT("unknown option: " & COMMAND(i))
       END SELECT
@@ -208,7 +214,7 @@ FUNCTION Options.scanFiles(BYREF Patt AS STRING, BYREF Path AS STRING) AS STRING
       IF res = fbDirectory ANDALSO n <> "." ANDALSO n <> ".." THEN t &= n & NL
       n = DIR()
     WEND
-  
+
     VAR a = 1, e = a, l = LEN(t)
     WHILE a < l
       e = INSTR(a, t, NL)
@@ -326,6 +332,7 @@ SUB Options.FileModi()
     , inslsh = 0 _         ' Flag, set when filename name contains a path
     , inpat = 0 _          ' Flag, set when name is a pattern
     , l = LEN(InFiles) - 1 ' Length of input queue (number of characters)
+
   DO
     SELECT CASE AS CONST InFiles[i]
     CASE 0 : EXIT DO
@@ -378,7 +385,7 @@ output channel \ref Ocha.
 SUB Options.doFile(BYREF Fnam AS STRING)
   SELECT CASE AS CONST RunMode
   CASE DEF_MODE  : Pars->File_(Fnam, InTree) : MSG_LINE(Fnam) : MSG_END(Pars->ErrMsg)
-  CASE SYNT_MODE : VAR nix = NEW Highlighter(Pars) : nix->DoDoxy(Fnam) : DELETE nix
+  CASE SYNT_MODE : VAR nix = NEW Highlighter(Pars) : nix->doDoxy(Fnam) : DELETE nix
   CASE LIST_MODE
     IF LCASE(RIGHT(Fnam, 4)) = ".bas" ORELSE _
        LCASE(RIGHT(Fnam, 3)) = ".bi" THEN
@@ -396,7 +403,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       , recu = InRecursiv _
       , oldo = Ocha _
       , patt = ""
-  
+
     MSG_LINE(Fnam)
     IF 0 = doxy->Length THEN
       MSG_END(doxy->Errr) : DELETE doxy
@@ -406,9 +413,9 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       IF 0 = doxy->Length THEN MSG_END(doxy->Errr) : DELETE doxy : EXIT SUB
       path = CURDIR()
     END IF
-      
-    InRecursiv = IIF(doxy->Tag("RECURSIVE") = "YES", 1, 0)
-    VAR in_path = addPath(path, doxy->Tag("INPUT"))
+
+    InRecursiv = IIF(doxy->Tag(RECURSIVE) = "YES", 1, 0)
+    VAR in_path = addPath(path, doxy->Tag(INPUT_TAG))
     DELETE doxy
     IF CHDIR(in_path) THEN
       MSG_END("error (couldn't change to " & in_path & ")")
@@ -461,7 +468,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
     IF checkDir(path) THEN
       ERROUT("couldn't create directory " & path)
     ELSE
-      out_name = OutPath & out_name & *IIF(RIGHT(FNam, 3) = ".bi", @"h", @"c")
+      out_name = OutPath & out_name & *IIF(RIGHT(FNam, 3) = ".bas", @"c", @"h")
       Ocha = FREEFILE
       IF OPEN(out_name FOR OUTPUT AS #Ocha) THEN
         ERROUT("couldn't write " & out_name)

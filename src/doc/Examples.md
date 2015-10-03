@@ -1,4 +1,4 @@
-Examples  {#pageExamples}
+Examples  {#PagExamples}
 ========
 \tableofcontents
 
@@ -85,9 +85,8 @@ Then you can test the binary by executing in that folder.
 
 -# Since this list is often needed to generate caller / callee graphs
    in Doxygen output, fb-doc has the special run mode \ref
-   subsectOptListMode to create it. Use option `--list-mode` (short
-   form `-l`) to activate it and execute fb-doc near the Doxyfile to
-   get the file at the right place
+   SubSecOptList to create it. Use this option and execute fb-doc near
+   the Doxyfile to get the file at the right place
    ~~~{.sh}
    cd ../doc
    ./src/fb-doc -l
@@ -108,7 +107,7 @@ Then you can test the binary by executing in that folder.
    The first command generates a lot of Doxygen messages (depending on
    the settings in *Doxyfile*). It should end with message '`***
    Doxygen has finished`'. The second command makes fb-doc run in \ref
-   SubSecOptSyntaxMode and repair the listing sections in the Doxygen
+   SubSecOptSyntax and repair the listing sections in the Doxygen
    output files. After all you should have a new folder *html* (in the
    folder *doc*) containing your personal version of this
    documentation. Test it by loading `..doc/html/index.html` in to your
@@ -172,7 +171,7 @@ a special comment by starting its context with a magic character
 -# Direct exports are only available for line end comments like
    ~~~{.bas}
    '&/ / a line end comment in C syntax
-   
+
    '&/*
    '&Some
    '&lines of
@@ -182,7 +181,7 @@ a special comment by starting its context with a magic character
    get emitted as
    ~~~{.c}
    / / a line end comment in C syntax
-   
+
    /*
    Some
    lines of
@@ -192,7 +191,7 @@ a special comment by starting its context with a magic character
 -# Normal FreeBasic comments (without magic character) wont be emitted.
    ~~~{.bas}
    ' a line end comment
-   
+
    /'
    A block
    of
@@ -256,12 +255,12 @@ gets
 const char* VarName;
 ~~~
 
-and this syntax can be used directly by a C compiler. This can be 
-useful to auto-generate C headers from FB source, ie to bind a library 
+and this syntax can be used directly by a C compiler. This can be
+useful to auto-generate C headers from FB source, ie to bind a library
 written in FB in to a C project.
 
 
-Templates  {#sectExaTemplates}
+Templates  {#SecExaTemplates}
 =========
 
 In an early stage of the project development you'll start to add
@@ -284,11 +283,11 @@ Gtk-doc  {#SubSecExaGtkdoc}
 
 \note This example is based on a system wide installation of fb-doc
        and a setting as Geany custom command with option
-       `--geany-mode`. (See \ref sectInstallGeany for details.)
+       `--geany-mode`. (See \ref SecInsGeany for details.)
 
-This example is about documenting a function and its parameter list. 
-We load our source code in to Geany IDE, select the function 
-declaration (the code in the following box) and send it to the 
+This example is about documenting a function and its parameter list.
+We load our source code in to Geany IDE, select the function
+declaration (the code in the following box) and send it to the
 fb-doc custom command:
 
 \verbatim
@@ -300,9 +299,9 @@ FUNCTION goo_axis_new CDECL( _
   ...) AS GooAxis PTR
 \endverbatim
 
-fb-doc extracts the names of the function and its parameters, 
-generates a matching template and returns the customized template 
-and the original code. The entries for the individual documentation 
+fb-doc extracts the names of the function and its parameters,
+generates a matching template and returns the customized template
+and the original code. The entries for the individual documentation
 texts are marked with the text `FIXME`:
 
 \verbatim
@@ -332,21 +331,21 @@ marked by the `FIXME`s, and we end-up with something like:
 \verbatim
 /'*
 goo_axis_new:
-@Parent: the parent item, or %NULL. If a parent is specified, it 
-         will assume ownership of the item, and the item will 
-         automatically be freed when it is removed from the 
+@Parent: the parent item, or %NULL. If a parent is specified, it
+         will assume ownership of the item, and the item will
+         automatically be freed when it is removed from the
          parent. Otherwise call g_object_unref() to free it.
-  @Back: the background box to connect the axis to (a 
-         #GooCanvasRect, #GooCanvasImage, #GooCanvasGroup, ...). 
-         Note: to set the axis position and size, the properties 
-         #GooCanvasItemSimple:x, #GooCanvasItemSimple:y, 
-         #GooCanvasItemSimple:width and 
-         #GooCanvasItemSimple:height will be red (and therefore 
+  @Back: the background box to connect the axis to (a
+         #GooCanvasRect, #GooCanvasImage, #GooCanvasGroup, ...).
+         Note: to set the axis position and size, the properties
+         #GooCanvasItemSimple:x, #GooCanvasItemSimple:y,
+         #GooCanvasItemSimple:width and
+         #GooCanvasItemSimple:height will be red (and therefore
          must be set in the background box item).
   @Text: the label text for the axis
- @Modus: the position and type (like %GOO_AXIS_SOUTH or 
+ @Modus: the position and type (like %GOO_AXIS_SOUTH or
          %GOO_GRIDAXIS_SOUTH, ...)
-   @...: optional pairs of property names and values, and a 
+   @...: optional pairs of property names and values, and a
          terminating %NULL.
 
 Creates a new axis item.
@@ -373,32 +372,32 @@ The corresponding <em>.c</em> file looks like
 \verbatim
 /**
 * goo_axis_new:
-* @Parent: the parent item, or %NULL. If a parent is specified, it 
-*          will assume ownership of the item, and the item will 
-*          automatically be freed when it is removed from the 
+* @Parent: the parent item, or %NULL. If a parent is specified, it
+*          will assume ownership of the item, and the item will
+*          automatically be freed when it is removed from the
 *          parent. Otherwise call g_object_unref() to free it.
-*   @Back: the background box to connect the axis to (a 
-*          #GooCanvasRect, #GooCanvasImage, #GooCanvasGroup, ...). 
-*          Note: to set the axis position and size, the properties 
-*          #GooCanvasItemSimple:x, #GooCanvasItemSimple:y, 
-*          #GooCanvasItemSimple:width and 
-*          #GooCanvasItemSimple:height will be red (and therefore 
+*   @Back: the background box to connect the axis to (a
+*          #GooCanvasRect, #GooCanvasImage, #GooCanvasGroup, ...).
+*          Note: to set the axis position and size, the properties
+*          #GooCanvasItemSimple:x, #GooCanvasItemSimple:y,
+*          #GooCanvasItemSimple:width and
+*          #GooCanvasItemSimple:height will be red (and therefore
 *          must be set in the background box item).
 *   @Text: the label text for the axis
-*  @Modus: the position and type (like %GOO_AXIS_SOUTH or 
+*  @Modus: the position and type (like %GOO_AXIS_SOUTH or
 *          %GOO_GRIDAXIS_SOUTH, ...)
-*    @...: optional pairs of property names and values, and a 
+*    @...: optional pairs of property names and values, and a
 *          terminating %NULL.
-* 
+*
 * Creates a new axis item.
-* 
+*
 * Returns: (transfer full): a new axis item.
 * */
 FUNCTION_CDECL_AS_GooAxis_PTR goo_axis_new (
-BYVAL_AS_GooCanvasItem_PTR Parent, 
-BYVAL_AS_GooCanvasItem_PTR Back, 
-BYVAL_AS_gchar_PTR Text, 
-BYVAL_AS_GooAxisType Modus, 
+BYVAL_AS_GooCanvasItem_PTR Parent,
+BYVAL_AS_GooCanvasItem_PTR Back,
+BYVAL_AS_gchar_PTR Text,
+BYVAL_AS_GooAxisType Modus,
 ...) {
 
 };
@@ -418,32 +417,32 @@ and the corresponding <em>.c</em> file looks like
 \verbatim
 /**
 * goo_axis_new:
-* @Parent: the parent item, or %NULL. If a parent is specified, it 
-*          will assume ownership of the item, and the item will 
-*          automatically be freed when it is removed from the 
+* @Parent: the parent item, or %NULL. If a parent is specified, it
+*          will assume ownership of the item, and the item will
+*          automatically be freed when it is removed from the
 *          parent. Otherwise call g_object_unref() to free it.
-*   @Back: the background box to connect the axis to (a 
-*          #GooCanvasRect, #GooCanvasImage, #GooCanvasGroup, ...). 
-*          Note: to set the axis position and size, the properties 
-*          #GooCanvasItemSimple:x, #GooCanvasItemSimple:y, 
-*          #GooCanvasItemSimple:width and 
-*          #GooCanvasItemSimple:height will be red (and therefore 
+*   @Back: the background box to connect the axis to (a
+*          #GooCanvasRect, #GooCanvasImage, #GooCanvasGroup, ...).
+*          Note: to set the axis position and size, the properties
+*          #GooCanvasItemSimple:x, #GooCanvasItemSimple:y,
+*          #GooCanvasItemSimple:width and
+*          #GooCanvasItemSimple:height will be red (and therefore
 *          must be set in the background box item).
 *   @Text: the label text for the axis
-*  @Modus: the position and type (like %GOO_AXIS_SOUTH or 
+*  @Modus: the position and type (like %GOO_AXIS_SOUTH or
 *          %GOO_GRIDAXIS_SOUTH, ...)
-*    @...: optional pairs of property names and values, and a 
+*    @...: optional pairs of property names and values, and a
 *          terminating %NULL.
-* 
+*
 * Creates a new axis item.
-* 
+*
 * Returns: (transfer full): a new axis item.
 * */
 GooAxis* goo_axis_new (
-GooCanvasItem* Parent, 
-GooCanvasItem* Back, 
-gchar* Text, 
-GooAxisType Modus, 
+GooCanvasItem* Parent,
+GooCanvasItem* Back,
+gchar* Text,
+GooAxisType Modus,
 ...) {
 
 };
@@ -455,7 +454,7 @@ Doxygen  {#SubSecExaDoxy}
 
 \note This example is based on a system wide installation of fb-doc
        and a setting as Geany custom command with option `--geany-mode
-       "DoxygenTemplates"`. (See \ref pageInstall for details.)
+       "DoxygenTemplates"`. (See \ref PagInstall for details.)
 
 This example is about documenting a function and its parameter list,
 similar to the previous one. We load our code in to Geany IDE, select
@@ -508,21 +507,21 @@ filling the `FIXME` entries. We end-up with something like:
 
 \verbatim
 /'* \brief Creates a new axis item.
-\param Parent the parent item, or %NULL. If a parent is specified, it 
-         will assume ownership of the item, and the item will 
-         automatically be freed when it is removed from the 
+\param Parent the parent item, or %NULL. If a parent is specified, it
+         will assume ownership of the item, and the item will
+         automatically be freed when it is removed from the
          parent. Otherwise call g_object_unref() to free it.
-\param Back the background box to connect the axis to (a 
-         #GooCanvasRect, #GooCanvasImage, #GooCanvasGroup, ...). 
-         Note: to set the axis position and size, the properties 
-         #GooCanvasItemSimple:x, #GooCanvasItemSimple:y, 
-         #GooCanvasItemSimple:width and 
-         #GooCanvasItemSimple:height will be red (and therefore 
+\param Back the background box to connect the axis to (a
+         #GooCanvasRect, #GooCanvasImage, #GooCanvasGroup, ...).
+         Note: to set the axis position and size, the properties
+         #GooCanvasItemSimple:x, #GooCanvasItemSimple:y,
+         #GooCanvasItemSimple:width and
+         #GooCanvasItemSimple:height will be red (and therefore
          must be set in the background box item).
 \param Text the label text for the axis
-\param Modus the position and type (like %GOO_AXIS_SOUTH or 
+\param Modus the position and type (like %GOO_AXIS_SOUTH or
          %GOO_GRIDAXIS_SOUTH, ...)
-\param ... optional pairs of property names and values, and a 
+\param ... optional pairs of property names and values, and a
          terminating %NULL.
 
 \returns a new axis item.
@@ -549,21 +548,21 @@ see output (which is the Doxygen input) like
 
 \verbatim
 /**
-\param Parent the parent item, or %NULL. If a parent is specified, it 
-         will assume ownership of the item, and the item will 
-         automatically be freed when it is removed from the 
+\param Parent the parent item, or %NULL. If a parent is specified, it
+         will assume ownership of the item, and the item will
+         automatically be freed when it is removed from the
          parent. Otherwise call g_object_unref() to free it.
-\param Back the background box to connect the axis to (a 
-         #GooCanvasRect, #GooCanvasImage, #GooCanvasGroup, ...). 
-         Note: to set the axis position and size, the properties 
-         #GooCanvasItemSimple:x, #GooCanvasItemSimple:y, 
-         #GooCanvasItemSimple:width and 
-         #GooCanvasItemSimple:height will be red (and therefore 
+\param Back the background box to connect the axis to (a
+         #GooCanvasRect, #GooCanvasImage, #GooCanvasGroup, ...).
+         Note: to set the axis position and size, the properties
+         #GooCanvasItemSimple:x, #GooCanvasItemSimple:y,
+         #GooCanvasItemSimple:width and
+         #GooCanvasItemSimple:height will be red (and therefore
          must be set in the background box item).
 \param Text the label text for the axis
-\param Modus the position and type (like %GOO_AXIS_SOUTH or 
+\param Modus the position and type (like %GOO_AXIS_SOUTH or
          %GOO_GRIDAXIS_SOUTH, ...)
-\param ... optional pairs of property names and values, and a 
+\param ... optional pairs of property names and values, and a
          terminating %NULL.
 
 \brief Creates a new axis item.
@@ -574,10 +573,10 @@ The detailed desription of the function follows here ...
 
 */
 FUNCTION_CDECL_AS_GooAxis_PTR goo_axis_new (
-BYVAL_AS_GooCanvasItem_PTR Parent, 
-BYVAL_AS_GooCanvasItem_PTR Back, 
-BYVAL_AS_gchar_PTR Text, 
-BYVAL_AS_GooAxisType Modus, 
+BYVAL_AS_GooCanvasItem_PTR Parent,
+BYVAL_AS_GooCanvasItem_PTR Back,
+BYVAL_AS_gchar_PTR Text,
+BYVAL_AS_GooAxisType Modus,
 ...) {
 
 };

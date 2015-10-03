@@ -1,8 +1,10 @@
-Emitters in Detail  {#ChaEmitter}
+Emitters in Detail  {#PagEmitter}
 ==================
 \tableofcontents
 
-\section sectEmitterCSource C Source
+
+C_Source  {#SecEmmCSource}
+========
 
 | Emitter                 | C_Source                                        |
 | ----------------------: | :---------------------------------------------- |
@@ -52,7 +54,8 @@ can translate the FB headers to real C headers by using option
 `--cstyle`. You just have to translate the \#`define` lines manually.
 
 
-\section sectEmitterGtkTempl GtkDoc Templates
+GtkDoc Templates  {#SecEmmGtk}
+================
 
 | Emitter                           | GtkDocTemplates                   |
 | --------------------------------: | :-------------------------------- |
@@ -77,7 +80,9 @@ other context.
 
 Further usage may be generating templates for a complete file
 
-\section sectEmitterDoxyTempl Doxygen Templages
+
+Doxygen Templages  {#SecEmmDoxy}
+=================
 
 | Emitter                           | DoxygenTemplates                  |
 | --------------------------------: | :-------------------------------- |
@@ -85,18 +90,19 @@ Further usage may be generating templates for a complete file
 | -                                 |                                   |
 |                                   |                                   |
 
-This emitter is designed to 
+This emitter is designed to
 
-The emitter is designed to be used in mode `--` 
+The emitter is designed to be used in mode `--`
 
 It doesn't really make sense to use this emitter in modes `--file-mode`,
 `--list-mode` or `--syntax-mode`, since their output files are used for
 other context.
 
-Further usage may be 
+Further usage may be
 
 
-\section sectEmitterLfn List of Function Names
+FunctionNames  {#SecEmmLfn}
+=============
 
 | Emitter                 | FunctionNames                   |
 | ----------------------: | :------------------------------ |
@@ -121,7 +127,8 @@ between the output from different input files. But when used in mode
 `--file-mode` the output is one file per input file.
 
 
-\section sectEmitterSyntax Syntax Hightlighting
+SyntaxHighLighting  {#SecEmmSyntax}
+===================
 
 | Emitter                 | SyntaxHighLighting              |
 | ----------------------: | :------------------------------ |

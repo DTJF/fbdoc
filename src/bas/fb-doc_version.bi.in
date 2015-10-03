@@ -1,10 +1,13 @@
-/'* \file version.bas
-\brief The global constants for the fb-doc source
+/'* \file fb-doc_version.bi
+\brief Some global constants for the fb-doc source
 
-See file ../../ReadMe.md for licence information.
+In order to place the project data at a single source (in the root
+CMakeLists.txt file), the data gets exported by this config file to get
+compiled accordingly.
 
-\since 3.0
+\since 0.4
 '/
+
 
 CONST PROJ_NAME = "@PROJ_NAME@" '*< The project name
 CONST PROJ_DESC = "@PROJ_DESC@" '*< The project description

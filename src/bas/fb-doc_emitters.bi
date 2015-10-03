@@ -1,15 +1,30 @@
 /'* \file fb-doc_emitters.bi
 \brief Header file for \ref EmitterIF
 
-This file contains the declaration of the emitters interface, a UDT 
-(User Defined Type) that contains function pointers. The \ref 
-Parser calls the matching function in the active emitter after 
-scanning a relevant construct. The emitter function extracts the 
-necessary information from the parser data, formats it as desired 
+This file contains the declaration of the emitters interface, a UDT
+(User Defined Type) that contains function pointers. The \ref
+Parser calls the matching function in the active emitter after
+scanning a relevant construct. The emitter function extracts the
+necessary information from the parser data, formats it as desired
 and sends it to the output stream.
 
 '/
 
+
+/'* \brief In-build emitters
+
+By default these four emitters are available in fb-doc. The
+enumerators are used for default settings in the Options class. The
+user can choose the emitter by option `--emitter`. The parameter
+gets checked against the \ref EmitterIF::Nam string (or parts of it). '/
+ENUM EmitterTypes
+  C_SOURCE          '*< emit pseudo C source (default and option `--file-mode`)
+  FUNCTION_NAMES    '*< emit a list of function names (option `--list-mode`)
+  GTK_DOC_TEMPLATES '*< emit templates for gtk-doc (option `--geany-mode gtk`)
+  DOXYGEN_TEMPLATES '*< emit templates for Doxygen (option `--geany-mode doxy`)
+  SYNTAX_REPAIR     '*< fix syntax highlighting of Doxygen listings (option `--syntax-mode`)
+  EXTERNAL          '*< external emitter loaded as plugin
+END ENUM
 
 /'* \brief Forward declaration '/
 TYPE AS Parser Parser_
@@ -17,39 +32,40 @@ TYPE AS Parser Parser_
 /'* \brief Function to emit a piece of code
 \param P the parser calling this handler '/
 TYPE EmitFunc AS SUB CDECL(BYVAL AS Parser_ PTR)
+'TYPE EmitFunc AS SUB CDECL(BYVAL AS Parser PTR)
 
-/'* \brief An empty emitter to initialize the interface
-\param P the parser calling this handler '/
-SUB null_emitter CDECL(BYVAL P AS Parser_ PTR) : END SUB
+DECLARE SUB null_emitter CDECL(BYVAL AS Parser_ PTR)
+
 
 /'* \brief The emitter interface
 
-The emitters interface is a UDT containing function pointers. The 
-\ref Parser calls the matching function in the active emitter after 
-scanning a relevant construct. The emitter function extracts the 
-necessary information from the parser data, formats it as desired 
+The emitters interface is a UDT containing function pointers. The
+\ref Parser calls the matching function in the active emitter after
+scanning a relevant construct. The emitter function extracts the
+necessary information from the parser data, formats it as desired
 and sends it to the output stream.
 
-Only one emitter can be active at a time. Either one of the four 
-inbuild fb-doc emitters or an external emitter plugin can be choosen 
+Only one emitter can be active at a time. Either one of the four
+inbuild fb-doc emitters or an external emitter plugin can be choosen
 by option `--emitter`.
 
-The function pointers get initialized with the null_emitter() 
+The function pointers get initialized with the null_emitter()
 function (SUB), that creates no output at all. Each emitter modul can
-replace one or more of the pointers by a customized function to 
+replace one or more of the pointers by a customized function to
 create a specific output.
 
-Since Doxygen doesn't support to generate documentation for such an 
-interface, it cannot create caller or callee graphs for the emitter 
-functions. But we use fb-doc and can work-around this by creating 
-additional C output in form of member function. These functions are 
+Since Doxygen doesn't support to generate documentation for such an
+interface, it cannot create caller or callee graphs for the emitter
+functions. But we use fb-doc and can work-around this by creating
+additional C output in form of member function. These functions are
 unvisible for the FreeBasic compiler, but get emitted to the pseudo C
-source for the Doxygen back-end and produce the desired output for 
+source for the Doxygen back-end and produce the desired output for
 the documentation.
 
 '/
 TYPE EmitterIF
-  AS STRING Nam = ""  '*< the emitters name
+  AS STRING _
+       Nam = ""  '*< the emitters name
 ' This is tricky code to make Doxygen document an interface:
 '&/* Doxygen shouldn't parse this ...
   AS EmitFunc _
@@ -108,14 +124,24 @@ TYPE EmitterIF
 '& inline void DTOR_ (void){synt_DTOR();};
 END TYPE
 
+DECLARE SUB c_Block CDECL(BYVAL P AS Parser_ PTR)
+DECLARE SUB cNam CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB cEmitSource CDECL(BYVAL AS Parser_ PTR, BYVAL AS INTEGER)
+DECLARE SUB cIni CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB c_error CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB geanyInit CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB geanyExit CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB cppCreateFunction CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB cCreateFunction CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB cppCreateTypNam CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB cCreateTypNam CDECL(BYVAL AS Parser_ PTR)
 
 '* the SHARED array for the emitter interfaces
-REDIM SHARED AS EmitterIF PTR Emitters(-1 TO -1)
+COMMON SHARED AS EmitterIF PTR Emitters()
+REDIM PRESERVE SHARED AS EmitterIF PTR Emitters(0 TO EmitterTypes.EXTERNAL)
 
 /'* \brief Snippet to create a new \ref EmitterIF (for new customized emitter modules) '/
-#MACRO WITH_NEW_EMITTER(_T_)
- REDIM PRESERVE Emitters(UBOUND(Emitters) + 1)
- Emitters(UBOUND(Emitters)) = NEW EmitterIF
- WITH *Emitters(UBOUND(Emitters))
-  .Nam = _T_
+#MACRO WITH_NEW_EMITTER(_N_)
+ Emitters(_N_) = NEW EmitterIF
+ WITH *Emitters(_N_)
 #ENDMACRO

@@ -1,15 +1,15 @@
-Welcome to the *fb-doc* package. It's a tool for generating
+Welcome to the *@PROJ_NAME@* package. It's a tool for generating
 documentation from and for FreeBasic source code. Rather than creating
-the documentation output directly, *fb-doc* is designed to close
+the documentation output directly, *@PROJ_NAME@* is designed to close
 the gap between FreeBasic (= FB) and C syntax to allow for using any C
 / C++ documentation tool-chain. Also it supports the creation of
 documentational comments in the source and it can get extended via
 external plugins.
 
-The package is [hosted at GitHub](http://github.com/DTJF/fb-doc) and
+The package is [hosted at GitHub](@PROJ_WEBS@) and
 it includes
 
-- the source code of the *fb-doc* tool
+- the source code of the *@PROJ_NAME@* tool
 - the context of the documentation
 - CMake scripts to build executables and documentation
 - examples for extending the tool by plugins
@@ -23,10 +23,10 @@ or at the world wide web:
  - de: http://www.freebasic-portal.de/downloads/ressourcencompiler/fb-doc-229.html
 
 
-Licence (GPLv3)  {#SecLicence}
+Licence (@PROJ_LICE@)  {#SecLicence}
 ===============
 
-Copyright &copy; 2012-2015 by Thomas{ At ]Freiherr{ at }gmx[ dOt ]net
+Copyright &copy; 2012-@PROJ_YEAR@ by @PROJ_MAIL@
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

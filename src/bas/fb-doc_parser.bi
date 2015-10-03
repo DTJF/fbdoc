@@ -7,6 +7,9 @@ the \ref EmitterIF.
 
 '/
 
+#INCLUDE ONCE "fb-doc_emitters.bi"
+
+
 #IF __FB_OUT_DLL__
 #DEFINE Code(_T_) P->writeOut(_T_) '*< Convenience macro for output (plugin)
 #ELSE
@@ -27,30 +30,30 @@ the \ref EmitterIF.
 
 /'* \brief The parser
 
-Class to handle FreeBasic source code. A Parser allways work on 
-exactly one input stream, comming from a file or from STDIN. The 
+Class to handle FreeBasic source code. A Parser allways work on
+exactly one input stream, comming from a file or from STDIN. The
 Parser does
 
  - read the source from an input channel (see \ref StdIn(), \ref File_())
  - call function \ref EmitterIF::Init_() before parsing
- - pre-parse the source for relavant code fractions (see \ref pre_parse()) 
+ - pre-parse the source for relavant code fractions (see \ref pre_parse())
    and call the comments emitter-handler on the way.
- - fine-scan any relavant code fractions (see \ref tokenize()) and call 
-   the matching emitter-handler for this code (done by the private 
+ - fine-scan any relavant code fractions (see \ref tokenize()) and call
+   the matching emitter-handler for this code (done by the private
    functions ie like \ref DEFINE_(), \ref FUNCTION_(), \ref VAR_(), ...)
- - provide functions to extract elements form the source (like 
+ - provide functions to extract elements form the source (like
    \ref SubStr(), \ref CurTok(), \ref BitIni(), ...)
  - call matching emitter functions to generaate the output stream
  - call function \ref EmitterIF::Exit_() after parsing
 
-When fb-doc follows the source tree (option `--tree`), the 
+When fb-doc follows the source tree (option `--tree`), the
 function \ref EmitterIF::Incl_() creates a new Parser for each file.
 
 '/
 TYPE Parser
 /'* \brief The tokens used by the parser
 
-Enumerators used to classify the type of a token found in the 
+Enumerators used to classify the type of a token found in the
 FreeBasic source code.
 
 '/
@@ -60,7 +63,7 @@ FreeBasic source code.
     TOK_EOS   '*< end of statement (either new line or `":"`)
     TOK_BRCLO '*< right parenthesis
     TOK_COMMA '*< a comma
-  
+
     TOK_KLOPN '*< left other bracket
     TOK_KLCLO '*< right other bracket
     TOK_DOT   '*< a dot
@@ -108,7 +111,7 @@ FreeBasic source code.
     TOK_UNIO  '*< the UNION keyword
     TOK_VAR   '*< the VAR keyword
     TOK_VIRT  '*< the VIRTUAL keyword
-  
+
     TOK_FUNC  '*< the FUNCTION keyword
     TOK_FILD  '*< the FIELD keyword
     TOK_OPER  '*< the OPERATOR keyword
@@ -157,8 +160,8 @@ STRING variables to exchange data with th emitters.
 
 /'* \name Parser token pointers
 
-Pointers to the token list, used to specify the result of the 
-parsing process. The tokens specify the construct in progress and 
+Pointers to the token list, used to specify the result of the
+parsing process. The tokens specify the construct in progress and
 they are used by the emitters to create their output.
 
 Four main tokens specify the kind of the construct:
@@ -198,7 +201,7 @@ Other tokens are only valid if the main token is not zero.
 
 /'* \name Parser counters, integers and pointers
 
-Diverse variables used on different events. They inform the emitters 
+Diverse variables used on different events. They inform the emitters
 about the state of the parser.
 
 \{
@@ -219,10 +222,10 @@ about the state of the parser.
 
 /'* \name Filehandlers
 
-Filehandlers are used to load some FreeBasic source code input in to 
-the buffer \ref Parser::Buf from different input channels (may be the 
-STDIN pipe, a single file or all files in a folder). Afterwards the 
-source code gets parsed and translated output created by the emitter 
+Filehandlers are used to load some FreeBasic source code input in to
+the buffer \ref Parser::Buf from different input channels (may be the
+STDIN pipe, a single file or all files in a folder). Afterwards the
+source code gets parsed and translated output created by the emitter
 gets returned.
 
 \{
@@ -235,8 +238,8 @@ gets returned.
 
 /'* \name Properties to extract original source code
 
-Properties are used to extract original text from the input buffer 
-at a certain position. This is the current position of the parser, 
+Properties are used to extract original text from the input buffer
+at a certain position. This is the current position of the parser,
 or the position  of the given parameter.
 
 \{
@@ -249,8 +252,8 @@ or the position  of the given parameter.
 
 /'* \name Parsers for lists and blocks
 
-External demuxers are called from emitter-handlers when they sit on 
-a list of statments, ie in an ENUM block or in a DIM statement with 
+External demuxers are called from emitter-handlers when they sit on
+a list of statments, ie in an ENUM block or in a DIM statement with
 more than one variable.
 
 \{
@@ -266,7 +269,7 @@ Private:
 
 /'* \brief The modi for end of statement searching
 
-Enumerators used in internal in the parser to specify where to stop 
+Enumerators used in internal in the parser to specify where to stop
 to tokenize the input buffer
 
 '/
@@ -331,3 +334,42 @@ to the emitter if and where the user sees the error message.)
 '* \}
 
 END TYPE
+
+
+/'* \brief Find the end of a Quote
+
+This snippet is used to find the end of a quoted string. It checks
+if the string uses escape sequences and evaluates '\\"' . It stops at
+the last double quote (if Buf[Po] isn't ASC(!"\\"") then the end of
+the buffer is reached).
+
+'/
+#MACRO SCAN_QUOTE(Buf,Po)
+  VAR esc = IIF(Po, IIF(Buf[Po - 1] = ASC("!"), 1, 0), 0)
+  DO
+    Po += 1
+    SELECT CASE AS CONST Buf[Po]
+    CASE 0, ASC(!"\n") : Po -= 1 : EXIT DO
+    CASE ASC("\") : IF esc THEN Po += 1
+    CASE ASC("""") : IF Buf[Po + 1] = ASC("""") THEN Po += 1 ELSE EXIT DO
+    END SELECT
+  LOOP
+#ENDMACRO
+
+
+/'* \brief Find the end of a line end comment
+
+This snippet is used to find the end of a line end comment. It
+checks for a ASC(!"\n") and evaluates line concatenations ( _ ) on
+the way. It stops at the line end (if Buf[Po] isn't ASC(!"\n") then
+the end of the buffer is reached).
+
+'/
+#MACRO SCAN_SL_COMM(Buf,Po)
+  DO
+    Po += 1
+    SELECT CASE AS CONST Buf[Po]
+    CASE 0, ASC(!"\n") : EXIT DO
+    END SELECT
+  LOOP
+#ENDMACRO

@@ -1,13 +1,16 @@
 /'* \file fb-doc_parser.bas
 \brief Source code for the \ref Parser class.
 
-This file contains the source code for the Parser class. It's used 
-to scan the FB input for relevant constructs and call the matching 
+This file contains the source code for the Parser class. It's used
+to scan the FB input for relevant constructs and call the matching
 function in the \ref EmitterIF.
 
 '/
 
 #INCLUDE ONCE "fb-doc_parser.bi"
+#INCLUDE ONCE "fb-doc_options.bi"
+#INCLUDE ONCE "fb-doc_version.bi"
+
 
 /'* \brief The constructor
 \param Em a pointer to the emitter interface to use
@@ -33,12 +36,12 @@ END CONSTRUCTOR
 
 
 /'* \brief Move to the next comma and one step beyond
-\returns the (doubled) number of steps gone in the token list (or 
+\returns the (doubled) number of steps gone in the token list (or
           MSG_ERROR on error and MSG_STOP on the end of the token list)
 
-We step trough the token list and search for the next comma, 
-skipping nested pairs of parenthesis. When we find a comma we walk 
-one step beyond. Otherwise we stop at the next right parenthesis or 
+We step trough the token list and search for the next comma,
+skipping nested pairs of parenthesis. When we find a comma we walk
+one step beyond. Otherwise we stop at the next right parenthesis or
 the next colon or line end.
 
 '/
@@ -56,12 +59,12 @@ END FUNCTION
 
 
 /'* \brief Move to the matching right parenthesis and one step beyond
-\returns the (doubled) number of steps gone in the token list (or 
+\returns the (doubled) number of steps gone in the token list (or
           MSG_ERROR on error and MSG_STOP on the end of the token list)
 
-Step through the token list and search for the next right 
+Step through the token list and search for the next right
 parenthesis, skipping nested pairs of paranethesis. When we find a
-matching right parenthesis we walk one step beyond. Else we 
+matching right parenthesis we walk one step beyond. Else we
 stop at the next colon or line end.
 
 '/
@@ -78,10 +81,10 @@ END FUNCTION
 
 
 /'* \brief Move to the end of statement and one step beyond
-\returns the (doubled) number of steps gone in the token list (or 
+\returns the (doubled) number of steps gone in the token list (or
           MSG_ERROR on error and MSG_STOP on the end of the token list)
 
-Step through the token list and search for the end of the current 
+Step through the token list and search for the end of the current
 statement. Then walk one step beyond, if not end of token list.
 
 '/
@@ -97,15 +100,15 @@ END FUNCTION
 /'* \brief Evaluate a name, dimension and initializer in the token list
 \param MinTk the token to start at
 \param DeclMod the modus (normal or declaration)
-\returns the (doubled) number of steps gone in the token list (or 
+\returns the (doubled) number of steps gone in the token list (or
           MSG_ERROR on error and MSG_STOP on the end of the token list)
 
-Check the token list for a declaration of a name, starting at the 
-current token (ie behind a VAR keyword). Also checking for 
-parenthesis to specify a dimension and the equal '=' character of an 
-initializer. After execution the current position is at the next 
-token after the equal character, or behind the closing parenthesis, 
-or the name. An error is returned if there is no word at the current 
+Check the token list for a declaration of a name, starting at the
+current token (ie behind a VAR keyword). Also checking for
+parenthesis to specify a dimension and the equal '=' character of an
+initializer. After execution the current position is at the next
+token after the equal character, or behind the closing parenthesis,
+or the name. An error is returned if there is no word at the current
 position.
 
 '/
@@ -113,7 +116,7 @@ FUNCTION Parser.demuxNam(BYVAL MinTk AS INTEGER = TOK_WORD, BYVAL DeclMod AS INT
   DimTok = 0
   IniTok = 0
   BitTok = 0
-  
+
   IF *Tk >= MinTk THEN NamTok = Tk           ELSE NamTok = 0 : RETURN MSG_ERROR
   DO
     SELECT CASE AS CONST *Tk
@@ -143,7 +146,7 @@ FUNCTION Parser.demuxNam(BYVAL MinTk AS INTEGER = TOK_WORD, BYVAL DeclMod AS INT
   SELECT CASE AS CONST *x
   CASE TOK_EQUAL : BitTok = Tk : Tk = x : IniTok = x
   CASE TOK_COMMA : BitTok = Tk : Tk = x
-  CASE ELSE 
+  CASE ELSE
     FOR i AS INTEGER = Tk[1] + 1 TO Tk[4] - 1
       SELECT CASE AS CONST Buf[i]
       CASE ASC(" "), ASC(!"\t"), ASC(!"\v")
@@ -156,11 +159,11 @@ END FUNCTION
 
 
 /'* \brief Evaluate a function declaration in the token list
-\returns the the result of demuxTyp() (or MSG_ERROR on error and 
+\returns the the result of demuxTyp() (or MSG_ERROR on error and
           MSG_STOP on the end of the token list)
 
 Pre-check the token list for a declaration of a function, starting at
-the token behind the DECLARE statement. When OK, use demuxTyp() to 
+the token behind the DECLARE statement. When OK, use demuxTyp() to
 evaluate the type of the declaration.
 
 '/
@@ -194,15 +197,15 @@ END FUNCTION
 
 /'* \brief Evaluate a type declaration in the token list
 \param DeclMod the modus (normal or declaration)
-\returns the (doubled) number of steps gone in the token list (or 
+\returns the (doubled) number of steps gone in the token list (or
           MSG_ERROR on error and MSG_STOP on the end of the token list)
 
-Check the token list for a type declaration. Starting at the AS 
-statement we read the name of the type and all following 'PTR' 
-statements. The type may be a SUB, FUNCTION, PROPERTY, ... After 
-execution the current position is at the next token behind the last 
-PTR, or at the type name, or at the closing parenthesis. An error is 
-returned if there is no word at the current position, or the token 
+Check the token list for a type declaration. Starting at the AS
+statement we read the name of the type and all following 'PTR'
+statements. The type may be a SUB, FUNCTION, PROPERTY, ... After
+execution the current position is at the next token behind the last
+PTR, or at the type name, or at the closing parenthesis. An error is
+returned if there is no word at the current position, or the token
 list doesn't start with 'AS', or the next token isn't a word.
 
 '/
@@ -246,7 +249,7 @@ FUNCTION Parser.demuxTyp(BYVAL DeclMod AS INTEGER = 0) AS INTEGER
       ELSE
         IF *Tk <> TOK_PTR THEN                      RETURN Tk - t
       END IF
-  
+
       PtrTok = Tk : WHILE *Tk = TOK_PTR : PtrCount += 1 : SKIP : WEND
 
       IF *Tk = TOK_EQUAL THEN IniTok = Tk
@@ -295,8 +298,8 @@ END FUNCTION
 /'* \brief Evaluate a list of names
 \param Export_ the function to call on each find
 
-Scan the token list for variable declarations and call the emitter 
-for each find  (ie for constructs like DIM AS BYTE Nam1, Nam2(5) = 
+Scan the token list for variable declarations and call the emitter
+for each find  (ie for constructs like DIM AS BYTE Nam1, Nam2(5) =
 {0,1,2,3,4,5}, Nam3, ...).
 
 '/
@@ -314,8 +317,8 @@ END SUB
 /'* \brief Evaluate a list of declarations
 \param Export_ the function to call on each find
 
-Scan the token list for variable declarations and call the emitter 
-for each find  (ie for constructs like DIM Nam1 AS BYTE, Nam2(5) AS 
+Scan the token list for variable declarations and call the emitter
+for each find  (ie for constructs like DIM Nam1 AS BYTE, Nam2(5) AS
 UBYTE = {0,1,2,3,4,5}, Nam3 AS STRING, ...).
 
 '/
@@ -332,8 +335,8 @@ END SUB
 /'* \brief Evaluate the context of an ENUM block
 \param Export_ the function to call on each find
 
-The emitter calls us to evaluate statements inside an ENUM block. So 
-we stop after finding a statement and call the emitter handler 
+The emitter calls us to evaluate statements inside an ENUM block. So
+we stop after finding a statement and call the emitter handler
 one-by-one.
 
 '/
@@ -347,7 +350,7 @@ SUB Parser.parseBlockEnum(BYVAL Export_ AS EmitFunc) EXPORT
       SKIP : IF *Tk = TOK_ENUM THEN EXIT WHILE
       Errr("END ENUM expected") : EXIT WHILE
     CASE TOK_LATTE : skipOverColon()
-    CASE ELSE 
+    CASE ELSE
       IF MSG_ERROR >= demuxNam() THEN Errr("name expected") : skipOverColon() : EXIT SELECT
       ListCount = lico
       skipOverComma() : IF *Tk = TOK_EOS THEN lico = 0 : skipOverColon() ELSE lico += 1
@@ -360,8 +363,8 @@ END SUB
 /'* \brief Evaluate the context of a block
 \param Export_ the function to call on each find
 
-The emitter calls us to evaluate constructs inside a block (TYPE / 
-UNION). So we stop after finding a statement and call the emitter 
+The emitter calls us to evaluate constructs inside a block (TYPE /
+UNION). So we stop after finding a statement and call the emitter
 handler one-by-one.
 
 '/
@@ -395,7 +398,7 @@ SUB Parser.parseBlockTyUn(BYVAL Export_ AS EmitFunc) EXPORT
         IF MSG_ERROR >= demuxNam(TOK_ABST) THEN _
           IF Errr("name expected") = MSG_ERROR THEN CONTINUE DO _
                                                ELSE EXIT DO
-  
+
         skipOverComma()
         *NamTok = TOK_WORD : ListCount = 0 : Export_(@THIS)
         IF *Tk >= TOK_ABST THEN parseListNam(Export_)
@@ -404,15 +407,15 @@ SUB Parser.parseBlockTyUn(BYVAL Export_ AS EmitFunc) EXPORT
         IF nextok = in_tk1                   THEN EXIT DO
         IF Errr("not supported") < MSG_ERROR THEN EXIT DO
         skipOverColon()
-  
+
       CASE TOK_DECL : SKIP
         IF MSG_ERROR >= demuxDecl() THEN IF Errr("syntax error " & SubStr(NamTok)) = MSG_ERROR _
                                     THEN skipOverColon() : EXIT SELECT ELSE EXIT DO
         skipOverColon() : Export_(@THIS)
-  
+
       CASE TOK_PUBL, TOK_PRIV, TOK_PROT
         skipOverColon() : Export_(@THIS)
-  
+
       CASE TOK_ENUM, TOK_TYPE, TOK_UNIO, TOK_CLAS
         VAR n = BlockNam
         IF nextok = TOK_WORD THEN SKIP : BlockNam = SubStr ELSE BlockNam = ""
@@ -428,8 +431,8 @@ END SUB
 /'* \brief Evaluate a parameter list
 \param Export_ the function to call on each find
 
-Scan the token list for a parameter list. Evaluate declaration 
-specifiers (BYVAL / BYREF) and handle ellipsis, parameters without 
+Scan the token list for a parameter list. Evaluate declaration
+specifiers (BYVAL / BYREF) and handle ellipsis, parameters without
 name, initializers and empty lists.
 
 '/
@@ -462,10 +465,10 @@ END SUB
 /'* \brief Evaluate a TYPE or CLASS statement
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found a TYPE or CLASS keyword. In case of TYPE we 
-tokenize the line and check if it is an alias declaration. In that 
-case we call the emitter for a declaration on that single line. 
-Otherwise we tokenize the complete block and call the emitter for a 
+The pre-parser found a TYPE or CLASS keyword. In case of TYPE we
+tokenize the line and check if it is an alias declaration. In that
+case we call the emitter for a declaration on that single line.
+Otherwise we tokenize the complete block and call the emitter for a
 TYPE block. Or we call Errr() on syntax problems.
 
 Note: the C emitter creates
@@ -504,8 +507,8 @@ END FUNCTION
 /'* \brief Evaluate a variable declaration
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found a VAR, DIM, CONST, EXTERN, COMMON or STATIC 
-keyword. We tokenize the current line and send the result to the 
+The pre-parser found a VAR, DIM, CONST, EXTERN, COMMON or STATIC
+keyword. We tokenize the current line and send the result to the
 emitter, or we call Errr() on syntax problems.
 
 '/
@@ -540,8 +543,8 @@ END FUNCTION
 /'* \brief Evaluate an ENUM block
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found an ENUM keyword. We tokenize the context of the 
-complete block and call the emitter, or we call Errr() on 
+The pre-parser found an ENUM keyword. We tokenize the context of the
+complete block and call the emitter, or we call Errr() on
 syntax problems.
 
 '/
@@ -558,8 +561,8 @@ END FUNCTION
 /'* \brief Evaluate an UNION block
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found an UNION keyword. We tokenize the context of the 
-complete block and call the emitter, or we call Errr() on 
+The pre-parser found an UNION keyword. We tokenize the context of the
+complete block and call the emitter, or we call Errr() on
 syntax problems.
 
 '/
@@ -577,9 +580,9 @@ END FUNCTION
 /'* \brief Evaluate a function
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found a SUB, FUNCTION, CONSTRUCTOR, DESTRUCTOR, 
-PROPERTY or OPERATOR keyword. We tokenize the complete block, 
-evaluate the name and type and send the result to the emitter, or we 
+The pre-parser found a SUB, FUNCTION, CONSTRUCTOR, DESTRUCTOR,
+PROPERTY or OPERATOR keyword. We tokenize the complete block,
+evaluate the name and type and send the result to the emitter, or we
 call Errr() on syntax problems.
 
 '/
@@ -611,8 +614,8 @@ END FUNCTION
 /'* \brief Evaluate a forward declaration
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found a DECLARE keyword. We tokenize the current line 
-and send the result to the emitter, or we call Errr() on syntax 
+The pre-parser found a DECLARE keyword. We tokenize the current line
+and send the result to the emitter, or we call Errr() on syntax
 problems.
 
 '/
@@ -628,8 +631,8 @@ END FUNCTION
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
 The pre-parser found an \#`INCLUDE` line. We tokenize the line and call
-the emitter, or we call Errr() handler on syntax problems. It's up 
-to the emitter function to follow the source tree (= create a new 
+the emitter, or we call Errr() handler on syntax problems. It's up
+to the emitter function to follow the source tree (= create a new
 parser and load the file).
 
 '/
@@ -645,7 +648,7 @@ END FUNCTION
 /'* \brief Evaluate a \#`MACRO` declaration
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found a \#`MACRO` block. We tokenize the block and call 
+The pre-parser found a \#`MACRO` block. We tokenize the block and call
 the emitter, or we call Errr() handler on syntax problems.
 
 '/
@@ -664,7 +667,7 @@ END FUNCTION
 /'* \brief Evaluate a \#`DEFINE` declaration
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found a \#`DEFINE` line. We tokenize the line and call 
+The pre-parser found a \#`DEFINE` line. We tokenize the line and call
 the emitter, or we call Errr() handler on syntax problems.
 
 '/
@@ -686,14 +689,14 @@ END FUNCTION
 \param E the reason for the error message
 \returns MSG_ERROR (and MSG_STOP at end of file)
 
-Create an error message and call the error function of the emitter. 
+Create an error message and call the error function of the emitter.
 It depends on the emitter if and where the error is shown.
 
 '/
 FUNCTION Parser.Errr(BYREF E AS STRING) AS INTEGER
   VAR z = LineNo
   IF LevelCount THEN '                         adapt line number counter
-    FOR i AS INTEGER = Tk[1] TO EndTok[1] 
+    FOR i AS INTEGER = Tk[1] TO EndTok[1]
       IF Buf[i] = ASC(!"\n") THEN z -= 1
     NEXT
   END IF
@@ -733,8 +736,8 @@ END FUNCTION
 \brief Check word at current parser position
 \returns: The token for the word at current position
 
-This function checks the word at the current parser position. In 
-case of a keyword the matching token gets returned. Otherwise \ref 
+This function checks the word at the current parser position. In
+case of a keyword the matching token gets returned. Otherwise \ref
 Parser::TOK_WORD gets returned.
 
 '/
@@ -844,49 +847,10 @@ FUNCTION Parser.getToken() AS INTEGER
 END FUNCTION
 
 
-/'* \brief Find the end of a Quote
-
-This snippet is used to find the end of a quoted string. It checks 
-if the string uses escape sequences and evaluates '\\"' . It stops at 
-the last double quote (if Buf[Po] isn't ASC(!"\\"") then the end of 
-the buffer is reached).
-
-'/
-#MACRO SCAN_QUOTE(Buf,Po)
-  VAR esc = IIF(Po, IIF(Buf[Po - 1] = ASC("!"), 1, 0), 0)
-  DO
-    Po += 1
-    SELECT CASE AS CONST Buf[Po]
-    CASE 0, ASC(!"\n") : Po -= 1 : EXIT DO
-    CASE ASC("\") : IF esc THEN Po += 1
-    CASE ASC("""") : IF Buf[Po + 1] = ASC("""") THEN Po += 1 ELSE EXIT DO
-    END SELECT
-  LOOP
-#ENDMACRO
-
-
-/'* \brief Find the end of a line end comment
-
-This snippet is used to find the end of a line end comment. It 
-checks for a ASC(!"\n") and evaluates line concatenations ( _ ) on 
-the way. It stops at the line end (if Buf[Po] isn't ASC(!"\n") then 
-the end of the buffer is reached).
-
-'/
-#MACRO SCAN_SL_COMM(Buf,Po)
-  DO
-    Po += 1
-    SELECT CASE AS CONST Buf[Po]
-    CASE 0, ASC(!"\n") : EXIT DO
-    END SELECT
-  LOOP
-#ENDMACRO
-
-
 /'* \brief Find the end of a multi line comment
 
-This snippet is used to find the end of a multi line comment block. 
-It stops at the characters ' and / (if Buf[Po] isn't ASC("/") then the 
+This snippet is used to find the end of a multi line comment block.
+It stops at the characters ' and / (if Buf[Po] isn't ASC("/") then the
 end of the buffer is reached).
 
 '/
@@ -908,7 +872,7 @@ end of the buffer is reached).
 
 /'* \brief Find the end of a word
 
-This snippet is used to find the end of a word in the input buffer. 
+This snippet is used to find the end of a word in the input buffer.
 Po is at the first non-word character when done.
 
 '/
@@ -935,12 +899,12 @@ Po is at the first non-word character when done.
 \param Stop_ the condition where to end parsing
 \returns the length of the token list in byte (at least 8)
 
-Start at the current position of the input buffer to check each 
-character. Sort the input in to a token list. The token list 
-contains three values in each entry: the type of the input, its 
+Start at the current position of the input buffer to check each
+character. Sort the input in to a token list. The token list
+contains three values in each entry: the type of the input, its
 start and its length.
 
-The end of this process gets specified by the Stop_ parameter. It's 
+The end of this process gets specified by the Stop_ parameter. It's
 one of the #EoS_Modi enumerators.
 
 '/
@@ -1020,8 +984,8 @@ END FUNCTION
 
 /'* \brief Pre-parse all FB source code, search relevant constructs
 
-Search the input buffer for a relevant construct. Start detailed 
-parsing on each relevant construct. Otherways skip the current line. 
+Search the input buffer for a relevant construct. Start detailed
+parsing on each relevant construct. Otherways skip the current line.
 Export comments on the way.
 
 '/
@@ -1071,7 +1035,7 @@ SUB Parser.pre_parse()
       CASE TOK_PUBL, TOK_PRIV
         SETOK(*StaTok, *A, *L) : *L = 0 : CONTINUE DO
       'CASE TOK_NAMS : ' !!! ToDo
-      'CASE TOK_SCOP : ' !!! ToDo 
+      'CASE TOK_SCOP : ' !!! ToDo
       CASE ELSE :  ToLast = *StaTok : CONTINUE DO
       END SELECT : ToLast = *StaTok : Tok = "" : *L = 0 : CONTINUE DO
     END SELECT : Po += 1
@@ -1084,8 +1048,8 @@ END SUB
 \param Tree if to follow source tree \#`INCLUDE`
 \returns the translated code (if any)
 
-Read a file in to input buffer. Start detailed parsing on each 
-relevant construct. Otherways skip the current line. Export comments 
+Read a file in to input buffer. Start detailed parsing on each
+relevant construct. Otherwise skip the current line. Export comments
 on the way. Do nothing if file doesn't exist or isn't readable.
 
 '/
@@ -1160,7 +1124,7 @@ END SUB
 /'* \brief The current token
 \returns the token the parser currently stopping at
 
-This property returns the parser token (where the parser currently 
+This property returns the parser token (where the parser currently
 stops).
 
 '/
@@ -1172,7 +1136,7 @@ END PROPERTY
 \returns the bitfield initialization
 
 This property returns the initialization of a bitfield in a TYPE / UNION
-block. The size of the bitfield may either be an integer number or a 
+block. The size of the bitfield may either be an integer number or a
 macro (= TOK_WORD).
 
 '/
@@ -1191,7 +1155,7 @@ END PROPERTY
 /'* \brief Context of current token
 \returns the context of the current token
 
-This property returns the context of the current token from the 
+This property returns the context of the current token from the
 input buffer.
 
 '/
@@ -1204,7 +1168,7 @@ END PROPERTY
 \param T The token to read
 \returns the context of the token T
 
-This property returns the context of the token T from the 
+This property returns the context of the token T from the
 input buffer.
 
 '/
@@ -1217,7 +1181,7 @@ END PROPERTY
 /'* \brief Check current token position, extract word if string type
 \returns the current word in upper case
 
-This property returns the context of the current parser position in the 
+This property returns the context of the current parser position in the
 input buffer in upper case characters.
 
 '/
@@ -1240,32 +1204,32 @@ Otherwise a new parser gets started to operate on that file.
 SUB Parser.Include(BYVAL N AS STRING)
   WITH *OPT
     IF .RunMode = .GEANY_MODE THEN EXIT SUB
-  
+
     VAR i = INSTRREV(N, SLASH)
     VAR fnam = .addPath(InPath, LEFT(N, i)) & MID(N, i + 1)
     MSG_LINE(fnam)
     IF DivTok ANDALSO INSTR(.FileIncl, !"\n" & fnam & !"\r") THEN _
       MSG_END("skipped (already done)") : EXIT SUB
-  
+
     VAR fnr = FREEFILE
     IF OPEN(fnam FOR INPUT AS #fnr) THEN _
       MSG_END("skipped (couldn't open)") : EXIT SUB
     CLOSE #fnr
     .FileIncl &= !"\n" & fnam & !"\r"
-  
+
     VAR pars_old = .Pars : .Pars = NEW Parser(.EmitIF)
     UserTok = pars_old->UserTok
-  
+
     MSG_END("working ...")
     .Level += 1
     .doFile(fnam)
     .Level -= 1
-  
+
     'SELECT CASE AS CONST .RunMode
     'CASE .LIST_MODE, .FILE_MODE
     'CASE ELSE : MSG_LINE(fnam) : MSG_END("included")
     'END SELECT
-  
+
     DELETE .Pars : .Pars = pars_old
   END WITH
 END SUB

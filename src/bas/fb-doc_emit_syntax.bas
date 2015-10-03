@@ -15,22 +15,29 @@ in FB source).
 
 '/
 
+#INCLUDE ONCE "fb-doc_parser.bi"
+#INCLUDE ONCE "fb-doc_emit_syntax.bi"
+#INCLUDE ONCE "fb-doc.bi"
+#INCLUDE ONCE "fb-doc_options.bi"
+#INCLUDE ONCE "fb-doc_version.bi"
+#INCLUDE ONCE "fb-doc_doxyfile.bi"
 
-/'* \brief A container for string replacements
 
-This class is to store two tables, one of search strings and a second
-one of their replacements. It's used to collect the links from the
-original source and replace symbol names in the emitter output, as well
-as referenced line numbers and \#`INCLUDE` files.
+'/'* \brief A container for string replacements
 
-'/
-TYPE RepData
-  AS STRING _
-      O _                 '*< The output (a list of counters and strings)
-    , I = MKl(0) & CHR(1) '*< The input (a list of strings to search for)
-  DECLARE FUNCTION add(BYREF AS STRING, BYREF AS STRING) AS ZSTRING PTR
-  DECLARE FUNCTION rep(BYREF AS STRING) AS ZSTRING PTR
-END TYPE
+'This class is to store two tables, one of search strings and a second
+'one of their replacements. It's used to collect the links from the
+'original source and replace symbol names in the emitter output, as well
+'as referenced line numbers and \#`INCLUDE` files.
+
+''/
+'TYPE RepData
+  'AS STRING _
+      'O _                 '*< The output (a list of counters and strings)
+    ', I = MKl(0) & CHR(1) '*< The input (a list of strings to search for)
+  'DECLARE FUNCTION add(BYREF AS STRING, BYREF AS STRING) AS ZSTRING PTR
+  'DECLARE FUNCTION rep(BYREF AS STRING) AS ZSTRING PTR
+'END TYPE
 
 /'* \brief Add a new element pair
 \param S The string to search for
@@ -165,7 +172,7 @@ END FUNCTION
 The function is used as \ref Highlighter::eol() function. It generates
 code to end the current line and start a new one with the next line
 number. The number counter gets increased and returned as a BYREF
-parameter. Special line no. are
+parameter. Special line numbers are
 
 - 1: the first line (emit no line end but the line start)
 - 0: the last line (emit the line end but no line start)
@@ -240,86 +247,6 @@ FUNCTION xml_eol(BYVAL Symb AS RepData PTR, BYREF Nr AS INTEGER) AS STRING
 END FUNCTION
 
 
-/'* \brief Class to process the syntax highlighting
-
-The class is used to process the replacement of the Doxygen syntax
-highlighting for HTML, LaTeX and XML output. It contains members to
-
-- scan for the files (Doxygen outputs),
-- to read files and extract links,
-- copy context to new files (header and footer)
-- replace original file by fixed version.
-
-'/
-TYPE Highlighter
-  '* \brief The high-lighting categories
-  ENUM WordTypes
-    FB_CODE  '*< Normal code, no high-lighting
-    FB_KEYW  '*< A keyword
-    FB_KWTP  '*< A keyword type
-    FB_KWFL  '*< A flow keyword (currently not used)
-    FB_PREP  '*< A preprocessor statement
-    FB_SYMB  '*< A linked Symbol
-  END ENUM
-  
-  AS STRING _
-      FbPath _   '*< The path to read FB code files from
-    , FbFiles _  '*< A list of all FB file names
-    , InPath _   '*< The path to read Doxygen files from
-    , DoxyFiles _'*< A list of all Doxygen file names
-    , HtmlPath _ '*< The path for html files
-    , HtmlSuff _ '*< The filename suffix for html files
-    , TexPath _  '*< The path for LaTeX files
-    , XmlPath _  '*< The path for XML files
-    , LastLine   '*< The last line red from the input file
-  AS RepData PTR Symbols '*< The list of linked symbols
-  AS Parser PTR Pars '*< The parser to operate with
-  AS ZSTRING PTR _
-      FBDOC_MARK = @"<!-- Syntax-highlighting by fb-doc -->" _ '*< Text to mark the output
-    , KEYW_A = @"<span class=""keyword"">"             _ '*< Code to start highlighting a keyword
-    , KWTP_A = @"<span class=""keywordtype"">"         _ '*< Code to start highlighting a keywordtype
-    , KWFL_A = @"<span class=""keywordflow"">"         _ '*< Code to start highlighting a flow keyword (not used yet)
-    , PREP_A = @"<span class=""preprocessor"">"        _ '*< Code to start highlighting a preprocessor statement
-    , CMNT_A = @"<span class=""comment"">"             _ '*< Code to start highlighting a comment
-    , SPAN_E = @"</span>"                              _ '*< Code to end highlighting
-    , QUOT_A = @"<span class=""stringliteral"">&quot;" _ '*< Code to start highlighting a string literal
-    , QUOT_E = @"&quot;</span>"                          '*< Code to end highlighting a string literal
-  AS INTEGER _
-      Ifnr _  '*< The file number for input
-    , LineNo  '*< The current line number
-
-  UNION
-    TYPE 
-      AS UBYTE _
-        GenHtml      _ '*< Flag for html output
-       , GenTex      _ '*< Flag for LaTeX output
-       , GenXml        '*< Flag for XML output
-    END TYPE
-    AS LONG GenAny '*< All output flags
-  END UNION
-
-  DECLARE CONSTRUCTOR()
-  DECLARE CONSTRUCTOR(BYVAL AS Parser PTR)
-  DECLARE SUB doDoxy(BYREF AS STRING)
-  DECLARE SUB do_files()
-  DECLARE STATIC FUNCTION prepare_tex(BYVAL AS Highlighter PTR) AS STRING
-  DECLARE STATIC FUNCTION prepare_xml(BYVAL AS Highlighter PTR) AS STRING
-  DECLARE STATIC FUNCTION prepare_html(BYVAL AS Highlighter PTR) AS STRING
-  DECLARE SUB generate_all(BYVAL AS ZSTRING PTR, BYVAL AS INTEGER)
-  DECLARE FUNCTION generate_code(BYVAL AS ZSTRING PTR, BYVAL AS INTEGER, BYVAL AS INTEGER) AS STRING
-  DECLARE FUNCTION word_type(BYREF AS STRING) AS ZSTRING PTR
-
-  '* \brief the function called to end a line and start a new one
-  eol AS FUNCTION(BYVAL AS RepData PTR, BYref AS INTEGER) AS STRING _
-    = @html_eol()
-  '* \brief the function called to extract links from original files
-  prepare AS FUNCTION(BYVAL AS Highlighter PTR) AS STRING _
-    = @prepare_html()
-  '* \brief the function called for normal code to replace special characters
-  special_chars AS FUNCTION(BYVAL AS UBYTE PTR, BYVAL AS INTEGER, BYVAL AS INTEGER) AS STRING _
-    = @html_specials()
-END TYPE
-
 /'* \brief Constructor executing the complete process
 \param P The parser for input
 
@@ -332,8 +259,8 @@ CONSTRUCTOR Highlighter(BYVAL P AS Parser PTR)
 END CONSTRUCTOR
 
 
-/'* \brief Constructor executing the complete process
-\param Fnam The Doxyfile for input
+/'* \brief Procedure to control the repairing process
+\param Fnam The path / file name of the Doxygen configuration file
 
 This SUB controls the complete repairing process
 
@@ -365,58 +292,65 @@ I evaluates the Doxyfile and scans the tags
 
 '/
 SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
-  VAR path = OPT->addPath(OPT->StartPath, LEFT(Fnam, INSTRREV(Fnam, SLASH))) _
-    , doxy = NEW Doxyfile(Fnam) _
-    , recu = OPT->InRecursiv _
-    , tree = OPT->InTree
+  'VAR path = OPT->addPath(OPT->StartPath, LEFT(Fnam, INSTRREV(Fnam, SLASH))) _
+   Var doxy = NEW Doxyfile(Fnam) _
+     , recu = OPT->InRecursiv _
+     , tree = OPT->InTree
 
-  MSG_LINE("Doxyfile " & Fnam)
+'?" HIER: ";Fnam, OPT->StartPath
+  'MSG_LINE("Doxyfile " & Fnam)
+  MSG_LINE(PROJ_NAME & " " & Fnam)
   WHILE doxy->Length
-    GenHtml = IIF(doxy->Tag("GENERATE_HTML") = "YES" ANDALSO _
-                  doxy->Tag("SOURCE_BROWSER") = "YES", 1, 0)
-    GenTex  = IIF(doxy->Tag("GENERATE_LATEX") = "YES" ANDALSO _
-                  doxy->Tag("LATEX_SOURCE_CODE") = "YES", 1, 0)
-    GenXml  = IIF(doxy->Tag("GENERATE_XML") = "YES" ANDALSO _
-                  doxy->Tag("XML_PROGRAMLISTING") = "YES", 1, 0)
+    GenHtml = IIF(doxy->Tag(GENERATE_HTML) = "YES" ANDALSO _
+                  doxy->Tag(SOURCE_BROWSER) = "YES", 1, 0)
+    GenTex  = IIF(doxy->Tag(GENERATE_LATEX) = "YES" ANDALSO _
+                  doxy->Tag(LATEX_SOURCE_CODE) = "YES", 1, 0)
+    GenXml  = IIF(doxy->Tag(GENERATE_XML) = "YES" ANDALSO _
+                  doxy->Tag(XML_PROGRAMLISTING) = "YES", 1, 0)
 
     IF GenAny THEN MSG_END("scanned") _
               ELSE MSG_END("nothing to do") : EXIT WHILE
-  
-    FbPath = doxy->Tag("INPUT")
-    OPT->InRecursiv = IIF(doxy->Tag("RECURSIVE") = "YES", 1, 0)
+
+    FbPath = doxy->Tag(INPUT_TAG)
+'?" HIER2: ";curdir(),FbPath
+    OPT->InRecursiv = IIF(doxy->Tag(RECURSIVE) = "YES", 1, 0)
     MSG_LINE("FB source " & FbPath)
-    CHDIR(path)
+    CHDIR(OPT->StartPath)
     IF CHDIR(FbPath) THEN MSG_END("error (couldn't change directory)") : EXIT WHILE
     FbFiles = NL & OPT->scanFiles("*.bas", "") _
                  & OPT->scanFiles("*.bi", "")
     IF LEN(FbFiles) > 1 THEN MSG_END("scanned") _
                         ELSE MSG_END("error (no FB source files)") : EXIT WHILE
-    FbPath = OPT->addPath(path, FbPath)
+    FbPath = OPT->addPath(OPT->StartPath, FbPath)
 
     OPT->InTree = 0
-    InPath = doxy->Tag("OUTPUT_DIRECTORY")
+    InPath = OPT->addPath(OPT->StartPath, doxy->Tag(OUTPUT_DIRECTORY))
     IF GenHtml THEN
-      HtmlPath = OPT->addPath(InPath, doxy->Tag("HTML_OUTPUT"))
-      HtmlSuff = doxy->Tag("HTML_FILE_EXTENSION")
+'?"Here: ";InPath, doxy->Tag(HTML_OUTPUT)
+      HtmlPath = OPT->addPath(InPath, doxy->Tag(HTML_OUTPUT))
+      HtmlSuff = doxy->Tag(HTML_FILE_EXTENSION)
+'?" HIRE: ";HtmlPath, HtmlSuff
       IF 0 = LEN(HtmlSuff) THEN HtmlSuff = ".html"
-      OPT->InRecursiv = IIF(doxy->Tag("CREATE_SUBDIRS") = "YES", 1, 0)
-      CHDIR(path)
+      OPT->InRecursiv = IIF(doxy->Tag(CREATE_SUBDIRS) = "YES", 1, 0)
+      'CHDIR(path)
+      CHDIR(OPT->StartPath)
       MSG_LINE("HTML source " & LEFT(HtmlPath, LEN(HtmlPath) - 1))
       IF CHDIR(HtmlPath) THEN
         MSG_END("error (couldn't change directory)")
       ELSE
         DoxyFiles = OPT->scanFiles("*_8bas_source" & HtmlSuff, "") _
                   & OPT->scanFiles("*_8bi_source" & HtmlSuff, "")
-  
+
         IF LEN(DoxyFiles) > 1 THEN MSG_END("scanned") : do_files() _
                               ELSE MSG_END("scanned (no files)")
       END IF
     END IF
     OPT->InRecursiv = 0
     IF GenTex THEN
-      TexPath = OPT->addPath(InPath, doxy->Tag("LATEX_OUTPUT"))
+      TexPath = OPT->addPath(InPath, doxy->Tag(LATEX_OUTPUT))
       MSG_LINE("LaTeX source " & LEFT(TexPath, LEN(TexPath) - 1))
-      CHDIR(path)
+      'CHDIR(path)
+      CHDIR(OPT->StartPath)
       IF CHDIR(TexPath) THEN
         MSG_END("error (couldn't change directory)")
       ELSE
@@ -443,9 +377,10 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
       END IF
     END IF
     IF GenXml THEN
-      XmlPath = OPT->addPath(InPath, doxy->Tag("XML_OUTPUT"))
+      XmlPath = OPT->addPath(InPath, doxy->Tag(XML_OUTPUT))
       MSG_LINE("XML source " & LEFT(XmlPath, LEN(XmlPath) - 1))
-      CHDIR(path)
+      'CHDIR(path)
+      CHDIR(OPT->StartPath)
       IF CHDIR(XmlPath) THEN
         MSG_END("error (couldn't change directory)")
       ELSE
@@ -514,7 +449,7 @@ SUB Highlighter.do_files()
         VAR fb_nam = prepare(@THIS)
         IF LEN(fb_nam) THEN
           Pars->File_(FbPath & fb_nam, 0)
-        
+
           PRINT #OPT->Ocha, LastLine
           WHILE NOT EOF(Ifnr)
             LINE INPUT #Ifnr, LastLine
@@ -558,7 +493,7 @@ SUB Highlighter.generate_all(BYVAL Buf AS ZSTRING PTR, BYVAL Stop_ AS INTEGER)
     WHILE i <= Stop_
       SELECT CASE AS CONST Buf[i]
       CASE 0 : EXIT WHILE
-      CASE ASC(!"\n") 
+      CASE ASC(!"\n")
         IF i <= start THEN Code(eol(Symbols, LineNo)) : start = i + 1 : EXIT SELECT
         Code(generate_code(Buf, start, i - start) & eol(Symbols, LineNo))
         start = i + 1
@@ -592,7 +527,7 @@ SUB Highlighter.generate_all(BYVAL Buf AS ZSTRING PTR, BYVAL Stop_ AS INTEGER)
             END SELECT
           END SELECT : i += 1
         LOOP
-      
+
         Code(*CMNT_A & special_chars(Buf, start, i - start + 1) & *SPAN_E)
         DO
           SELECT CASE AS CONST Buf[i]
@@ -1205,7 +1140,7 @@ The result is in the typ variable:
     word = UCASE(word)
     res = word_type(word)
     typ = IIF(res, ASC(*res), FB_CODE)
-  
+
     SELECT CASE AS CONST OPT->CaseMode '  reformat letter cases, if required
     CASE OPT->CASE_LOWER : MID(*T, start + 1, size) = LCASE(word)
     CASE OPT->CASE_MIXED : MID(*T, start + 1, size) = MID(*res, 2, size)
@@ -1295,7 +1230,7 @@ END FUNCTION
 
 This function prepares a HTML file to replace the syntax highlighting.
 It reads the header from the original output and copies the context to
-the replacement file. The file name of the odiginal FB source is
+the replacement file. The file name of the original FB source is
 extracted from the header. Then the links from the original listing
 part are extracted in to the \ref Highlighter::Symbols table.
 
@@ -1489,7 +1424,7 @@ END SUB
 /'* \brief Emitter to be called after parsing of a file
 \param P the parser calling this emitter
 
-This emitter gets called after the parser ends its parsing process. 
+This emitter gets called after the parser ends its parsing process.
 It sends the rest of the FB source code to the output stream.
 
 '/
@@ -1509,8 +1444,8 @@ END SUB
 \param P the parser calling this emitter
 
 This emitter operates on include statements. It extracts the file name
-and checks the \ref Highlighter::Symbols table for a matching link. If there
-is no link, nothing is done.
+and checks the \ref Highlighter::Symbols table for a matching link. If
+there is no link, nothing is done.
 
 In case of a matching link the source code gets emitted up to the link.
 
@@ -1520,16 +1455,22 @@ checked for linkage.
 '/
 SUB synt_incl CDECL(BYVAL P AS Parser PTR)
   WITH *CAST(Highlighter PTR, P->UserTok)
-    VAR fnam = TRIM(P->SubStr(P->NamTok), """") _
-       , res = IIF(.Symbols, .Symbols->rep(fnam), SADD(fnam))
+    VAR fnam = TRIM(P->SubStr(P->NamTok), """")
+    fnam = .special_chars(SADD(fnam), 0, LEN(fnam)) '   LaTeX underscore
+    VAR res = IIF(.Symbols, .Symbols->rep(fnam), SADD(fnam))
 
-    .generate_all(SADD(P->Buf), P->Tk1[1])
+    IF res = SADD(fnam) THEN
+      .generate_all(SADD(P->Buf), P->NamTok[1])
+    ELSE
+      VAR i = INSTR(*res, fnam) _
+        , j = i + LEN(fnam) _
+        , a = P->StaTok[1] - 1 _
+        , l = P->NamTok[1] - a
+      .generate_all(SADD(P->Buf), a)
+      Code(.generate_code(SADD(P->Buf), a, l) _
+        & *.QUOT_A & LEFT(*res, i - 1) & fnam & MID(*res, j) & *.QUOT_E)
+    END IF
     P->SrcBgn = P->NamTok[1] + P->NamTok[2]
-    IF .GenAny ORELSE 0 = OPT->InTree THEN EXIT SUB
-
-    Code(.eol(.Symbols, .LineNo))
-    P->Include(fnam)
-    .Pars = P
   END WITH
 END SUB
 
@@ -1583,9 +1524,10 @@ END SUB
 
 
 ' place the handlers in the emitter interface
-WITH_NEW_EMITTER("SyntaxHighLighting")
-    .Init_ = @synt_init
-    .Exit_ = @synt_exit
-    .Incl_ = @synt_incl
-    .Func_ = @synt_func_
+WITH_NEW_EMITTER(EmitterTypes.SYNTAX_REPAIR)
+    .Nam = "SyntaxHighLighting"
+  .Init_ = @synt_init
+  .Exit_ = @synt_exit
+  .Incl_ = @synt_incl
+  .Func_ = @synt_func_
 END WITH
