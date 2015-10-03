@@ -212,7 +212,7 @@ END SUB
 
 Create a declaration for the construct at the current parser
 position using FB style. All FB keywords gets mangled to a single
-word to get a FreeBasic look-and-feel in the documentation. Ie we emit
+word to get a FreeBASIC look-and-feel in the documentation. Ie we emit
 
  - "SUB Name();" (instead of "void Name(void);")
  - "INTEGER varnam" (instead of "int varname")
@@ -270,7 +270,7 @@ we emit
  - ...
 
 The C source code is very useful when you use a library compiled
-with FreeBasic in a other language like C or C++. fb-doc can
+with FreeBASIC in a other language like C or C++. fb-doc can
 auto-generate the header files (just check initializers and array
 dimensioning manually).
 
@@ -509,7 +509,7 @@ SUB c_defi_ CDECL(BYVAL P AS Parser PTR)
     VAR e = .EndTok[1]
     IF *.StaTok = .TOK_MACR THEN
       VAR a = .NamTok[1], l = .CurTok[1] - a
-      Code(MID(.Buf, a + 1, l) & "  /* (multi line FreeBasic #MACRO) ")
+      Code(MID(.Buf, a + 1, l) & "  /* (multi line FreeBASIC #MACRO) ")
       a += l
       Code(MID(.Buf, a + 1, e - a) & " */ ")
     ELSE
@@ -806,7 +806,7 @@ WITH_NEW_EMITTER(EmitterTypes.C_SOURCE)
 END WITH
 
 
-/'* \brief Handler for exporting FreeBasic source code
+/'* \brief Handler for exporting FreeBASIC source code
 \param P the parser calling this handler
 \param E the end position in the input buffer
 

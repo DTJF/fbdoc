@@ -9,7 +9,7 @@ It also includes the headers for the modules.
 
 /'* \brief The help message for the command line interface (option `--help`) '/
 #DEFINE MSG_HELP _
-  "Command line tool for generating documentation from FreeBasic source code." & NL & NL & _
+  "Command line tool for generating documentation from FreeBASIC source code." & NL & NL & _
   "Usage" & NL & _
   "  " & FBDOC_BINARY & " [Options] [file specs]" & NL & NL & _
   "Options:" & NL & _

@@ -7,7 +7,7 @@ Further Development  {#SecToDo}
 ===================
 
 In combination with Doxygen fb-doc is a powerful documentation
-system for FreeBasic source code. The Doxygen support for FreeBasic
+system for FreeBASIC source code. The Doxygen support for FreeBasic
 is much better than for any other BASIC dialect (ie like VB6). But
 there's still some room for optimization, for Doxygen support as
 well as for other features, like:

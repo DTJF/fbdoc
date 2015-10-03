@@ -62,7 +62,7 @@ This mode is active when none of the other modes is specified.
 |           Input | file (path and name)                                  |
 |          Output | STDOUT (context depends on emitter)                   |
 | Default Emitter | C_Source (in FB style)                                |
-|       File Spec | FreeBasic source code (like *.bas;*.bi -- no default) |
+|       File Spec | FreeBASIC source code (like *.bas;*.bi -- no default) |
 | Further Options | -a -c -e -r -t (depends on emitter)                   |
 | Ignored Options | -o
 
@@ -123,7 +123,7 @@ to your Doxygen file tree.
 |           Input | file (path and name)                         |
 |          Output | file (.bi -> .h, .bas -> .c)                 |
 | Default Emitter | C_Source (in FB style)                       |
-|       File Spec | FreeBasic source code (default: *.bas *.bi)  |
+|       File Spec | FreeBASIC source code (default: *.bas *.bi)  |
 | Further Options | -a -c -e -o (defaults to ../doc/c_src) -r -t |
 | Ignored Options | (depends on emitter)                         |
 
@@ -529,7 +529,7 @@ files as if they were specified as input files on the command line.
 
 \note This only works with files in the source code tree. Standard
       header files (ie like `"crt/string.bi"`) wont be found since
-      fb-doc doesn't know the standard FreeBasic include path.
+      fb-doc doesn't know the standard FreeBASIC include path.
 \note For this option to work the emitter must provide a handler for
       \ref EmitterIF::Incl_() in which the parsing of the new files
       get started. Not all emitters do support this.

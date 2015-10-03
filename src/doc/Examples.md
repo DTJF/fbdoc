@@ -133,7 +133,7 @@ a special comment by starting its context with a magic character
 - `*` for comments (exported as C comment)
 - `&` for direct exports (exported as C source)
 
-\note In these examples the ends of the FreeBasic multi line comments
+\note In these examples the ends of the FreeBASIC multi line comments
        are fakes, because the straight single quote mark cannot be used
        in the source (Geany lexer gets confused). Instead an acute
        accent is used. Correct them when you intend to copy / paste the
@@ -188,7 +188,7 @@ a special comment by starting its context with a magic character
    C comment
    * /
    ~~~
--# Normal FreeBasic comments (without magic character) wont be emitted.
+-# Normal FreeBASIC comments (without magic character) wont be emitted.
    ~~~{.bas}
    ' a line end comment
 
@@ -205,7 +205,7 @@ a special comment by starting its context with a magic character
 Variables Declaration  {#SecExaDim}
 =====================
 
-A varible declaration in a FreeBasic source code is in human readable
+A varible declaration in a FreeBASIC source code is in human readable
 words (making it easy to understand the code) and may look like
 
 ~~~{.bas}

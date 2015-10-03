@@ -15,7 +15,7 @@ data in separate files and keeping comments to a minimal size.
 Powerful tool-chains (back-ends) exist for several programming
 languages (like C) to generate output in different formats (ie like
 *html*, *pdf*, *man-pages* and others). But previous to fb-doc
-there is nothing for FreeBasic source code yet.
+there is nothing for FreeBASIC source code yet.
 
 Rather than being a complete tool-chain fb-doc is designed as a bridge
 to existing C back-ends, since it's a lot of work to build and test
@@ -32,7 +32,7 @@ The steps to generate a well documented project are
 -# generate source code, compile and test it
 -# add documentation comments inside the source code and keep them up
    to date
--# run fb-doc on the FreeBasic source code to build a C-like
+-# run fb-doc on the FreeBASIC source code to build a C-like
    intermediate format
 -# run the C-back-end on the intemediate format to build the
    documentation output in one or more output formats (ie \em html,
@@ -42,7 +42,7 @@ This intermediate format doesn't contain complete C source and
 cannot get compiled by a C compiler. Instead it just contains all
 information the lexical scanner of the back-end needs to build the
 documentation output. Therefor fb-doc itself doesn't parse the complete
-FreeBasic source code. Instead it also acts as a lexical scanner to
+FreeBASIC source code. Instead it also acts as a lexical scanner to
 extract just the necessary information.
 
 \note That's why fb-doc shouldn't be executed on buggy source (be

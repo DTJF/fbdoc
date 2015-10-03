@@ -115,14 +115,14 @@ Manual Compiling  {#SecManual}
 
 
 build your personal binary of fb-doc.
-It gets shipped as a FreeBasic source tree. Find the code in the
+It gets shipped as a FreeBASIC source tree. Find the code in the
 folder *src* in your *fb-doc.zip* archive. To create your binary you
-need to install the [FreeBasic compiler
+need to install the [FreeBASIC compiler
 fbc](http://www.freebasic.net/get) for your operating system. Then just
 extract the *fb-doc* folder to any place on your hard disk, change to
 the folder *src* and compile the main file *fb-doc.bas*. Ie load the
 file in to Geany IDE and choose menu <em>Build -> Compile</em>. Or call
-the Freebasic compiler at the command line (in the extracted
+the FreeBASIC compiler at the command line (in the extracted
 folder *src*)
 ~~~{.sh}
 cd src/bas

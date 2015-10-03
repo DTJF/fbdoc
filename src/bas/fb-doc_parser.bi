@@ -30,7 +30,7 @@ the \ref EmitterIF.
 
 /'* \brief The parser
 
-Class to handle FreeBasic source code. A Parser allways work on
+Class to handle FreeBASIC source code. A Parser allways work on
 exactly one input stream, comming from a file or from STDIN. The
 Parser does
 
@@ -54,7 +54,7 @@ TYPE Parser
 /'* \brief The tokens used by the parser
 
 Enumerators used to classify the type of a token found in the
-FreeBasic source code.
+FreeBASIC source code.
 
 '/
   ENUM ParserTokens
@@ -222,7 +222,7 @@ about the state of the parser.
 
 /'* \name Filehandlers
 
-Filehandlers are used to load some FreeBasic source code input in to
+Filehandlers are used to load some FreeBASIC source code input in to
 the buffer \ref Parser::Buf from different input channels (may be the
 STDIN pipe, a single file or all files in a folder). Afterwards the
 source code gets parsed and translated output created by the emitter
@@ -300,7 +300,7 @@ Variables used in pre-parsing process.
 
 /'* \name Internal parsers
 
-Functions for evaluating a construct in the FreeBasic source code after
+Functions for evaluating a construct in the FreeBASIC source code after
 a relevant keyword was found in the pre-parsering process. After the
 fine-parsing process the matching emitter-handler gets called. (Or the
 function \ref EmitterIF::Error_() in case of a syntax problem. It's up

@@ -248,14 +248,14 @@ rmdir bas
 C Headers  {#SecUseCHeader}
 =========
 
-Since fb-doc needs to generate C-like code for the back-end parsers,
-it can also be useful to create a set of C headers for a library
-written in FreeBasic. By default the FB types get mangled in to one
-word (for documentation purposes). Ie a FB parameter <em>byref Nam
-as const short</em> gets the pseudo C code <em>byref_as_const_short
-Nam</em>. This mangling can get suppressed by option `--cstyle`
-and fb-doc emitts real C types. In that case the example gets
-<em>const short* Nam</em> and this code can be used by a C compiler.
+Since fb-doc needs to generate C-like code for the back-end parsers, it
+can also be useful to create a set of C headers for a library written
+in FreeBASIC (= FB). By default the FB types get mangled in to one word
+(for documentation purposes). Ie a FB parameter <em>byref Nam as const
+short</em> gets the pseudo C code <em>byref_as_const_short Nam</em>.
+This mangling can get suppressed by option `--cstyle` and fb-doc emitts
+real C types. In that case the example gets <em>const short* Nam</em>
+and this code can be used by a C compiler.
 
 So when we need C headers for our FB library we just execute
 

@@ -58,7 +58,7 @@ Since Doxygen doesn't support to generate documentation for such an
 interface, it cannot create caller or callee graphs for the emitter
 functions. But we use fb-doc and can work-around this by creating
 additional C output in form of member function. These functions are
-unvisible for the FreeBasic compiler, but get emitted to the pseudo C
+unvisible for the FreeBASIC compiler, but get emitted to the pseudo C
 source for the Doxygen back-end and produce the desired output for
 the documentation.
 

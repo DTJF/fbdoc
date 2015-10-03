@@ -294,7 +294,7 @@ means no caller or callees graphs will be created.
 
 fb-doc can use external emitter modules. These are executable
 binaries, compiled and linked as a library for dynamic linkage,
-either by using the FreeBasic compiler or any other compiler / linker
+either by using the FreeBASIC compiler or any other compiler / linker
 combination. These files may have any name and get the system
 specific file name extension (= suffix) \em .so on LINUX or \em .dll
 on windows.
