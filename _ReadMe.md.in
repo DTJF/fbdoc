@@ -1,13 +1,14 @@
-Welcome to the *@PROJ_NAME@* package. It's a tool for generating
-documentation from and for FreeBASIC (= FB) source code. Rather than
-creating the documentation output directly, *@PROJ_NAME@* is designed
-to close the gap between FB and C syntax to allow for using any C / C++
-documentation tool-chain. Also it supports the creation of
-documentational comments in the source and it can get extended via
-external plugins.
+Welcome to the *@PROJ_NAME@* package. It's a multifunctional tool,
+mainly for generating documentation from and for FreeBASIC (= FB)
+source code, but useful for other pruposes as well, ie. like generating
+header files. Rather than creating the documentation output directly,
+*@PROJ_NAME@* is designed to close the gap between FB and C syntax to
+allow for using any C / C++ documentation tool-chain. Also it supports
+the creation of documentational comments in the source and it can get
+extended via external plugins.
 
 The package is [hosted at GitHub](@PROJ_WEBS@) and
-it includes
+it contains
 
 - the source code of the *@PROJ_NAME@* tool
 - the context of the documentation

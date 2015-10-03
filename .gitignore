@@ -19,6 +19,5 @@ test*/**/*
 src/test*/**/*
 doc/html/**/*
 doc/latex/**/*
-cmake/**/*
 CMakeFiles/**/*
 _CPack*/**/*

@@ -1,13 +1,14 @@
-Welcome to the *fb-doc* package. It's a tool for generating
-documentation from and for FreeBASIC (= FB) source code. Rather than
-creating the documentation output directly, *fb-doc* is designed
-to close the gap between FB and C syntax to allow for using any C / C++
-documentation tool-chain. Also it supports the creation of
-documentational comments in the source and it can get extended via
-external plugins.
+Welcome to the *fb-doc* package. It's a multifunctional tool,
+mainly for generating documentation from and for FreeBASIC (= FB)
+source code, but useful for other pruposes as well, ie. like generating
+header files. Rather than creating the documentation output directly,
+*fb-doc* is designed to close the gap between FB and C syntax to
+allow for using any C / C++ documentation tool-chain. Also it supports
+the creation of documentational comments in the source and it can get
+extended via external plugins.
 
 The package is [hosted at GitHub](http://github.com/DTJF/fb-doc) and
-it includes
+it contains
 
 - the source code of the *fb-doc* tool
 - the context of the documentation
