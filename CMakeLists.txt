@@ -24,27 +24,6 @@ ADD_SUBDIRECTORY(src/bas)
 # the documentation construction folder
 ADD_SUBDIRECTORY(doc)
 
-## transfer constants to FB source
-#SET(fnam ${CMAKE_CURRENT_SOURCE_DIR}/src/bas/version.bas)
-#CONFIGURE_FILE(${fnam}.in  ${fnam} @ONLY)
-
-## fbdbg[.exe]: link the final executable
-#ADD_EXECUTABLE(${PROJ_NAME} src/bas/fb-doc.bas)
-##SET_TARGET_PROPERTIES(fbdbg PROPERTIES
-  ##LINK_FLAGS "-export"
-  ##)
-
-## installation
-##INSTALL(FILES ${UI_FILES}
-   ##DESTINATION bin
-   ##)
-##INSTALL(DIRECTORY src/dat src/img src/locale
-  ##DESTINATION bin
-  ##)
-#INSTALL(TARGETS ${PROJ_NAME}
-  #DESTINATION bin
-  #)
-
 #SET(CPACK_GENERATOR "TBZ2")
 
 # autogenerate dependency information
