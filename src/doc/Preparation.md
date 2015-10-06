@@ -5,7 +5,7 @@ Preparation  {#PagInstall}
 First, you've to
 
 -# [install some programming tools](#SecTools) to
--# [get the package](#SecGit) and
+-# [get the package](#SecGet) and
 -# [compile your executable](#SecBuild).
 
 
@@ -34,8 +34,14 @@ are optional.
 
 
 
-Get Package  {#SecGit}
+Get Package  {#SecGet}
 ===========
+
+Depending on whether you installed the optional GIT package, there're
+two ways to get the \Proj package.
+
+GIT  {#SubSecGit}
+---
 
 Use GIT to get your copy of the package and change to the source tree
 
@@ -44,26 +50,35 @@ git clone https://github.com/DTJF/fb-doc
 cd fb-doc
 ~~~
 
-(As an alternative you can click the [Download
-ZIP](https://github.com/DTJF/cmakefbc/archive/master.zip) button on the
-\Proj website, unpack the archive and change to the new folder.)
+ZIP  {#SubSecZip}
+---
+
+As an alternative you can download a Zip archive by clicking the
+[Download ZIP](https://github.com/DTJF/cmakefbc/archive/master.zip)
+button on the \Proj website, and use your local Zip software to unpack
+the archive and change to the newly created folder.
 
 
-CMake Build System  {#SecCMake}
-==================
+Build \Proj  {#SecBuild}
+===========
+
+Depending on whether you installed the optional CMake package, there're
+two ways to build the \Proj executable.
+
+CMake Build System  {#SubSecCMake}
+------------------
 
 The prefered way to build the executable and the documentation files is
 to use the scripts for the CMake build system. If you don't want to
 install or to use CMake, then skip this section and continue at \ref
-SecManual.
+SubSecManual.
 
 The CMake scripts check your system and through warnings if anything is
 missing. Otherwise you can either perform an in-source or an
 out-of-source build. The later should be your prefered choise.
 
 
-In-Source-Build  {#SubSecInS}
----------------
+*In-Source-Build*
 
 The following command triple will compile the executable in the source
 tree and install it on your system:
@@ -78,8 +93,8 @@ sudo make install
 
 \note In-Source-Builds polute the source tree by newly created files.
 
-Out-Of-Source-Build  {#SubSecOoS}
--------------------
+
+*Out-Of-Source-Build*
 
 The following command quintuple will create a new *build* folder,
 change to that folder, compile the executable and install it on your
@@ -96,30 +111,39 @@ sudo make install
 \note Omit `sudo` in case of non-LINUX systems.
 
 
-Documentation-Build  {#SubSecMakeDoc}
--------------------
+*Documentation-Build*
 
-The following command will build the documentation in form of an HTML
-file tree (either in-source or out-of-source):
+In order to build the documentation, all optional packages listed in
+section \ref SecTools have to get installed. The following command will
+build the documentation in form of an HTML file tree and in form of a
+PDF file (either in-source or out-of-source):
 
 ~~~{.sh}
 make doc
 ~~~
 
-\note Find the start file at *doc/html/index.html*.
+\note Find the HTML start file at *doc/html/index.html*.
+\note Find the PDF file at *doc/fb-doc.pdf*.
+
+Both targets can get build separately by executing
+
+~~~{.sh}
+make doc_htm
+make doc_pdf
+~~~
 
 
-Manual Compiling  {#SecManual}
-================
+Manual Compiling  {#SubSecManual}
+----------------
 
 
 
-build your personal binary of fb-doc.
+build your personal binary of \Proj.
 It gets shipped as a FreeBASIC source tree. Find the code in the
 folder *src* in your *fb-doc.zip* archive. To create your binary you
 need to install the [FreeBASIC compiler
 fbc](http://www.freebasic.net/get) for your operating system. Then just
-extract the *fb-doc* folder to any place on your hard disk, change to
+extract the \Proj folder to any place on your hard disk, change to
 the folder *src* and compile the main file *fb-doc.bas*. Ie load the
 file in to Geany IDE and choose menu <em>Build -> Compile</em>. Or call
 the FreeBASIC compiler at the command line (in the extracted
@@ -134,17 +158,17 @@ This creates an executable binary named
 - *fb-doc* (on UNIX-like systems) or
 - *fb-doc.exe* (on other systems).
 
-That's all you need to get started. Now you can use fb-doc and check
+That's all you need to get started. Now you can use \Proj and check
 its features, ie translate FB code to intermediate C format or generate
 templates.
 
 Therefor you don't need a complex installation. Just place the compiled
 binary in any of your source folders and execute it there (see \ref
-PagUsage for details). Or you test your fb-doc executable on its own
+PagUsage for details). Or you test your \Proj executable on its own
 source, find some examples in \ref SecExaCli.
 
 To generate a real documentation &mdash; as mentioned in the
-Introduction, fb-doc is not a complete documentation generator &mdash;
+Introduction, \Proj is not a complete documentation generator &mdash;
 you have to install an additional back-end for C source, like
 
 - [gtk-doc](http://developer.gnome.org/gtk-doc-manual/stable/index.html)
@@ -162,8 +186,8 @@ especially when you have to document a program or application &mdash;
 the later is the better choise. Doxygen is a more modern tool, it's
 easier to handle, comes with a GUI front-end and has more features.
 
-When you intend to use fb-doc in a regular basis and call it from
-different folders for several projects, it's best to install fb-doc on
+When you intend to use \Proj in a regular basis and call it from
+different folders for several projects, it's best to install \Proj on
 your system, as specified in one of the two following sections.
 
 
@@ -179,24 +203,24 @@ to a folder in the system `PATH`. Using a link allows
 This can be done by executing in a terminal
 ~~~{.sh}
 cd .../fb-doc/src
-cp -l fb-doc ~/bin/fbdoc
+cp -l fb-doc ~/bin/fb-doc
 ~~~
 
 Assuming that the folder `~/bin` is in your PATH you can now execute
-fb-doc in each folder by calling the link. Try
+\Proj in each folder by calling the link. Try
 
 \code{.sh}
 cd ~
-fbdoc --version
+fb-doc --version
 \endcode
 
 and you should see the version information text in the terminal. This
 solution works on your personal user account. When you need a system
-wide installation that allows all users to access fb-doc, then you need
+wide installation that allows all users to access \Proj, then you need
 admin privileges to place the link in a similar system folder, ie in like
 ~~~{.sh}
 cd .../fb-doc/src
-sudo cp -l fb-doc /usr/bin/fbdoc
+sudo cp -l fb-doc /usr/bin/fb-doc
 ~~~
 
 \note Replace `.../` by a proper path on your system.
@@ -207,7 +231,7 @@ DOS / windows Installation  {#SubSecInsWoe}
 
 DOS doesn't support links and on the other system links don't work at
 the terminal (AFAIK). So it's best to use a batch file to call the
-fb-doc executable.
+\Proj executable.
 
 Here's the recommended way
 
@@ -222,7 +246,7 @@ C:\YOUR\PATH\TO\fb-doc\src\fb-doc.exe %*
 Then test the installation by executing
 ~~~{.bat}
 cd \
-fbdoc --version
+fb-doc --version
 ~~~
 
 and you should see the version information text in the terminal.
@@ -233,7 +257,7 @@ and you should see the version information text in the terminal.
 Geany IDE Installation  {#SecInsGeany}
 ======================
 
-fb-doc can be used as a filter (= custom command) for Geany IDE. Using
+\Proj can be used as a filter (= custom command) for Geany IDE. Using
 this feature, we can send the current selection (a text fragment) to
 the filter and receive the filtered output as replacement for the
 selected text. From a user point of view it looks like paste a new text
@@ -246,14 +270,14 @@ To get this running, start Geany and choose menu item
 *Add* to get a new item. Then type
 
 ~~~{.sh}
-fbdoc --geany-mode
+fb-doc --geany-mode
 ~~~
 
 to use the default emitter for gtk-doc templates or select the emitter
 for Doxygen templates by
 
 ~~~{.txt}
-fbdoc --geany-mode "DoxygenTemplates"
+fb-doc --geany-mode "DoxygenTemplates"
 ~~~
 
 To test the installation open a new editor window. Now right-click on
@@ -281,9 +305,9 @@ to get a hint for solving the problem.
 \note Instead of the right-click menu try also keybindings &mdash;
        `<Crtl>-[1 | 2 | 3]` is default. Find further details in [Geany
        documentation](http://www.geany.org/manual/current/index.html#sending-text-through-custom-commands").
-\note This setting only works when fb-doc is installed in your system
+\note This setting only works when \Proj is installed in your system
        `PATH` (see previous sections for details). If you don't want to
-       install fb-doc, you have to use the full path and the original
+       install \Proj, you have to use the full path and the original
        name of the executable (ie like `/home/me/proj/fb-doc/src/fb-doc
        -g Doxy`).
 

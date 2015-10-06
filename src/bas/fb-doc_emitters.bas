@@ -270,7 +270,7 @@ we emit
  - ...
 
 The C source code is very useful when you use a library compiled
-with FreeBASIC in a other language like C or C++. fb-doc can
+with FreeBASIC in a other language like C or C++. \Proj can
 auto-generate the header files (just check initializers and array
 dimensioning manually).
 

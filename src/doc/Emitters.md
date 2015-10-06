@@ -38,7 +38,7 @@ translation of `TYPE`s (`class{public:` *or* `typedef struct{`),
 `CONSTRUCTOR`s and `DESTRUCTOR`s (`name::name()` *or* `void()`) and the
 names in \#`include` statements (original *or* suffix `".c" ".h"`).
 
-Option `--asterix` makes fb-doc to start each line in a special multi
+Option `--asterix` makes \Proj to start each line in a special multi
 line comment block by the characters '* '. This is mandatory for the
 gtk-doc back-end. Adding these characters to the FB source code has two
 downsides: it blows up the code size and these characters complicate
@@ -164,11 +164,11 @@ these categories (replacing the '...' in the above tag format examples)
 Doxygen supports a further style class named `keywordflow`, meant to be
 used for keywords like `WHILE ... WEND`, `DO ...LOOP` and so on. This
 doesn't work for FB code since some keywords are used in different
-meanings (ie `FOR ... next` and also `open(... FOR input)`). So fb-doc
+meanings (ie `FOR ... next` and also `open(... FOR input)`). So \Proj
 doesn't use this style class.
 
 This emitter is designed to be used in mode `--syntax_mode` to repair
-the syntax hightlighting in Doxygen output. In this mode fb-doc reads
+the syntax hightlighting in Doxygen output. In this mode \Proj reads
 the original Doxygen output files and extracts the links to the
 documentation. The header and footer of the original file get copied to
 the new file and the listing section get filled with fresh code,

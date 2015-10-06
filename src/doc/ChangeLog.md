@@ -6,7 +6,7 @@ Changelog & Credits {#PagChangeLog}
 Further Development  {#SecToDo}
 ===================
 
-In combination with Doxygen fb-doc is a powerful documentation
+In combination with Doxygen \Proj is a powerful documentation
 system for FreeBASIC source code. The Doxygen support for FreeBasic
 is much better than for any other BASIC dialect (ie like VB6). But
 there's still some room for optimization, for Doxygen support as
@@ -15,7 +15,7 @@ well as for other features, like:
 - additional emitters to support further documentation systems or other tools
 - extended SUB / FUNCTION detection for caller / callee graph when using operators `.` or `->`
 - a hash table for callees to speed up the execution
-- currently fb-doc only works with clean FB code. When one of the
+- currently \Proj only works with clean FB code. When one of the
   used standard keywords get \#`UNDEF`ined, grazy things may happen.
 - ...
 
@@ -24,7 +24,11 @@ to the project page at
 
 - \Page
 
-or feel free to send your ideas to the author (\Email).
+or to the
+
+- [forum page](http://www.freebasic.net/forum/viewtopic.php?f=8&t=19810)
+
+or feel free to send your ideas directly to the author (\Email).
 
 
 fb-doc-0.4 {#SecV-0-4}
@@ -32,17 +36,20 @@ fb-doc-0.4 {#SecV-0-4}
 
 New:
 
-- Doxyfile parsing supports @INCLUDE tag now
-- CMake build scripts, modular compiling (in-source / out-of-source)
 - GIT repository
+- CMake build scripts, modular compiling (in-source / out-of-source)
 - separate doc building: doc_htm, doc_pdf
+- Doxyfile parsing supports `@INCLUDE` tag now
 - modular Doxyfile, auto-includes PROJ constants
+- source listings: documentational comments get removed now (as in Doxygen listings)
+- source listings: new option --doc-comments (-d) to force inclusion of documentational comments
 - example plugin py_ctypes to create language bindings for python
 
 Bugfixes:
 
-- syntax highlighter supports #INCLUDE now
-- interface for external emitter plugins, renewed examples
+- syntax highlighter: files in subfolders found now (TEX, XML)
+- syntax highlighter: supports #`INCLUDE` now (HTM, TEX, XML)
+- fixed interface for external emitter plugins, renewed examples
 
 Released on 2015 October, ??.
 

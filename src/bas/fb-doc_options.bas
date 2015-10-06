@@ -2,7 +2,7 @@
 \brief The source code for the \ref Options class
 
 This file contains the source code for the Options class. It's used
-to scan the command line options and control the execution of fb-doc.
+to scan the command line options and control the execution of \Proj.
 
 '/
 
@@ -24,7 +24,7 @@ with two minus characters). Some options may have an additinal
 parameter.
 
 Each command line argument that is neither an option nor its parameter
-gets interpreted as a file name or pattern. fb-doc collects them in
+gets interpreted as a file name or pattern. \Proj collects them in
 a queue and operates on this queue afterwards. The queue may have
 mixed entries (names and patterns). It's recommended to specify
 queue entries in single or double quotes.
@@ -84,7 +84,7 @@ variable \ref InFiles, separated by new line characters.
 
 The function returns the value of \ref RunMode. In case of an error
 the RunMode is \ref ERROR_MESSAGE and the variable \ref Errr
-contains an message text. fb-doc stops execution in that case.
+contains an message text. \Proj stops execution in that case.
 
 Loading an external emitter plugin must be done after scanning the
 COMMAND strings because DYLIBLOAD destroys the COMMAND array.
@@ -115,6 +115,7 @@ FUNCTION Options.parseCLI() AS RunModes
         EmitTyp = SYNTAX_REPAIR
 
       CASE "-a", "--asterix" : Asterix = 1
+      CASE "-d", "--doc-comments" : Docom = 1
       CASE "-c", "--cstyle"
             Types = C_STYLE
         CreateFunction = @cCreateFunction
@@ -165,7 +166,7 @@ DoxygenTemplates).
 
 In case of no match in any internal \ref EmitterIF::Nam this SUB tries
 to load an external emitter. If this fails an error message gets
-created and fb-doc stops execution.
+created and \Proj stops execution.
 
 '/
 SUB Options.chooseEmitter(BYREF F AS STRING)

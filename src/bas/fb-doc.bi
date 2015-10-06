@@ -15,17 +15,18 @@ It also includes the headers for the modules.
   "Options:" & NL & _
   " -h (--help)    : print this help text and stop" & NL & _
   " -v (--version) : print version information and stop" & NL & _
-  "       none        : file in --> STDOUT" & NL & _
-  " -f (--file-mode)  : file in --> file out" & NL & _
-  " -g (--geany-mode) : STDIN --> STDOUT" & NL & _
-  " -l (--list-mode)  : Doxgfile inputs --> fb-doc.lfn" & NL & _
-  " -s (--syntax-mode): scan doxygen output, repair syntax highlighting" & NL & _
-  " -a (--asterix) : prepend '* ' in ML comments (gtk-doc style)" & NL & _
-  " -c (--cstyle)  : emit real C types" & NL & _
-  " -e (--emitter) : specify emitter name" & NL & _
-  " -o (--outpath) : specify output directory" & NL & _
-  " -r (--recursiv): scan input files also in subfolders" & NL & _
-  " -t (--tree)    : scan source tree (follow #INCLUDEs)" & NL & _
+  "       none         : file in --> STDOUT" & NL & _
+  " -f (--file-mode)   : file in --> file out" & NL & _
+  " -g (--geany-mode)  : STDIN --> STDOUT" & NL & _
+  " -l (--list-mode)   : Doxgfile inputs --> fb-doc.lfn" & NL & _
+  " -s (--syntax-mode) : scan doxygen output, repair syntax highlighting" & NL & _
+  " -a (--asterix)     : prepend '* ' in ML comments (gtk-doc style)" & NL & _
+  " -c (--cstyle)      : emit real C types" & NL & _
+  " -d (--doc-comment) : force documentational comments in listings" & NL & _
+  " -e (--emitter)     : specify emitter name" & NL & _
+  " -o (--outpath)     : specify output directory" & NL & _
+  " -r (--recursiv)    : scan input files also in subfolders" & NL & _
+  " -t (--tree)        : scan source tree (follow #INCLUDEs)" & NL & _
   "Examples:" & NL & _
   "  " & FBDOC_BINARY & " --geany-mode" & NL & _
   "      Get input from STDIN, prepend a matching comment block, emit to STDOUT" & NL & _

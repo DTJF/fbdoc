@@ -2,12 +2,12 @@ Tables  {#PagTables}
 ======
 \tableofcontents
 
-This chapter contains some information on fb-doc in table format.
+This chapter contains some information on \Proj in table format.
 
 Overview  {#SecTabOverview}
 ========
 
-fb-doc is a multi functional tool. The choosen Emitter specifies which
+\Proj is a multi functional tool. The choosen Emitter specifies which
 kind of output to generate. And the choosen Run Mode specifies where to
 get input from and where to write the output at. Here's a table of all
 run modes against the inbuild emitters ("DEF" = default configuration,
@@ -15,17 +15,17 @@ run modes against the inbuild emitters ("DEF" = default configuration,
 
 | Emitter \ Run Mode | default | `--file-mode` | `--list-mode` | `--syntax-mode` | `--geany-mode` |
 | -----------------: | :-----: | :-----------: | :-----------: | :-------------: | :------------: |
-| C_Source           |   DEF   |      DEF      |       -       |        -        |        +       |
-| GtkDocTemplates    |    +    |       +       |       -       |        -        |       DEF      |
-| DoxygenTemplates   |    +    |       +       |       -       |        -        |        +       |
-| FunctionNames      |    +    |       +       |      DEF      |        -        |        +       |
-| SyntaxHighLighting |    +    |       +       |       -       |       DEF       |        +       |
+| \ref SecEmmCSource |   DEF   |      DEF      |       -       |        -        |        +       |
+| \ref SecEmmGtk     |    +    |       +       |       -       |        -        |       DEF      |
+| \ref SecEmmDoxy    |    +    |       +       |       -       |        -        |        +       |
+| \ref SecEmmLfn     |    +    |       +       |      DEF      |        -        |        +       |
+| \ref SecEmmSyntax  |    +    |       +       |       -       |       DEF       |        +       |
 
 
 Emitter  {#SecTabEmitter}
 =======
 
-fb-doc has five inbuild emitters to generate different kinds of output.
+\Proj has five inbuild emitters to generate different kinds of output.
 By setting a run mode (\ref SecOptModes) a default emitter gets
 specified. Use option `--emitter` (`-e`) after the run mode option to
 override the default setting. See chapter \ref PagEmitter for details.
@@ -43,13 +43,13 @@ override the default setting. See chapter \ref PagEmitter for details.
 <td> default mode (Doxy-Filter) and `--file-mode`
 <td> Translate FB source and documentational comments in intermediate format.
 <tr>
-<td> [GtkDocTemplates](\ref SecEmmGtk)
+<td> \ref SecEmmGtk
 <td> `--geany-mode`
 <td> Emit original source code and prepend documentation relevant
      constructs by templates for gtk-doc. Prefered usage in
      `--geany-mode`.
 <tr>
-<td> [DoxygenTemplates](\ref SecEmmDoxy)
+<td> \ref SecEmmDoxy
 <td> none
 <td> Emit original source code and prepend documentation relevant
      constructs by templates for Doxygen. Prefered usage in
@@ -69,7 +69,7 @@ override the default setting. See chapter \ref PagEmitter for details.
 </table>
 
 
-Run Mode  {#SecTabRunModi}
+Run Modi  {#SecTabRunModi}
 ========
 
 The data flow, that is where to get input from and where to write
@@ -90,32 +90,32 @@ SecOptModes for details.
 <td> one file
 <td> stream to STDOUT
 <tr>
-<td> `-f` *or* `--file-mode`
+<td> \ref SubSecOptFile
 <td> \ref SecEmmCSource
 <td> controlled by file specification[s]
 <td> *.\em c and *.\em h files
 <tr>
-<td> `-g` *or* `--geany-mode`
-<td> [GtkDocTemplates](\ref SecEmmGtk)
+<td> \ref SubSecOptGeany
+<td> \ref SecEmmGtk
 <td> stream from STDIN
 <td> stream to STDOUT
 <tr>
-<td> `-l` *or* `--list-mode`
+<td> \ref SubSecOptList
 <td> \ref SecEmmLfn
 <td> controlled by file specification[s]
 <td> file \em fb-doc.lfn
 <tr>
-<td> `-s` *or* `--syntax-mode`
+<td> \ref SubSecOptSyntax
 <td> \ref SecEmmSyntax
 <td> Doxyfile (+ files *.\em bas, *.\em bi, *.\em html, *.\em tex or *.\em xml)
 <td> files *.\em html, *.\em tex or *.\em xml
 <tr>
-<td> `-h` *or* `--help`
+<td> \ref SubSecOptHelp
 <td> none
 <td> none
 <td> stream to STDOUT
 <tr>
-<td> `-v` *or* `--version`
+<td> \ref SubSecOptVersion
 <td> none
 <td> none
 <td> stream to STDOUT
@@ -131,7 +131,7 @@ SecOptModes for details.
 Options  {#SecTabOptions}
 =======
 
-The following table contains an overview of all fb-doc options. An
+The following table contains an overview of all \Proj options. An
 option either starts by a minus character followed by a single
 character (short form) or by two minus characters followed by a word or
 pair of words (LONG form). Both forms have the same meaning.
@@ -156,9 +156,15 @@ PagOptionDetails .
      (instead of FB styled pseudo C syntax). Also used in emitter
      `DoxygenTemplates`.
 <tr>
+<td> \ref SubSecOptDocom
+<td> none
+<td> The syntax highlight emitter transfers documentational comments to
+     the output (by default they get removed since the context is
+     already in the html tree).
+<tr>
 <td> \ref SubSecOptEmitter
 <td> Emitter name
-<td> Customized emitter selection. fb-doc compares the parameter with
+<td> Customized emitter selection. \Proj compares the parameter with
      the names of the internal emitters. In case of no match it tries to
      find and load an external with this name.
 <tr>
@@ -203,7 +209,7 @@ PagOptionDetails .
 <td> Print the version information and quit.
 </table>
 
-\note An empty command line makes fb-doc to output the help text
+\note An empty command line makes \Proj to output the help text
       (as if option `--help` was given).
 
 \note Multiple run modes raise an error message, only one run mode is
@@ -215,9 +221,9 @@ File Specifications  {#SecTabFileSpecs}
 
 Any text in the command line not matching an option or its parameter
 gets interpreted as a file specification, that is either a file name or
-a file pattern. File specs get added to a queue and fb-doc executes
+a file pattern. File specs get added to a queue and \Proj executes
 this queue in the given order. Depending on the file spec[s] and the
-run mode, fb-doc operates in different ways:
+run mode, \Proj operates in different ways:
 
 <table>
 <tr>
@@ -269,7 +275,7 @@ run mode, fb-doc operates in different ways:
       include single or double quote characters.
 
 \note On UNIX like systems usually the shell (bash) expands the file
-      patterns (fb-doc doesn't see the pattern, but gets the files
+      patterns (\Proj doesn't see the pattern, but gets the files
       list instead, so option `--recursive` doesn't work -- enclose
       the pattern by single or double quotes to hinder that).
 
@@ -286,7 +292,7 @@ keywords for better human readability. Most of them are unknown for the
 C parser (fbc-0.90 has more than 400 keyword, in C it's less than 50).
 
 A type specification may have more than one word, the C parsers expect
-just a single word. That's why fb-doc packs all FB information in a
+just a single word. That's why \Proj packs all FB information in a
 single word type name, so that the C tool can handle this fantasy type
 and build the documentation output.
 
@@ -315,13 +321,13 @@ Files  {#SecTabFiles}
 
 The source files of this project are listed and described in detail in
 this documentation. The following tables give an overview on file types
-used by fb-doc and additional files not listed in the file browser.
+used by \Proj and additional files not listed in the file browser.
 
 
 File Types  {#SubSecFileTypes}
 ----------
 
-Different file types are used by fb-doc as input and output. The input
+Different file types are used by \Proj as input and output. The input
 depends on the emitter in use, the output depends on the run mode and
 the emitter.
 
@@ -408,13 +414,13 @@ documentation by executing Doxygen in this folder, check its manual for
 details. Those files are not listed in the Files browser, here're the
 their functions
 
-|        fb-doc/doc | Function                                                             |
-| ----------------: | :------------------------------------------------------------------- |
-|          Doxyfile | A configuration file, controlling the Doxygen and fb-doc operations. |
-| DoxygenLayout.xml | A configuration file, controlling the index of these *html* pages.   |
-|  DoxyExtension.in | A configuration file for CMake, containing global information.       |
-|        fb-doc.lfn | A list of function names generated by executing `fb-doc -l`.         |
-|        fb-doc.css | A customized style sheet specifying the colors.                      |
+|        fb-doc/doc | Function                                                            |
+| ----------------: | :------------------------------------------------------------------ |
+|          Doxyfile | A configuration file, controlling the Doxygen and \Proj operations. |
+| DoxygenLayout.xml | A configuration file, controlling the index of these *html* pages.  |
+|  DoxyExtension.in | A configuration file for CMake, containing global information.      |
+|        fb-doc.lfn | A list of function names generated by executing `fb-doc -l`.        |
+|        fb-doc.css | A customized style sheet specifying the colors.                     |
 
 To generate caller / callee graphs in the documentation (as in this
 html files) you have to install the *dot* tool from the *GraphViz*

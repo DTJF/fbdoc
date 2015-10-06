@@ -13,9 +13,16 @@ compiled in FB.
 #INCLUDE ONCE "../bas/fb-doc_parser.bi"   ' declaration of the Parser members (not used here)
 
 
+'* Macro to place a comment in to the output (file name and line number)
 #DEFINE NEW_ENTRY Code(!"\n\n# " & MID(.Fnam, 23) & ": " & .LineNo)
-DIM SHARED AS STRING T0, T1, T2, CLASSES, LIBRARY
-DIM SHARED AS LONG ENUM_COUNT
+DIM SHARED AS LONG _
+  ENUM_COUNT
+DIM SHARED AS STRING _
+    T0 _
+  , T1 _
+  , T2 _
+  , CLASSES _
+  , LIBRARY
 CLASSES = !"\n"
 LIBRARY = "libpruio.so"
 
@@ -150,20 +157,6 @@ SUB py_emitBlockNames CDECL(BYVAL P AS Parser PTR)
     CASE .TOK_DECL
     CASE ELSE : IF 0 = .NamTok THEN EXIT SUB
       IF .TypTok THEN ctype = doCType(P)
-      'IF .TypTok THEN
-        'VAR ntype = doType(.SubStr(.TypTok))
-        'IF ntype THEN ctype = *ntype ELSE ctype = .SubStr(.TypTok)
-        'IF .PtrCount THEN ctype = "POINTER(" & ctype & ")"
-        'IF .PtrCount THEN
-          'IF UCASE(.SubStr(.TypTok)) = "ANY" THEN
-            'ctype = "POINTER(c_void_p)"
-          'ELSE
-            'ctype = "POINTER(" & .SubStr(.TypTok) & ")"
-          'END IF
-        'ELSE
-          'ctype = .SubStr(.TypTok)
-        'END IF
-      'END IF
       VAR size = ""
       IF .DimTok THEN
         VAR a = .DimTok[1] + 2, i = a

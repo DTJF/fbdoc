@@ -16,6 +16,7 @@ in FB source).
 '/
 
 #INCLUDE ONCE "fb-doc_parser.bi"
+#INCLUDE ONCE "fb-doc_version.bi"
 
 
 /'* \brief A container for string replacements
@@ -106,6 +107,7 @@ TYPE Highlighter
   DECLARE SUB generate_all(BYVAL AS ZSTRING PTR, BYVAL AS INTEGER)
   DECLARE FUNCTION generate_code(BYVAL AS ZSTRING PTR, BYVAL AS INTEGER, BYVAL AS INTEGER) AS STRING
   DECLARE FUNCTION word_type(BYREF AS STRING) AS ZSTRING PTR
+  DECLARE FUNCTION searchPathNam(BYREF AS STRING) AS STRING
 
   '* \brief the function called to end a line and start a new one
   eol AS FUNCTION(BYVAL AS RepData PTR, BYref AS INTEGER) AS STRING _

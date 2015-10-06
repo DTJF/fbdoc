@@ -13,7 +13,7 @@ and sends it to the output stream.
 
 /'* \brief In-build emitters
 
-By default these four emitters are available in fb-doc. The
+By default these four emitters are available in \Proj. The
 enumerators are used for default settings in the Options class. The
 user can choose the emitter by option `--emitter`. The parameter
 gets checked against the \ref EmitterIF::Nam string (or parts of it). '/
@@ -46,7 +46,7 @@ necessary information from the parser data, formats it as desired
 and sends it to the output stream.
 
 Only one emitter can be active at a time. Either one of the four
-inbuild fb-doc emitters or an external emitter plugin can be choosen
+inbuild \Proj emitters or an external emitter plugin can be choosen
 by option `--emitter`.
 
 The function pointers get initialized with the null_emitter()
@@ -56,7 +56,7 @@ create a specific output.
 
 Since Doxygen doesn't support to generate documentation for such an
 interface, it cannot create caller or callee graphs for the emitter
-functions. But we use fb-doc and can work-around this by creating
+functions. But we use \Proj and can work-around this by creating
 additional C output in form of member function. These functions are
 unvisible for the FreeBASIC compiler, but get emitted to the pseudo C
 source for the Doxygen back-end and produce the desired output for

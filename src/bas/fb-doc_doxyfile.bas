@@ -3,7 +3,7 @@
 
 This file contains the source code for a class used to read parameters
 from a Doxyfile, a file that contain settings to control the operations
-of Doxygen. fb-doc reads this files to operate on the same folders and
+of Doxygen. \Proj reads this files to operate on the same folders and
 files as Doxygen.
 
 This is used in modes `--list-mode` and `--syntax-mode`.
@@ -17,12 +17,36 @@ This is used in modes `--list-mode` and `--syntax-mode`.
 '* search for a tag in current file add if non-existent or newer
 #DEFINE GET_TAG(_N_) t = Search(#_N_, a) : IF LEN(t) ANDALSO a > CVI(LEFT(Tags(_N_), LEN(INTEGER))) THEN Tags(_N_) = MKI(a) & t
 
-/'* \brief construct reading a Doxyfile
+/'* \brief constructor loading and parsing a Doxyfile
 \param Fnam The (path and) file name
 
-The constructor tries to find and read the Doxyfile. In case of
-errors the variable Errr contains an error message. Its empty
-otherwise and the context can get parsed by the function \ref Search().
+The constructor tries to find, load and parse the Doxyfile. In case of
+failure the variable Errr contains an error message. Otherwise Errr is
+empty and the following tags get parsed from the Doxyfile by the
+function \ref Search().
+
+- GENERATE_HTML
+- SOURCE_BROWSER
+- GENERATE_LATEX
+- LATEX_SOURCE_CODE
+- GENERATE_XML
+- XML_PROGRAMLISTING
+- INPUT
+- RECURSIVE
+- OUTPUT_DIRECTORY
+- HTML_OUTPUT
+- HTML_FILE_EXTENSION
+- CREATE_SUBDIRS
+- LATEX_OUTPUT
+- XML_OUTPUT
+
+\note As in Doxygen, a second tag overrides the first.
+
+\note \Proj doesn't read tag lists, only the first entry of a list.
+
+\note Only the first parameter of the Doxyfile INPUT tag gets used as
+      source code path. So make sure that this tag contains the path to
+      the FB source code at first place.
 
 '/
 CONSTRUCTOR Doxyfile(BYREF Fnam AS STRING)

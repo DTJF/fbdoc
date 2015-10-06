@@ -168,8 +168,7 @@ SUB gtk_Block CDECL(BYVAL P AS Parser PTR)
     CASE .TOK_ENUM : .parseBlockEnum(@gtk_emit_Name)
     CASE ELSE :      .parseBlockTyUn(@gtk_emitBlockNames)
     END SELECT
-'& gtk_emit_Name(); // pseudo function calls (help Doxygen documenting the interface)
-'& gtk_emitBlockNames();
+'& gtk_emit_Name(); gtk_emitBlockNames(); // pseudo function calls (help Doxygen documenting the interface)
 
     Code(GTK_END)
   END WITH

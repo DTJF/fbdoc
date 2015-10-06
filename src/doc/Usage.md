@@ -7,11 +7,11 @@ from the source code. Therefor you'll need well written source code in
 correct syntax for the compiler (FB syntax), but also comments matching
 the syntax of the back-end in use.
 
-So to test fb-doc and to learn about its usage and features you'll need
+So to test \Proj and to learn about its usage and features you'll need
 
--# source code to work on (ie the fb-doc code in the `src` folder)
--# an executable of fb-doc (ie compiled by `fbc fb-doc.bas`)
--# a documentation back-end (fb-doc comments are formated for Doxygen)
+-# source code to work on (ie the \Proj code in the `src` folder)
+-# an executable of \Proj (ie compiled by `fbc fb-doc.bas`)
+-# a documentation back-end (\Proj comments are formated for Doxygen)
 -# optional a GUI frontend (ie Doxywizard)
 -# optional further tools (ie *GraphViz* (graphs), *LaTeX* (pdf), ...)
 
@@ -24,7 +24,7 @@ So to test fb-doc and to learn about its usage and features you'll need
 both, an installation of a C tool-chain and some source code with
 documentation comments in the tool-chain's syntax.
 
-The easiest way to get started is to use Doxygen and the fb-doc
+The easiest way to get started is to use Doxygen and the \Proj
 sourc code. In that case you can skip the next section.
 
 
@@ -44,20 +44,20 @@ members, followed by its decription. (Doxygen can handle such blocks
 as well, but it isn't well supported.)
 
 Generating such a comment block is a reasonable amount of word. Each
-name has to get copied from the source in to the block. fb-doc can
+name has to get copied from the source in to the block. \Proj can
 do this for us.
 
 When we use Geany IDE, we can use a convenient method by installing
-fb-doc as Geany custom command (see \ref SecInsGeany) and choose
+\Proj as Geany custom command (see \ref SecInsGeany) and choose
 the emitter for the tool-chain in use (\em GtkDocTemplates or \em
 DoxygenTemplates). After loading the source, we select a block of
-code, send it to fb-doc and we receive the original block, prepended
+code, send it to \Proj and we receive the original block, prepended
 by a customized documentation block. We just need to edit the
 entries (marked by the text `FIXME`). See \ref SubSecExaGtkdoc and
 \ref SubSecExaDoxy for examples.
 
 We can select a single construct and generate the comment blocks
-one-by-one. Or we select a bunch of statements and fb-doc inserts
+one-by-one. Or we select a bunch of statements and \Proj inserts
 the templates inbetween the constructs. In case of a block
 construct (ENUM / UNION / TYPE) it's advantageous to select the
 complete block up to the END ... statement, to get all members
@@ -67,7 +67,7 @@ should contain the complete decalaration.
 
 It's a bit less convenient to auto-generate templates when an other
 IDE is in use. In that case the documentation blocks can get
-generated for a complete file, by piping its context to fb-doc. See
+generated for a complete file, by piping its context to \Proj. See
 \ref SecUsePipe for details.
 
 
@@ -82,12 +82,12 @@ http://developer.gnome.org/gtk-doc-manual/stable/index.html for
 details. Find an example for a gtk-doc documentation comment in \ref
 SubSecExaGtkdoc.
 
-fb-doc helps us by creating such documentation comment blocks (=
+\Proj helps us by creating such documentation comment blocks (=
 template). We select a piece of code in Geany and send it to the
-fb-doc filter. fb-doc creates a template, evaluates the names from
+\Proj filter. \Proj creates a template, evaluates the names from
 our source code and includes them in the template, followed by the
 text `FIXME`. We just replace this text by the proper description.
-To use this feature we have to install fb-doc as Geany filter, see
+To use this feature we have to install \Proj as Geany filter, see
 \ref SecInsGeany for details.
 
 When our documentation texts are done, we create a pseudo C source
@@ -99,7 +99,7 @@ switch to the folder where our FB source is placed. Then, we execute
 fb-doc --asterix --file-mode
 ~~~
 
-This makes fb-doc creating a new folder <em>../doc/c_src</em> (if
+This makes \Proj creating a new folder <em>../doc/c_src</em> (if
 not present) and write pseudo C files similar to our FB source
 (overriding existing files). *.\em bas files get translated to *.\em
 c and *.\em bi files get translated to *.\em h. Our documentation
@@ -112,7 +112,7 @@ gtk-doc works well to document a library API. Especially when it's
 related to GLib, GTK+ or gnome software. One of the unique features
 is auto-extracting the properties from the source code (I'll publish
 an FB tool soon). But it's not the best choise when we want to
-document a program like fb-doc. In that case we better use Doxygen.
+document a program like \Proj. In that case we better use Doxygen.
 
 
 Doxygen Back-End  {#SecUseDoxy}
@@ -120,7 +120,7 @@ Doxygen Back-End  {#SecUseDoxy}
 
 For Doxygen we can either use separate comment blocks, similar to
 the gtk-doc blocks. Doxygen blocks use a different syntax and they
-don't need to be placed in front of the related construct. fb-doc
+don't need to be placed in front of the related construct. \Proj
 also supports Doxygen templates, but this way of documenting isn't
 very common and not well supported yet.
 
@@ -138,18 +138,18 @@ documentation block. See
  - the manual
    http://www.stack.nl/~dimitri/doxygen/manual.html for details.
  - \ref SubSecExaDoxy for an example for a function comment block
- - all fb-doc source code as further examples.
+ - all \Proj source code as further examples.
 
 For Doxygen we can also create the pseudo C files in the
 <em>../doc/c_src</em> folder, as described in the previous section.
 But it's more convenient to send the pseudo C code directly to
 Doxygen without creating intermediate files. This can be done by
-using fb-doc as a Doxygen filter. (We use Doxygen as if we were
-working on C source code, fb-doc translates on-the-fly when Doxygen
+using \Proj as a Doxygen filter. (We use Doxygen as if we were
+working on C source code, \Proj translates on-the-fly when Doxygen
 reads the input.)
 
 Doxygen gets controlled by a configuration file. This file contains
-all options. Here we can specify the fb-doc filter by adapting the
+all options. Here we can specify the \Proj filter by adapting the
 following:
 
 First we have to tell Doxygen that it should load FB source files:
@@ -159,33 +159,33 @@ FILE_PATTERNS          = *.bi \
                          *.bas
 \endverbatim
 
-and second we need to set fb-doc as the filter for these files
+and second we need to set \Proj as the filter for these files
 
 \verbatim
-FILTER_PATTERNS        = *.bas=fbdoc \
-                         *.bi=fbdoc
+FILTER_PATTERNS        = *.bas=fb-doc \
+                         *.bi=fb-doc
 \endverbatim
 
 \note Doxygen doesn't allow to send additional options directly to
        a filter. So if we need further options we can set the name
-       of a batch file here and call fb-doc from the batch file
+       of a batch file here and call \Proj from the batch file
        passing further options.
 
 That's it. When we now start doxygen with proper settings for the
 paths and output format, we get our first auto-created
-documentation. (Try it with the fb-doc source code.)
+documentation. (Try it with the \Proj source code.)
 
 To get caller and callees graphs (as in this document) it gets a
 little tricky. Doxygen needs the function calls inside the function
-bodies (in the C source). But when fb-doc acts as a Doxygen filter
+bodies (in the C source). But when \Proj acts as a Doxygen filter
 it gets restarted on each file. So it doesn't know a function
 declaration in file B when working on file A. The names of all the
 functions must be known to evaluate their calls in a function body
-and to generate proper pseudo C source. That's why fb-doc reads the
+and to generate proper pseudo C source. That's why \Proj reads the
 names from a file called <em>fb-doc.lfn</em> in the current folder.
 
-We needn't generate this file manually, fb-doc can do this for
-us by executing the command
+We needn't generate this file manually, \Proj can do this for us by
+executing the command
 
 ~~~{.sh}
 fb-doc --list-mode
@@ -201,14 +201,14 @@ frontend for Doxygen) this is the folder specified under
 Step1: Specify the working directory from which doxygen will run
 \endverbatim
 
-And we have to specify fb-doc as filter for source files and enable
+And we have to specify \Proj as filter for source files and enable
 source file filtering
 
 \verbatim
 FILTER_SOURCE_FILES    = YES
 
-FILTER_SOURCE_PATTERNS = *.bas=fbdoc \
-                         *.bi=fbdoc
+FILTER_SOURCE_PATTERNS = *.bas=fb-doc \
+                         *.bi=fb-doc
 \endverbatim
 
 In the next run Doxygen should be able to generate caller and callee
@@ -248,12 +248,12 @@ rmdir bas
 C Headers  {#SecUseCHeader}
 =========
 
-Since fb-doc needs to generate C-like code for the back-end parsers, it
+Since \Proj needs to generate C-like code for the back-end parsers, it
 can also be useful to create a set of C headers for a library written
 in FreeBASIC (= FB). By default the FB types get mangled in to one word
 (for documentation purposes). Ie a FB parameter <em>byref Nam as const
 short</em> gets the pseudo C code <em>byref_as_const_short Nam</em>.
-This mangling can get suppressed by option `--cstyle` and fb-doc emitts
+This mangling can get suppressed by option `--cstyle` and \Proj emitts
 real C types. In that case the example gets <em>const short* Nam</em>
 and this code can be used by a C compiler.
 
@@ -266,21 +266,21 @@ fb-doc --file-mode --cstyle "*.bi"
 in our source folder and get a set of C translations in *.\em h
 files in the target folder (<em>../doc/c_src</em> by default).
 
-\note fb-doc doesn't handle initializers. You have to check them
+\note \Proj doesn't handle initializers. You have to check them
        manually.
 
 
 Piping  {#SecUsePipe}
 ======
 
-By default fb-doc reads its input for (one or more) files and sends
+By default \Proj reads its input for (one or more) files and sends
 its output to STDOUT. We can switch to STDIN input by option \em
 --geany-mode and then use the operating system commands to control the
-data flow in and from fb-doc.
+data flow in and from \Proj.
 
 Ie this is useful when we don't use Geany IDE or when we want to get
 templates for a complete file or a bunch of files at once. We can
-pipe the files context to the fb-doc STDIN channel and the fb-doc
+pipe the files context to the \Proj STDIN channel and the fb-doc
 output to a file.
 
 To get templates for all constructs in an existing file, first we
@@ -290,12 +290,12 @@ create a copy the file (example for LINUX OS)
 cp filename.bas filename.txt
 ~~~
 
-Then we pipe the copy to fb-doc in geany mode (using emitter \em
+Then we pipe the copy to \Proj in geany mode (using emitter \em
 DoxygenTemplates here). The output gets piped to the original file
 (omit <em>>filename.bas</em> to see the output in the console)
 
 ~~~{.sh}
-fbdoc --geany-mode doxy < filename.txt > filename.bas
+fb-doc --geany-mode doxy < filename.txt > filename.bas
 ~~~
 
 Finally we may want to delete the intermediate file

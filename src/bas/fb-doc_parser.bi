@@ -13,7 +13,7 @@ the \ref EmitterIF.
 #IF __FB_OUT_DLL__
 #DEFINE Code(_T_) P->writeOut(_T_) '*< Convenience macro for output (plugin)
 #ELSE
-#DEFINE Code(_T_) PRINT #OPT->Ocha, _T_; '*< Convenience macro for output (fb-doc)
+#DEFINE Code(_T_) PRINT #OPT->Ocha, _T_; '*< Convenience macro for output (\Proj)
 #ENDIF
 
 #IFDEF __FB_UNIX__
@@ -46,7 +46,7 @@ Parser does
  - call matching emitter functions to generaate the output stream
  - call function \ref EmitterIF::Exit_() after parsing
 
-When fb-doc follows the source tree (option `--tree`), the
+When \Proj follows the source tree (option `--tree`), the
 function \ref EmitterIF::Incl_() creates a new Parser for each file.
 
 '/

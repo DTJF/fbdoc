@@ -269,37 +269,14 @@ This SUB controls the complete repairing process
 - switch to matching emitter parameters
 - scan output directories and process files
 
-I evaluates the Doxyfile and scans the tags
-
-- GENERATE_HTML
-- SOURCE_BROWSER
-- GENERATE_LATEX
-- LATEX_SOURCE_CODE
-- GENERATE_XML
-- XML_PROGRAMLISTING
-- INPUT
-- RECURSIVE
-- OUTPUT_DIRECTORY
-- HTML_OUTPUT
-- HTML_FILE_EXTENSION
-- CREATE_SUBDIRS
-- LATEX_OUTPUT
-- XML_OUTPUT
-
-\note Only the first parameter of the Doxyfile INPUT tag gets used as
-      source code path. So make sure that this tag contains the path to
-      the FB source code at first place.
-
 '/
 SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
-  'VAR path = OPT->addPath(OPT->StartPath, LEFT(Fnam, INSTRREV(Fnam, SLASH))) _
    Var doxy = NEW Doxyfile(Fnam) _
      , recu = OPT->InRecursiv _
      , tree = OPT->InTree
 
-'?" HIER: ";Fnam, OPT->StartPath
-  'MSG_LINE("Doxyfile " & Fnam)
-  MSG_LINE(PROJ_NAME & " " & Fnam)
+  MSG_END(PROJ_NAME & " syntax highlighting")
+  MSG_LINE("Doxyfile " & Fnam)
   WHILE doxy->Length
     GenHtml = IIF(doxy->Tag(GENERATE_HTML) = "YES" ANDALSO _
                   doxy->Tag(SOURCE_BROWSER) = "YES", 1, 0)
@@ -308,11 +285,10 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
     GenXml  = IIF(doxy->Tag(GENERATE_XML) = "YES" ANDALSO _
                   doxy->Tag(XML_PROGRAMLISTING) = "YES", 1, 0)
 
-    IF GenAny THEN MSG_END("scanned") _
+    IF GenAny THEN MSG_END("parsed") _
               ELSE MSG_END("nothing to do") : EXIT WHILE
 
     FbPath = doxy->Tag(INPUT_TAG)
-'?" HIER2: ";curdir(),FbPath
     OPT->InRecursiv = IIF(doxy->Tag(RECURSIVE) = "YES", 1, 0)
     MSG_LINE("FB source " & FbPath)
     CHDIR(OPT->StartPath)
@@ -326,13 +302,10 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
     OPT->InTree = 0
     InPath = OPT->addPath(OPT->StartPath, doxy->Tag(OUTPUT_DIRECTORY))
     IF GenHtml THEN
-'?"Here: ";InPath, doxy->Tag(HTML_OUTPUT)
       HtmlPath = OPT->addPath(InPath, doxy->Tag(HTML_OUTPUT))
       HtmlSuff = doxy->Tag(HTML_FILE_EXTENSION)
-'?" HIRE: ";HtmlPath, HtmlSuff
       IF 0 = LEN(HtmlSuff) THEN HtmlSuff = ".html"
       OPT->InRecursiv = IIF(doxy->Tag(CREATE_SUBDIRS) = "YES", 1, 0)
-      'CHDIR(path)
       CHDIR(OPT->StartPath)
       MSG_LINE("HTML source " & LEFT(HtmlPath, LEN(HtmlPath) - 1))
       IF CHDIR(HtmlPath) THEN
@@ -349,7 +322,6 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
     IF GenTex THEN
       TexPath = OPT->addPath(InPath, doxy->Tag(LATEX_OUTPUT))
       MSG_LINE("LaTeX source " & LEFT(TexPath, LEN(TexPath) - 1))
-      'CHDIR(path)
       CHDIR(OPT->StartPath)
       IF CHDIR(TexPath) THEN
         MSG_END("error (couldn't change directory)")
@@ -358,7 +330,7 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
                   & OPT->scanFiles("*_8bi_source.tex", "")
         IF LEN(DoxyFiles) > 1 THEN
           MSG_END("scanned")
-          FBDOC_MARK = @"%%% Syntax-highlighting by fb-doc %%%"
+          FBDOC_MARK = @"%** Syntax-highlighting by fb-doc **%"
           KEYW_A = @"\textcolor{keyword}{"
           KWTP_A = @"\textcolor{keywordtype}{"
           KWFL_A = @"\textcolor{keywordflow}{"
@@ -379,7 +351,6 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
     IF GenXml THEN
       XmlPath = OPT->addPath(InPath, doxy->Tag(XML_OUTPUT))
       MSG_LINE("XML source " & LEFT(XmlPath, LEN(XmlPath) - 1))
-      'CHDIR(path)
       CHDIR(OPT->StartPath)
       IF CHDIR(XmlPath) THEN
         MSG_END("error (couldn't change directory)")
@@ -507,33 +478,38 @@ SUB Highlighter.generate_all(BYVAL Buf AS ZSTRING PTR, BYVAL Stop_ AS INTEGER)
         IF i >= start THEN Code(generate_code(Buf, start, i - start))
         start = i
         SCAN_SL_COMM(Buf,i)
-        Code(*CMNT_A & special_chars(Buf, start, i - start) & *SPAN_E)
+        IF Buf[start + 1] <> OPT->JoComm ORELSE OPT->Docom THEN _
+          Code(*CMNT_A & special_chars(Buf, start, i - start) & *SPAN_E)
         start = i
         CONTINUE WHILE
       CASE ASC("/") : IF Buf[i + 1] <> ASC("'") THEN EXIT SELECT
         i += 2
         start = i - 2
+        VAR fl = Buf[i] <> OPT->JoComm OR OPT->Docom
         DO
           SELECT CASE AS CONST Buf[i]
           CASE 0 : EXIT DO
           CASE ASC(!"\n")
-            IF i <= start THEN Code(eol(Symbols, LineNo)) : start = i + 1 : EXIT SELECT
-            Code(*CMNT_A & special_chars(Buf, start, i - start) & *SPAN_E & eol(Symbols, LineNo))
+            IF i <= start THEN
+              IF fl THEN Code(eol(Symbols, LineNo)) ELSE LineNo += 1
+              start = i + 1 : EXIT SELECT
+            END IF
+            IF fl THEN Code(*CMNT_A & special_chars(Buf, start, i - start) & *SPAN_E & eol(Symbols, LineNo)) ELSE LineNo += 1
             start = i + 1
           CASE ASC("'")
             SELECT CASE AS CONST Buf[i + 1]
-            CASE 0 : EXIT while
+            CASE 0 : EXIT WHILE
             CASE ASC("/") : i += 1 : EXIT DO
             END SELECT
           END SELECT : i += 1
         LOOP
 
-        Code(*CMNT_A & special_chars(Buf, start, i - start + 1) & *SPAN_E)
+        IF fl THEN Code(*CMNT_A & special_chars(Buf, start, i - start + 1) & *SPAN_E)
         DO
           SELECT CASE AS CONST Buf[i]
-          CASE 0 : EXIT while
+          CASE 0 : EXIT WHILE
           CASE ASC(!"\r")
-          CASE ASC(!"\n") : Code(eol(Symbols, LineNo))
+          CASE ASC(!"\n") : IF fl THEN Code(eol(Symbols, LineNo)) ELSE LineNo += 1
           CASE ELSE : EXIT DO
           END SELECT : i += 1
         LOOP : start = i + 1
@@ -1224,6 +1200,38 @@ FUNCTION Highlighter.generate_code(BYVAL T AS ZSTRING PTR, BYVAL A AS INTEGER, B
   NEXT : RETURN r
 END FUNCTION
 
+
+/'* \brief Search path and name of fb source
+\param Nam The name of the source file
+\returns The path and the file name of an FB source file (or empty string if not found)
+
+This function prepends the path to a file name for a FB source file.
+
+The original Doxygen output (HTM, TEX or XML) contains the name of the
+related source file, but it doesn't contain the path. This function
+searches the list of FB source files and returns the path (if any) and
+the file name.
+
+\note If there is no such name in the list, an empty string gets returned.
+
+\note If there're multiple matches (several files with identical names
+      in different folders), only the first match gets returned.
+
+'/
+FUNCTION Highlighter.searchPathNam(BYREF Nam AS STRING) AS STRING
+  VAR p = INSTR(FbFiles, Nam)
+  WHILE p
+    SELECT CASE AS CONST FbFiles[p - 2]
+    CASE ASC(NL) :                                            RETURN Nam ' in main folder
+    CASE ASC(SLASH)
+      VAR pp = INSTRREV(FbFiles, NL, p) + 1
+                              RETURN MID(FbFiles, pp, p - pp + LEN(Nam)) ' in subfolder
+    END SELECT
+    p = INSTR(p + LEN(Nam), FbFiles, Nam)
+  WEND :                                                       RETURN "" ' nothing found
+END FUNCTION
+
+
 /'* \brief Prepare a HTML file for syntax repairing
 \param Hgh The Highlighter to operate with
 \returns The file name of the FB source code
@@ -1246,21 +1254,8 @@ FUNCTION Highlighter.prepare_html(BYVAL Hgh AS Highlighter PTR) AS STRING
       IF pa THEN
         pa += 19
         VAR pe = INSTR(pa, .LastLine, "</div>")
-        VAR p = INSTR(.FbFiles, MID(.LastLine, pa, pe - pa)) : IF 0 = p THEN RETURN ""
-        DO '                      search path and name of FB source list
-          SELECT CASE AS CONST .FbFiles[p - 2]
-          CASE ASC(NL) '                                  in main folder
-            fb_nam = MID(.LastLine, pa, pe - pa)
-            EXIT DO
-          CASE ASC(SLASH) '                                 in subfolder
-            VAR pp = INSTRREV(.FbFiles, NL, p) + 1
-            fb_nam = MID(.FbFiles, pp, p - pp + pe - pa)
-            EXIT DO
-          CASE ELSE '                   only partial match, search again
-            p = INSTR(p + 1, .FbFiles, MID(.LastLine, pa, pe - pa))
-            IF p < 1 THEN pa = 0 : RETURN "" '     no matching FB source
-          END SELECT
-        LOOP
+        fb_nam = .searchPathNam(MID(.LastLine, pa, pe - pa))
+        IF 0 = len(fb_nam) THEN RETURN ""
       END IF
     WEND
 
@@ -1311,6 +1306,7 @@ FUNCTION Highlighter.prepare_tex(BYVAL Hgh AS Highlighter PTR) AS STRING
       END IF
       fb_nam &= CHR(.LastLine[i])
     NEXT
+    fb_nam = .searchPathNam(fb_nam) : IF 0 = len(fb_nam) THEN RETURN ""
 
     WHILE NOT EOF(.Ifnr) '                  search start of code section
       LINE INPUT #.Ifnr, .LastLine
@@ -1326,9 +1322,11 @@ FUNCTION Highlighter.prepare_tex(BYVAL Hgh AS Highlighter PTR) AS STRING
       VAR pa = INSTR(.LastLine, "\hyper")
       IF pa = 1 THEN                              ' link for line number
         pa = INSTR(14, .LastLine, "\hyperlink{")
-        pa = INSTR(pa + 10, .LastLine, "}{") + 2
-        VAR pe = INSTR(pa, .LastLine, "}")
-        .Symbols->add(MID(.LastLine, pa, pe - pa), LEFT(.LastLine, pe))
+        var pm = INSTR(pa + 10, .LastLine, "}{") + 2 _
+          , pe = INSTR(pm, .LastLine, "}") _
+           , t = LEFT(.LastLine, pa - 2) & MID(.LastLine, pm, pe - pm + 1)
+        '.Symbols->add(MID(.LastLine, pm, pe - pm), LEFT(.LastLine, pe))
+        .Symbols->add(MID(.LastLine, pm, pe - pm), t)
         pa = INSTR(pe + 1, .LastLine, "\hyperlink{")
       END IF
       WHILE pa '                                    links in source code
@@ -1369,7 +1367,8 @@ FUNCTION Highlighter.prepare_xml(BYVAL Hgh AS Highlighter PTR) AS STRING
       IF pa THEN
         pa += 14
         VAR pe = INSTR(pa, .LastLine, "</compoundname>")
-        fb_nam = MID(.LastLine, pa, pe - pa)
+        'fb_nam = MID(.LastLine, pa, pe - pa)
+        fb_nam = .searchPathNam(MID(.LastLine, pa, pe - pa)) : IF 0 = len(fb_nam) THEN RETURN ""
       END IF
     WEND
 

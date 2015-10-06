@@ -2,7 +2,7 @@ Examples  {#PagExamples}
 ========
 \tableofcontents
 
-This chapter contains some examples on how to use fb-doc and its
+This chapter contains some examples on how to use \Proj and its
 features.
 
 
@@ -10,11 +10,12 @@ Command Line Interface  {#SecExaCli}
 ======================
 
 As a first step this section contains some exercises to learn how
-fb-doc works. All operations get executed in the package folder.
+\Proj works. All operations get executed in the package folder.
 
-We execute fb-doc with several command line and use its own source code in
-folder *src* as input to learn about its usage. Therefor extract the archive *fb-doc.zip*
-to any folder, change to the source folder and compile.
+We execute \Proj with several command line and use its own source code
+in folder *src* as input to learn about its usage. Therefor extract the
+archive *fb-doc.zip* to any folder, change to the source folder and
+compile.
 
 ~~~{.sh}
 cd fb-doc/src/bas
@@ -62,7 +63,7 @@ Then you can test the binary by executing in that folder.
    only function declared in the code files matching this pattern.
 -# When we use `"fb-doc.bas"` as file specification we'll get empty
    output since this file contains no function declaration. But when we
-   add option `--tree` fb-doc follows each \#`INCLUDE` statement in the
+   add option `--tree` \Proj follows each \#`INCLUDE` statement in the
    source tree and generates a list of all function names.
    ~~~{.sh}
    ./fb-doc -e "FunctionNames" --tree "fb-doc.bas"
@@ -74,24 +75,24 @@ Then you can test the binary by executing in that folder.
    ~~~{.sh}
    ./fb-doc -e "FunctionNames" -t "fb-doc.bas" > fb-doc.lfn
    ~~~
-   This list includes the function names of the fb-doc source tree.
+   This list includes the function names of the \Proj source tree.
 -# To generate a list of all function names you can specify several
    file patterns and collect the function names of all source files in
    in a single file, like
    ~~~{.sh}
    ./fb-doc -e "FunctionNames"  "*.bas" "*.bi" > fb-doc.lfn
    ~~~
-   Option `--recursiv` will make fb-doc searching in subfolders also.
+   Option `--recursiv` will make \Proj searching in subfolders also.
 
 -# Since this list is often needed to generate caller / callee graphs
-   in Doxygen output, fb-doc has the special run mode \ref
-   SubSecOptList to create it. Use this option and execute fb-doc near
+   in Doxygen output, \Proj has the special run mode \ref
+   SubSecOptList to create it. Use this option and execute \Proj near
    the Doxyfile to get the file at the right place
    ~~~{.sh}
    cd ../doc
    ./src/fb-doc -l
    ~~~
-   fb-doc scans the configuration file *Doxyfile* for the `INPUT` path
+   \Proj scans the configuration file *Doxyfile* for the `INPUT` path
    (first entry only). In this path it scans depending on the
    `RECURSIV` setting the patterns `"*.bas;*.bi"` to scan for input
    files, generates the list of function names and writes the output to
@@ -106,7 +107,7 @@ Then you can test the binary by executing in that folder.
    ~~~
    The first command generates a lot of Doxygen messages (depending on
    the settings in *Doxyfile*). It should end with message '`***
-   Doxygen has finished`'. The second command makes fb-doc run in \ref
+   Doxygen has finished`'. The second command makes \Proj run in \ref
    SubSecOptSyntax and repair the listing sections in the Doxygen
    output files. After all you should have a new folder *html* (in the
    folder *doc*) containing your personal version of this
@@ -121,9 +122,9 @@ Comments (in general)  {#SecExaComments}
 =====================
 
 The C back-ends work on an intermediate format. This format contains
-comments exported from the FB source. fb-doc doesn't export all
+comments exported from the FB source. \Proj doesn't export all
 comments, since the programmer may want to have private comments as
-well (ie ToDo marks). On the other hand fb-doc provides a way to export
+well (ie ToDo marks). On the other hand \Proj provides a way to export
 context directly to the intermediate format, to do tricky things with
 the back-end in use.
 
@@ -229,7 +230,7 @@ The type declaration `char*` can get replaced by any other type. Rather
 than checking each type declaration, the parsers in the back-ends just
 scan the type names and use them to build the documentation.
 
-fb-doc makes use of this flexibility. It creates new C types named
+\Proj makes use of this flexibility. It creates new C types named
 similar to the FB syntax (without any declaration). As new type name
 all FB keywords get mangled in to a single word, separated by
 underscore characters. The C back-end interpretes this word as a type
@@ -248,7 +249,7 @@ SecTabInterForm for more examples.
 \note The type name is allways in front of the symbol name, this order
        cannot get swapped as in FB syntax.
 
-fb-doc can also generate real C types. In this case the above example
+\Proj can also generate real C types. In this case the above example
 gets
 
 ~~~{.c}
@@ -271,7 +272,7 @@ the relevant statement in the source code.
 It's different for gtk-doc. Each and every documentation comment needs
 a list of the symbols the comment referes to. It's a boring job to copy
 the symbol names from the source code to the documentation comment.
-fb-doc can support this process.
+\Proj can support this process.
 
 \note The source code in this section contains verbatim blocks instead
        of code blocks, because Doxygen miss-interpretes the \\ \p brief
@@ -281,14 +282,14 @@ fb-doc can support this process.
 Gtk-doc  {#SubSecExaGtkdoc}
 -------
 
-\note This example is based on a system wide installation of fb-doc
+\note This example is based on a system wide installation of \Proj
        and a setting as Geany custom command with option
        `--geany-mode`. (See \ref SecInsGeany for details.)
 
 This example is about documenting a function and its parameter list.
 We load our source code in to Geany IDE, select the function
 declaration (the code in the following box) and send it to the
-fb-doc custom command:
+\Proj custom command:
 
 \verbatim
 FUNCTION goo_axis_new CDECL( _
@@ -299,7 +300,7 @@ FUNCTION goo_axis_new CDECL( _
   ...) AS GooAxis PTR
 \endverbatim
 
-fb-doc extracts the names of the function and its parameters,
+\Proj extracts the names of the function and its parameters,
 generates a matching template and returns the customized template
 and the original code. The entries for the individual documentation
 texts are marked with the text `FIXME`:
@@ -364,7 +365,7 @@ Finally we translate all FB sources to C source using (defaults: output
 path = `../doc/c_src`, file specification = `"*.bas" "*.bi"`)
 
 ~~~{.sh}
-fbdoc --file-mode --asterix
+fb-doc --file-mode --asterix
 ~~~
 
 The corresponding <em>.c</em> file looks like
@@ -410,7 +411,7 @@ files in the <em>../doc/c_src</em> folder.
 Or you use option `--cstyle` to generate output with types in real C syntax
 
 ~~~{.sh}
-fbdoc --file-mode --asterix --cstyle
+fb-doc --file-mode --asterix --cstyle
 ~~~
 and the corresponding <em>.c</em> file looks like
 
@@ -452,13 +453,13 @@ GooAxisType Modus,
 Doxygen  {#SubSecExaDoxy}
 -------
 
-\note This example is based on a system wide installation of fb-doc
+\note This example is based on a system wide installation of \Proj
        and a setting as Geany custom command with option `--geany-mode
        "DoxygenTemplates"`. (See \ref PagInstall for details.)
 
 This example is about documenting a function and its parameter list,
 similar to the previous one. We load our code in to Geany IDE, select
-some source like the following code and send it to the fb-doc custom
+some source like the following code and send it to the \Proj custom
 command:
 
 \verbatim
@@ -470,7 +471,7 @@ FUNCTION goo_axis_new CDECL( _
   ...) AS GooAxis PTR
 \endverbatim
 
-fb-doc extracts the names and returns the customized template, followed
+\Proj extracts the names and returns the customized template, followed
 by the original code:
 
 \verbatim
@@ -541,9 +542,9 @@ END FUNCTION
 \endverbatim
 
 Using Doxygen we don't need to generate intermediate C source code in
-files. Instead this code gets directly piped by fb-doc acting as a
+files. Instead this code gets directly piped by \Proj acting as a
 filter, so we usually don't see it. Being curious we may execute in a
-terminal `fbdoc XYZ.bas` (replace XYZ by your file name) and we'll
+terminal `fb-doc XYZ.bas` (replace XYZ by your file name) and we'll
 see output (which is the Doxygen input) like
 
 \verbatim
@@ -583,7 +584,7 @@ BYVAL_AS_GooAxisType Modus,
 \endverbatim
 
 \note This output is also visible in the source code browser before the
-       listings get repaired by executing `fbdoc -s` in the folder *doc*.
+       listings get repaired by executing `fb-doc -s` in the folder *doc*.
 
 
 
@@ -596,15 +597,15 @@ BYVAL_AS_GooAxisType Modus,
  They should have
 
 - well prepared FB source files (supported by `--geany-mode "DoxygenTemplates"`) and
-- a matching Doxyfile (using fb-doc as input filter)
+- a matching Doxyfile (using \Proj as input filter)
 
 to auto-generate the documentation by executing
 
 ~~~{.sh}
 cd ../doc
-fbdoc -l
+fb-doc -l
 doxygen
-fbdoc -s
+fb-doc -s
 ~~~
 
 \note This conclusion assumes a complete installation of *fb-doc*, *Doxygen* and *GraphViz*.

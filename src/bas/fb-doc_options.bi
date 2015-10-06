@@ -34,7 +34,7 @@ modules.
 
 '/
 TYPE Options
-/'* \brief fb-doc operation modes. '/
+/'* \brief \Proj operation modes. '/
   ENUM RunModes
 
     /'* \brief Report an error found in the command line
@@ -45,7 +45,7 @@ TYPE Options
 
     /'* \brief Print the helptext
 
-    Stop after printing out some help information on how to start fb-doc
+    Stop after printing out some help information on how to start \Proj
     and how to use options at the command line. (Option `--help`). '/
     HELP_MESSAGE
 
@@ -86,7 +86,7 @@ TYPE Options
     /'* \brief Operate in syntax-highlighting mode
 
     Read input from one or more files, write output to a several files. As
-    input fb-doc reads files created by Doxygen, containing the source
+    input \Proj reads files created by Doxygen, containing the source
     listings in the intermediate format. The file types depend on the
     settings in the Doxyfile. It may be <em>*.html, *.tex</em> and
     <em>*.xml</em>, depending on GENERATE_HTML & SOURCE_BROWSER,
@@ -98,7 +98,7 @@ TYPE Options
 
   '/'* \brief In-build emitters
 
-  'By default these four emitters are available in fb-doc. The
+  'By default these four emitters are available in \Proj. The
   'enumerators are used for default settings in the Options class. The
   'user can choose the emitter by option `--emitter`. The parameter
   'gets checked against the \ref EmitterIF::Nam string (or parts of it). '/
@@ -149,6 +149,7 @@ TYPE Options
         , Errr = ""   '*< path for file output (option `--outpath`)
   AS INTEGER _
        Asterix = 0 _ '*< style for C_Source emitter to export comment blocks
+       , Docom = 0 _ '*< include documentational comments in source code (syntax highlighter)
   , AllCallees = 0 _ '*< export external callee names as well (option `--list-mode`)
   , InRecursiv = 0 _ '*< flag set when InFiles should get scaned recursiv in subfolders
       , InTree = 0 _ '*< flag set when source tree should get scanned

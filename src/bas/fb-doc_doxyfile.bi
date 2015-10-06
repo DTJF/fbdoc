@@ -3,7 +3,7 @@
 
 This file contains the declaration code for a class used to read
 parameters from a Doxyfile, a file that contain settings to control the
-operations of Doxygen. fb-doc reads this files to operate on the same
+operations of Doxygen. \Proj reads this files to operate on the same
 folders and files as Doxygen.
 
 This is used in modes `--list-mode` and `--syntax-mode`.
@@ -37,10 +37,12 @@ END ENUM
 
 /'* \brief handle a Doxyfile
 
-Read a Doxyfile and parse its coontext. In case of errors finding or
+Load a Doxyfile and parse its coontext. In case of failure finding or
 loading the file the Errr variable gets set in the constructor. Its
-empty on success. Currently only single line tags are supported (no
-lists).
+empty on success.
+
+Currently only the first entry in a tags gets parsed (just the first
+parameter of a lists).
 
 '/
 TYPE Doxyfile

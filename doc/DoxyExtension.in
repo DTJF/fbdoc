@@ -1,6 +1,11 @@
 @INCLUDE = @CMAKE_CURRENT_SOURCE_DIR@/Doxyfile
 
 OUTPUT_DIRECTORY=@CMAKE_CURRENT_BINARY_DIR@
+FILTER_SOURCE_PATTERNS = *.bas=fb-doc \
+                         *.bi=fb-doc
+FILTER_SOURCE_FILES    = YES
+FILTER_PATTERNS        = *.bas=fb-doc \
+                         *.bi=fb-doc
 PROJECT_NAME=@PROJ_NAME@
 PROJECT_BRIEF="@PROJ_DESC@"
 PROJECT_NUMBER=@PROJ_VERS@

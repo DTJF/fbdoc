@@ -1,5 +1,5 @@
 /'* \file fb-doc_version.bi
-\brief Some global constants for the fb-doc source
+\brief Some global constants for the @PROJ_NAME@ source
 
 In order to place the project data at a single source (in the root
 CMakeLists.txt file), the data gets exported by this config file to get

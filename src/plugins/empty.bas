@@ -2,11 +2,11 @@
 \brief Example code for an empty external emitter
 
 This file contains example source code for an external emitter. It
-isn't used in the fb-doc source tree. See \ref PagExtend for details.
+isn't used in the \Proj source tree. See \ref PagExtend for details.
 
 This emitter generates a list of the function names called via the
-emitter interface. So when you input some source to fb-doc and use
-this emitter, the output is a list of the functions called by the
+emitter interface. So when you input some FB source to \Proj and use
+this emitter, the output is a list of the \Proj functions called by the
 parser for this input.
 
 Before you can use this emitter, you have to compile it first, using
@@ -22,7 +22,7 @@ The result is a binary called
 There's no way to compile or use an external emitter on DOS since
 DOS doesn't support dynamic linked libraries.
 
-To use this emitter in fb-doc set its name (without the suffix .bas)
+To use this emitter in \Proj set its name (without the suffix .bas)
 just as an internal name (,so don't name your customized emitter
 similar to an internal emitter name).
 
@@ -120,12 +120,12 @@ SUB dll_exit CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__ & NL)
 END SUB
 
-'* \brief Emitter called after the input got parsed
+'* \brief Emitter called before the parser gets created and the input gets parsed
 SUB dll_CTOR CDECL(BYVAL P AS Parser PTR)
   PRINT __FUNCTION__
 END SUB
 
-'* \brief Emitter called after the input got parsed
+'* \brief Emitter called after the input got parsed and the parser got deleted
 SUB dll_DTOR CDECL(BYVAL P AS Parser PTR)
   PRINT __FUNCTION__
 END SUB
