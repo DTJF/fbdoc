@@ -57,7 +57,7 @@ Default Mode  {#SubSecOptDefault}
 
 This mode is active when none of the other modes is specified.
 
-|       _Summary_ | Standard Mode (Doxygen Filter)                        |
+|            none | none (= standard Mode = Doxygen Filter)               |
 | --------------: | :---------------------------------------------------- |
 |           Input | file (path and name)                                  |
 |          Output | STDOUT (context depends on emitter)                   |
@@ -78,7 +78,7 @@ that case a single file name (including a path, if any) is passed at
 the command line. \Proj operates on this file and emits its output to
 STDOUT pipe.
 
-Furthermore this mode is helpful to test the \Proj output (ie when
+Furthermore this mode is helpful to test the \Proj output (ie. when
 developing a new emitter). Just specify your emitter and an input file
 like
 
@@ -118,7 +118,7 @@ to your Doxygen file tree.
 --file-mode (-f)  {#SubSecOptFile}
 ----------------
 
-|       _Summary_ | File Mode                                    |
+|            `-f` | `--file-mode`                                |
 | --------------: | :------------------------------------------- |
 |           Input | file (path and name)                         |
 |          Output | file (.bi -> .h, .bas -> .c)                 |
@@ -144,7 +144,7 @@ of the output file depends on the emitter in use:
 \Proj creates a new folder if the output folder doesn't exist. Also
 higher level directories get created if not existend. When an input
 file comes from a subfolder, a similar subfolder gets created in the
-output folder. When a subfolder is beyond the current path (ie like
+output folder. When a subfolder is beyond the current path (ie. like
 `../../../src` form an \#`INCLUDE` statement in a source file) the ..
 part(s) of the path get skipped and \Proj creates subfolders for the
 rest of the path.
@@ -173,7 +173,7 @@ the default output folder <em>../doc/c_src</em>. Then switch to this
 folder and start the gtk-doc tool chain there.
 
 Furthermore you can add a file pattern (or multiple) to operate on
-selected files (ie "??_view*.b*"). Or we use this run mode in a
+selected files (ie. "??_view*.b*"). Or we use this run mode in a
 Makefile to update a set of C sources like
 
 ~~~{.sh}
@@ -188,7 +188,7 @@ fb-doc --file-mode --asterix --cstyle $@
 --geany-mode (-g)  {#SubSecOptGeany}
 -----------------
 
-|       _Summary_ |  Mode                                  |
+|            `-g` | `--geany-mode`                         |
 | --------------: | :------------------------------------- |
 |           Input | STDIN                                  |
 |          Output | STDOUT                                 |
@@ -243,7 +243,7 @@ fb-doc --geany-mode "C_Source" --c-style < file2.bi >> C_Header.h
 --list-mode (-l)  {#SubSecOptList}
 ----------------
 
-|       _Summary_ |  Mode                                        |
+|            `-l` | `--list-mode`                                |
 | --------------: | :------------------------------------------- |
 |           Input | file (path from Doxyfile, name = *.bas;*.bi) |
 |          Output | fb-doc.lfn                                   |
@@ -271,7 +271,7 @@ fb-doc --list-mode
 
 In this example no input file name is specified and \Proj uses the
 default name `Doxyfile`. Also it's possible to specify any outher file
-name and a prepending path (ie like `../doc/fb-doc.Doxyfile`). But if
+name and a prepending path (ie. like `../doc/fb-doc.Doxyfile`). But if
 the file specification contains a pattern (characters `*` or `?`) or
 the extension is one of `.bas` or `.bi`, then \Proj skips the reading
 of the Doxyfile and operates on the FB source file(s) directly.
@@ -280,7 +280,7 @@ of the Doxyfile and operates on the FB source file(s) directly.
 --syntax-mode (-s)  {#SubSecOptSyntax}
 ------------------
 
-|       _Summary_ | Syntax Mode                            |
+|            `-s` | `--syntax-mode`                        |
 | --------------: | :------------------------------------- |
 |           Input | files (pathes and names from Doxyfile) |
 |          Output | files                                  |
@@ -313,7 +313,7 @@ this scenario).
 --help (-h)  {#SubSecOptHelp}
 -----------
 
-|       _Summary_ | Help Mode             |
+|            `-h` | `help`                |
 | --------------: | :-------------------- |
 |           Input | none                  |
 |          Output | STDOUT (version text) |
@@ -333,7 +333,7 @@ information. (It's not mentioned to be a complete documentation.)
 --version (-v)  {#SubSecOptVersion}
 --------------
 
-|       _Summary_ | Version Mode         |
+|            `-v` | `--version`          |
 | --------------: | :------------------- |
 |           Input | none                 |
 |          Output | STDOUT (help text)   |
@@ -419,7 +419,7 @@ in the line numbers at the place of the original documentational
 comments (as in Doxygen listings).
 
 \note Documentational comments are redundant informations, since their
-      context was already used to generate the text.
+      context was already used to generate the output.
 
 
 --emitter (-e)  {#SubSecOptEmitter}
@@ -439,13 +439,13 @@ removed befor further operation.
 First, \Proj searches in the list of internal emitter names (see \ref
 SecTabEmitter). This search gets done non-case-sensitive and
 partial-matching. Meaning you need not type the complete emitter name
-nor use the right letter cases. Ie *d*, *Dox* or <em>"DOXY"</em> all
+nor use the right letter cases. Ie. *d*, *Dox* or <em>"DOXY"</em> all
 match the full emitter name *DoxygenTemplates*.
 
 In case of no match in the internal emitter names \Proj tries to load
 an external emitter with the specified name. In this case the emitter
 name must exactly match the base file name of the FB source code used
-to build the plugin module. Ie when the plugin was compiled by
+to build the plugin module. Ie. when the plugin was compiled by
 
 ~~~{.sh}
 fbc -dylib empty.bas
@@ -549,7 +549,7 @@ This option makes \Proj to follow the source code tree. That is, all
 files as if they were specified as input files on the command line.
 
 \note This only works with files in the source code tree. Standard
-      header files (ie like `"crt/string.bi"`) wont be found since
+      header files (ie. like `"crt/string.bi"`) wont be found since
       \Proj doesn't know the standard FreeBASIC include path.
 \note For this option to work the emitter must provide a handler for
       \ref EmitterIF::Incl_() in which the parsing of the new files

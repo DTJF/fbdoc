@@ -40,7 +40,7 @@ Parser does
    and call the comments emitter-handler on the way.
  - fine-scan any relavant code fractions (see \ref tokenize()) and call
    the matching emitter-handler for this code (done by the private
-   functions ie like \ref DEFINE_(), \ref FUNCTION_(), \ref VAR_(), ...)
+   functions ie. like \ref DEFINE_(), \ref FUNCTION_(), \ref VAR_(), ...)
  - provide functions to extract elements form the source (like
    \ref SubStr(), \ref CurTok(), \ref BitIni(), ...)
  - call matching emitter functions to generaate the output stream
@@ -253,7 +253,7 @@ or the position  of the given parameter.
 /'* \name Parsers for lists and blocks
 
 External demuxers are called from emitter-handlers when they sit on
-a list of statments, ie in an ENUM block or in a DIM statement with
+a list of statments, ie. in an ENUM block or in a DIM statement with
 more than one variable.
 
 \{

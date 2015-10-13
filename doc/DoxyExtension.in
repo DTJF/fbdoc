@@ -11,6 +11,6 @@ PROJECT_BRIEF="@PROJ_DESC@"
 PROJECT_NUMBER=@PROJ_VERS@
 ALIASES = "Email=@PROJ_MAIL@" \
           "Proj=*@PROJ_NAME@*" \
-          "Page=@PROJ_WEBS@" \
+          "Webs=@PROJ_WEBS@" \
           "Year=@PROJ_YEAR@" \
           "Item{1}=- <b>\1</b>:" \

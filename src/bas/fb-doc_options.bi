@@ -114,7 +114,7 @@ TYPE Options
   /'* \brief The style of the types in the C source
 
   A FB type can be translated to a C type or it can be shown as a
-  pseudo type. Ie instead of the C type void the pseudo type SUB can
+  pseudo type. Ie. instead of the C type void the pseudo type SUB can
   be used. '/
   ENUM TypesStyle
     C_STYLE  '*< types gets translated to C

@@ -62,7 +62,7 @@ pointers and the tokenlist to generate its output.
 
 These most important pointers are set always
 
-- \ref Parser::StaTok the first (start) token of the construct (*ie*
+- \ref Parser::StaTok the first (start) token of the construct (*ie.*
   `TOK_SUB` *in* `SUB name ...` *and* `TOK_DECL` *in* `DECLARE SUB
   name ...`)
 - \ref Parser::EndTok the last token in a construct (`TOK_EOS`, *check*
@@ -108,7 +108,7 @@ context (like variable declarations or function declarations). And
 these blocks may contain further nested blocks that may or may not get
 parsed recursivly (depending on the purpose of the emitter). The
 handler has to deal with all this kind of stuff. Find examples in any
-\ref EmitterIF::Clas_ handler, ie in the handler \ref c_Block().
+\ref EmitterIF::Clas_ handler, ie. in the handler \ref c_Block().
 
 
 
@@ -128,7 +128,7 @@ Example Plugin.bas  {#SecExtExample}
 
 Enough of theory, let's switch to practise. The \Proj parser calls
 emitter functions via the emitter interface \ref EmitterIF, so it can
-easy get extended by new emitters providing additional features (ie
+easy get extended by new emitters providing additional features (ie.
 support further C tools like <em>source navigator</em>).
 
 The *plugins* folder of archive *fb-doc.zip* contains the file empty.bas.

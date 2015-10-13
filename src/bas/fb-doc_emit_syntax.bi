@@ -9,7 +9,7 @@ output.
 
 The code includes links to the documentation. These links are extracted
 from the original Doxygen output. Since the names in the link tags
-change the repairing process can be done only once (ie the name of the
+change the repairing process can be done only once (ie. the name of the
 constructor *Parser::Parser* in intermediate format gets just *Parser*
 in FB source).
 

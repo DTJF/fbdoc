@@ -57,7 +57,7 @@ END DESTRUCTOR
 \returns the parameter, without quotes if any
 
 This function evaluates a parameter for an option. Some options need
-an additional parameter (ie like `--outpath`). It gets read by this
+an additional parameter (ie. like `--outpath`). It gets read by this
 function, removing surrounding single or double quotes (if any).
 
 In case of no further parameter or when the parameter starts by an
@@ -161,7 +161,7 @@ END FUNCTION
 This function checks for an emitter specified by the parameter F. The
 check is not case-sensitve and is done for a complete emitter name
 as well as for a fragment. So it's enough to specify some of the
-start characters of the emitter name (ie *dox* instead of \em
+start characters of the emitter name (ie. *dox* instead of \em
 DoxygenTemplates).
 
 In case of no match in any internal \ref EmitterIF::Nam this SUB tries
@@ -399,8 +399,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       Pars->File_(Fnam, InTree) : MSG_LINE(Fnam) : MSG_END(Pars->ErrMsg) : EXIT SUB
     END IF
 
-    VAR path = addPath(StartPath, LEFT(Fnam, INSTRREV(Fnam, SLASH))) _
-      , doxy = NEW Doxyfile(Fnam) _
+    VAR doxy = NEW Doxyfile(Fnam) _
       , recu = InRecursiv _
       , oldo = Ocha _
       , patt = ""
@@ -412,23 +411,22 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       IF CHDIR(Fnam) THEN MSG_END("error (couldn't change directory)") : EXIT SUB
       doxy = NEW Doxyfile("Doxyfile")
       IF 0 = doxy->Length THEN MSG_END(doxy->Errr) : DELETE doxy : EXIT SUB
-      path = CURDIR()
     END IF
 
     InRecursiv = IIF(doxy->Tag(RECURSIVE) = "YES", 1, 0)
-    VAR in_path = addPath(path, doxy->Tag(INPUT_TAG))
+    VAR in_path = addPath(StartPath, doxy->Tag(INPUT_TAG))
     DELETE doxy
     IF CHDIR(in_path) THEN
       MSG_END("error (couldn't change to " & in_path & ")")
     ELSE
       patt = scanFiles("*.bas", "") & scanFiles("*.bi", "")
       IF 0 = LEN(patt) THEN
-        MSG_END("error (nothing to do)")
+        MSG_END("error (no input files in " & in_path & ")")
       ELSE
         MSG_END("scanned") _
 
-        MSG_LINE(path & CALLEES_FILE)
-        Ocha = writeLFN(path)
+        MSG_LINE(StartPath & CALLEES_FILE)
+        Ocha = writeLFN(StartPath)
         IF 0 = Ocha THEN
           MSG_END("error (couldn't write)")
         ELSE
@@ -440,7 +438,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
             MSG_LINE(MID(patt, a, e - a)) : MSG_END("scanned")
             a = e + 1
           WEND
-          CLOSE #Ocha : MSG_LINE(path & CALLEES_FILE) : MSG_END("written")
+          CLOSE #Ocha : MSG_LINE(StartPath & CALLEES_FILE) : MSG_END("written")
         END IF
       END IF
     END IF

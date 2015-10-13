@@ -124,7 +124,7 @@ Comments (in general)  {#SecExaComments}
 The C back-ends work on an intermediate format. This format contains
 comments exported from the FB source. \Proj doesn't export all
 comments, since the programmer may want to have private comments as
-well (ie ToDo marks). On the other hand \Proj provides a way to export
+well (ie. ToDo marks). On the other hand \Proj provides a way to export
 context directly to the intermediate format, to do tricky things with
 the back-end in use.
 
@@ -206,6 +206,17 @@ a special comment by starting its context with a magic character
 Variables Declaration  {#SecExaDim}
 =====================
 
+??? This intermediate format doesn't contain complete C source and
+cannot get compiled by a C compiler. Instead it just contains all
+information the lexical scanner of the back-end needs to build the
+documentation output. Therefor \Proj itself doesn't parse the complete
+FreeBASIC source code. Instead it also acts as a lexical scanner to
+extract just the necessary information.
+
+\note That's why \Proj shouldn't be executed on buggy source (be
+      prepared to face fancy output in that case).
+
+
 A varible declaration in a FreeBASIC source code is in human readable
 words (making it easy to understand the code) and may look like
 
@@ -257,7 +268,7 @@ const char* VarName;
 ~~~
 
 and this syntax can be used directly by a C compiler. This can be
-useful to auto-generate C headers from FB source, ie to bind a library
+useful to auto-generate C headers from FB source, ie. to bind a library
 written in FB in to a C project.
 
 
@@ -609,3 +620,29 @@ fb-doc -s
 ~~~
 
 \note This conclusion assumes a complete installation of *fb-doc*, *Doxygen* and *GraphViz*.
+
+
+
+
+
+
+Documentation Context  {#SecIntDocu}
+=====================
+
+The documentation context gets build from the FB source code and its
+surrounding comments. \Proj exports both in a C-like intermediate
+format as input for the used back-end.
+
+Not all comments get exported. Only comments starting with a magic
+character are used to build the documentation, see \ref SecExaComments
+for details.
+
+Also, not all FB source code gets exported. The output is reduced to
+the minimal set of constructs to build the documentation, see \ref
+SecEmmCSource for details. This makes the execution of the
+tool-chain faster and avoids confusion due to the foreign language for
+the lexical scanner.
+
+This constructs and their comments get emitted at the same line number
+in the intermediate format to enable the tool-chain referencing to a
+certain line.

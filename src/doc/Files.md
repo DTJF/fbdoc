@@ -31,6 +31,8 @@ this files, calling the related emitter functions. So \Proj uses at
 least one of those files in each run (except when getting input from
 StdIn in \ref SubSecModGeany).
 
+\Proj is designed to operate on error-free source code. Usually the code gets edited, compiled, checked and finally documented. So \Proj contains just a minimal set of syntax checks, it depends on input previously validated by the FB compiler.
+
 
 fb-doc.lfn  {#SubSecInLfn}
 ----------
@@ -262,11 +264,11 @@ manipulated by any text editor.
 
 The file contains the names of all functions in the source code.
 Member functions of a UDT are listed as they are named in the
-function body (ie TypeName.FunctionName). The first line is empty.
+function body (ie. TypeName.FunctionName). The first line is empty.
 Further lines contain the names, one in each line, including the dot
 in case of a member function. The lines \b must be separated by a
 single line feed character (LINUX line end = 'CHR(10)'). So be
-careful when we edit on DOS / windows (ie use Geany and switch to
+careful when we edit on DOS / windows (ie. use Geany and switch to
 LF line ends).
 
 This file is needed when running as a filter for Doxygen to create

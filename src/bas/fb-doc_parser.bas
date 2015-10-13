@@ -104,7 +104,7 @@ END FUNCTION
           MSG_ERROR on error and MSG_STOP on the end of the token list)
 
 Check the token list for a declaration of a name, starting at the
-current token (ie behind a VAR keyword). Also checking for
+current token (ie. behind a VAR keyword). Also checking for
 parenthesis to specify a dimension and the equal '=' character of an
 initializer. After execution the current position is at the next
 token after the equal character, or behind the closing parenthesis,
@@ -113,9 +113,7 @@ position.
 
 '/
 FUNCTION Parser.demuxNam(BYVAL MinTk AS INTEGER = TOK_WORD, BYVAL DeclMod AS INTEGER = 0) AS INTEGER
-  DimTok = 0
-  IniTok = 0
-  BitTok = 0
+  DimTok = 0 : IniTok = 0 : BitTok = 0
 
   IF *Tk >= MinTk THEN NamTok = Tk           ELSE NamTok = 0 : RETURN MSG_ERROR
   DO
@@ -173,7 +171,7 @@ FUNCTION Parser.demuxDecl() AS INTEGER
   CASE ELSE : DivTok = 0
   END SELECT
 
-  FunTok = Tk : DimTok = 0 : IniTok = 0
+  FunTok = Tk : DimTok = 0 : IniTok = 0 : BitTok = 0
   SELECT CASE AS CONST *Tk
   CASE TOK_CTOR, TOK_DTOR
     SKIP : IF *Tk = TOK_WORD THEN NamTok = Tk : SKIP ELSE NamTok = 0
@@ -299,7 +297,7 @@ END FUNCTION
 \param Export_ the function to call on each find
 
 Scan the token list for variable declarations and call the emitter
-for each find  (ie for constructs like DIM AS BYTE Nam1, Nam2(5) =
+for each find (ie. for constructs like DIM AS BYTE Nam1, Nam2(5) =
 {0,1,2,3,4,5}, Nam3, ...).
 
 '/
@@ -308,7 +306,7 @@ SUB Parser.parseListNam(BYVAL Export_ AS EmitFunc) EXPORT
   TypTok = 0 : FunTok = 0
   DO
     Tk1 = Tk
-    IF MSG_ERROR >= demuxNam() THEN : Errr("name expected") : skipOverComma() : ELSE
+    IF MSG_ERROR >= demuxNam() THEN : Errr("name expectedA") : skipOverComma() : ELSE
     skipOverComma() : ListCount = count : Export_(@THIS) : count += 1 : END IF
   LOOP UNTIL *Tk <= TOK_COMMA
 END SUB
@@ -318,14 +316,14 @@ END SUB
 \param Export_ the function to call on each find
 
 Scan the token list for variable declarations and call the emitter
-for each find  (ie for constructs like DIM Nam1 AS BYTE, Nam2(5) AS
+for each find (ie. for constructs like DIM Nam1 AS BYTE, Nam2(5) AS
 UBYTE = {0,1,2,3,4,5}, Nam3 AS STRING, ...).
 
 '/
 SUB Parser.parseListNamTyp(BYVAL Export_ AS EmitFunc) EXPORT
   DO
     Tk1 = Tk
-    IF MSG_ERROR >= demuxNam() THEN : Errr("name expected") : skipOverComma() : ELSE
+    IF MSG_ERROR >= demuxNam() THEN : Errr("name expectedB") : skipOverComma() : ELSE
     IF MSG_ERROR >= demuxTyp() THEN : Errr("type expected") : skipOverComma() : ELSE
     skipOverComma() : ListCount = 0 : Export_(@THIS) : END IF : END IF
   LOOP UNTIL *Tk <= TOK_COMMA
@@ -351,7 +349,7 @@ SUB Parser.parseBlockEnum(BYVAL Export_ AS EmitFunc) EXPORT
       Errr("END ENUM expected") : EXIT WHILE
     CASE TOK_LATTE : skipOverColon()
     CASE ELSE
-      IF MSG_ERROR >= demuxNam() THEN Errr("name expected") : skipOverColon() : EXIT SELECT
+      IF MSG_ERROR >= demuxNam() THEN Errr("name expectedC") : skipOverColon() : EXIT SELECT
       ListCount = lico
       skipOverComma() : IF *Tk = TOK_EOS THEN lico = 0 : skipOverColon() ELSE lico += 1
       Export_(@THIS)
@@ -379,7 +377,7 @@ SUB Parser.parseBlockTyUn(BYVAL Export_ AS EmitFunc) EXPORT
     CASE TOK_AS, TOK_BROPN
       BitTok = 0
       IF MSG_ERROR >= demuxNam(TOK_ABST) THEN _
-        IF Errr("name expected") = MSG_ERROR THEN CONTINUE DO _
+        IF Errr("name expectedD") = MSG_ERROR THEN CONTINUE DO _
                                              ELSE EXIT DO
       IF MSG_ERROR >= demuxTyp() THEN _
         IF Errr("type expected") = MSG_ERROR THEN CONTINUE DO _
@@ -396,7 +394,7 @@ SUB Parser.parseBlockTyUn(BYVAL Export_ AS EmitFunc) EXPORT
           IF Errr("type expected") = MSG_ERROR THEN CONTINUE DO _
                                                ELSE EXIT DO
         IF MSG_ERROR >= demuxNam(TOK_ABST) THEN _
-          IF Errr("name expected") = MSG_ERROR THEN CONTINUE DO _
+          IF Errr("name expectedE") = MSG_ERROR THEN CONTINUE DO _
                                                ELSE EXIT DO
 
         skipOverComma()
@@ -477,9 +475,9 @@ Note: the C emitter creates
 
 '/
 FUNCTION Parser.TYPE_() AS INTEGER
-  IF 3 > tokenize(TO_COLON) THEN RETURN Errr("syntax error")
+  IF 3 > tokenize(TO_COLON) THEN               RETURN Errr("syntax error")
 
-  DimTok = 0 : IniTok = 0
+  DimTok = 0 : IniTok = 0 : BitTok = 0
   IF *StaTok = TOK_TYPE THEN
     IF *Tk = TOK_AS THEN
       IF MSG_ERROR >= demuxTyp() THEN          RETURN Errr("type expected")
@@ -513,14 +511,16 @@ emitter, or we call Errr() on syntax problems.
 
 '/
 FUNCTION Parser.VAR_() AS INTEGER
-  IF 3 > tokenize(TO_COLON) THEN    RETURN Errr("syntax error")
+  IF 3 > tokenize(TO_COLON) THEN _
+         RETURN IIF(*StaTok = TOK_EXRN, MSG_ERROR, Errr("syntax error"))
   IF *Tk <> TOK_SHAR THEN ShaTok = 0 ELSE ShaTok = Tk : SKIP
 
   IF *Tk = TOK_AS THEN
     IF MSG_ERROR >= demuxTyp() THEN RETURN Errr("type expected")
-    IF MSG_ERROR >= demuxNam() THEN RETURN Errr("name expected")
+    IF MSG_ERROR >= demuxNam() THEN RETURN Errr("name expectedF")
   ELSE
-    IF MSG_ERROR >= demuxNam() THEN RETURN Errr("name expected")
+    IF *StaTok = TOK_EXRN THEN      RETURN MSG_ERROR
+    IF MSG_ERROR >= demuxNam() THEN RETURN Errr("name expectedG")
     IF *Tk = TOK_AS THEN demuxTyp() ELSE TypTok = 0 : FunTok = 0
     IF 0 = TypTok ANDALSO 0 = FunTok THEN
       SELECT CASE AS CONST *StaTok
@@ -568,7 +568,7 @@ syntax problems.
 '/
 FUNCTION Parser.UNION_() AS INTEGER
   IF 9 > tokenize(TO_END_BLOCK) THEN RETURN Errr("syntax error")
-  IF *Tk <> TOK_WORD THEN RETURN Errr("name expected")
+  IF *Tk <> TOK_WORD THEN RETURN Errr("name expectedH")
   BlockNam = SubStr
   skipOverColon()
   Tk1 = StaTok
@@ -595,7 +595,7 @@ FUNCTION Parser.FUNCTION_() AS INTEGER
   FunTok = StaTok
 
   IF DivTok THEN DivTok = Tk1
-  IF MSG_ERROR >= demuxNam(TOK_WORD, 1) THEN RETURN Errr("name expected")
+  IF MSG_ERROR >= demuxNam(TOK_WORD, 1) THEN RETURN Errr("name expectedI")
   IF MSG_ERROR >= demuxTyp(1) THEN RETURN Errr("syntax error")
 
   FOR i AS INTEGER = 0 TO 1
@@ -621,7 +621,7 @@ problems.
 '/
 FUNCTION Parser.DECLARE_() AS INTEGER
   IF 3 > tokenize(TO_COLON) THEN RETURN Errr("syntax error")
-  IF MSG_ERROR >= demuxDecl() THEN Errr("syntax error!!")
+  IF MSG_ERROR >= demuxDecl() THEN Errr("syntax error")
   Emit->Decl_(@THIS)
   RETURN MSG_ERROR
 END FUNCTION
@@ -654,7 +654,7 @@ the emitter, or we call Errr() handler on syntax problems.
 '/
 FUNCTION Parser.MACRO_() AS INTEGER
   IF 3 > tokenize(TO_END_BLOCK) THEN RETURN Errr("syntax error")
-  IF *Tk <> TOK_WORD THEN RETURN Errr("name expected")
+  IF *Tk <> TOK_WORD THEN RETURN Errr("name expectedJ")
   NamTok = Tk : SKIP
   IF *Tk <> TOK_BROPN THEN RETURN Errr("'()' expected")
   ParTok = Tk
@@ -673,7 +673,7 @@ the emitter, or we call Errr() handler on syntax problems.
 '/
 FUNCTION Parser.DEFINE_() AS INTEGER
   IF 3 > tokenize(TO_EOL) THEN RETURN Errr("syntax error")
-  IF *Tk <> TOK_WORD THEN RETURN Errr("name expected")
+  IF *Tk <> TOK_WORD THEN RETURN Errr("name expectedK")
   NamTok = Tk : SKIP
   IF *Tk = TOK_BROPN ANDALSO Tk[1] = NamTok[1] + NamTok[2] _
     THEN ParTok = Tk : skipOverBrclo() _
@@ -690,7 +690,7 @@ END FUNCTION
 \returns MSG_ERROR (and MSG_STOP at end of file)
 
 Create an error message and call the error function of the emitter.
-It depends on the emitter if and where the error is shown.
+It depends on the emitter if and where the error gets shown.
 
 '/
 FUNCTION Parser.Errr(BYREF E AS STRING) AS INTEGER
@@ -1194,7 +1194,7 @@ END PROPERTY
 \param N the (path, if any, and) file name
 
 This procedure is used by the emitter handlers for \#`INCLUDE`
-statements. It checks if the file hasn't been done already and can get
+statements. It checks if the file has been done already or can get
 opened. If one of these fails a message gets sent to STDERR and the
 file gets skipped.
 

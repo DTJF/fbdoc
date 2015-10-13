@@ -2,71 +2,89 @@ Preparation  {#PagInstall}
 ===========
 \tableofcontents
 
-First, you've to
+In order to install and make use of the \Proj package, first, you've to
 
--# [install some programming tools](#SecTools) to
+-# [install some programming tools](#SecTools) before you
 -# [get the package](#SecGet) and
 -# [compile your executable](#SecBuild).
 
 
-Programming tools  {#SecTools}
-=================
+# Programming tools  {#SecTools}
 
-Before you can use (or install) the \Proj package you have to have a
-working installation of some tools, the first is mandatory and others
-are optional.
+The following table lists all dependencies for \Proj and their types.
+At least, you have to install the FreeBASIC compiler on your system to
+build your \Proj executable. (Of course, later you'll need it for your
+projects as well.) Beside this mandatory (M) tool, the others are
+optional. Some are recommended (R) in order to make use of all package
+features. Some are helpful for testing (T) purposes. LINUX users find
+some packages in their distrubution management system (D).
 
-|                                       Name  |    Typ    |  Function                                                          |
-| ------------------------------------------: | :-------: | :----------------------------------------------------------------- |
-| [fbc](http://www.freebasic.net)             | mandatory | The FreeBASIC compiler to compile the source code                  |
-| [GIT](http://git-scm.com/)                  | optional  | The version control system to organize the files                   |
-| [CMake](http://www.cmake.org)               | optional  | The build management system to build executables and documentation |
-| [cmakefbc](http://github.com/DTJF/cmakefbc) | optional  | The FreeBASIC extension for CMake                                  |
-| [Doxygen](http://www.doxygen.org/)          | optional  | The documentation generator (ie. for this text)                    |
-| [Graphviz](http://www.graphviz.org/)        | optional  | The Graph Visualization Software (caller/callee graphs)            |
-| [gtk-doc](http://developer.gnome.org/gtk-doc-manual/) | optional  | A further documentation generator (ie. for testing purposes)  |
+|                                       Name  | Type |  Function                                                      |
+| ------------------------------------------: | :--: | :------------------------------------------------------------- |
+| [fbc](http://www.freebasic.net)             | M    | FreeBASIC compiler to compile the source code                  |
+| [GIT](http://git-scm.com/)                  | R  D | version control system to organize the files                   |
+| [CMake](http://www.cmake.org)               | R  D | build management system to build executables and documentation |
+| [cmakefbc](http://github.com/DTJF/cmakefbc) | R    | FreeBASIC extension for CMake                                  |
+| [Doxygen](http://www.doxygen.org/)          | R  D | documentation generator (ie. for this text)                    |
+| [Graphviz](http://www.graphviz.org/)        | R  D | Graph Visualization Software (caller/callee graphs)            |
+| [Geany](http://www.geany.org/)              | T  D | Integrated development environment (ie. to test templates)     |
+| [gtk-doc](http://www.gtk.org/gtk-doc/)      | T  D | A further documentation generator (ie. for testing purposes)   |
+
+It's beyond the scope of this guide to describe the installation for
+those programming tools. Find detailed installation instructions on the
+related websides, linked by the name in the first column.
+
+-# First, install the distributed (D) packages of your choise.
+
+-# Make the FB compiler working. If you aren't confident about
+   the task you can find a few notes on the [Installing
+   FreeBASIC](http://www.freebasic.net/wiki/wikka.php?wakka=CompilerInstalling)
+   wiki page.
+
+-# Install cmakefbc, if wanted. That's easy, when you have GIT and CMake.
+   Execute the commands
+   ~~~{.sh}
+   git clone https://github.com/DTJF/cmakefbc
+   cd cmakefbc
+   mkdir build
+   cd build
+   cmake ..
+   make
+   sudo make install
+   ~~~
+   \note Omit `sudo` in case of non-LINUX systems.
 
 
-\note It's beyond the scope of this guide to describe the installation
-      for those programming tools. Follow the installation instructions
-      in the above links (The name in the first column is linked to the
-      related websites.)
-
-
-
-Get Package  {#SecGet}
-===========
+# Get Package  {#SecGet}
 
 Depending on whether you installed the optional GIT package, there're
 two ways to get the \Proj package.
 
-GIT  {#SubSecGit}
----
+## GIT  {#SubSecGit}
 
-Use GIT to get your copy of the package and change to the source tree
+Using GIT is the prefered way to download the \Proj package (since it
+helps users to get involved in to the development process). Get your
+copy and change to the source tree by executing
 
 ~~~{.sh}
 git clone https://github.com/DTJF/fb-doc
 cd fb-doc
 ~~~
 
-ZIP  {#SubSecZip}
----
+## ZIP  {#SubSecZip}
 
 As an alternative you can download a Zip archive by clicking the
-[Download ZIP](https://github.com/DTJF/cmakefbc/archive/master.zip)
+[Download ZIP](https://github.com/DTJF/fb-doc/archive/master.zip)
 button on the \Proj website, and use your local Zip software to unpack
-the archive and change to the newly created folder.
+the archive. Then change to the newly created folder.
 
 
-Build \Proj  {#SecBuild}
-===========
+# Build Executable  {#SecBuild}
 
 Depending on whether you installed the optional CMake package, there're
 two ways to build the \Proj executable.
 
-CMake Build System  {#SubSecCMake}
-------------------
+## CMake Build System  {#SubSecCMake}
 
 The prefered way to build the executable and the documentation files is
 to use the scripts for the CMake build system. If you don't want to
@@ -78,7 +96,7 @@ missing. Otherwise you can either perform an in-source or an
 out-of-source build. The later should be your prefered choise.
 
 
-*In-Source-Build*
+### In-Source-Build  {#SubSubSecISB}
 
 The following command triple will compile the executable in the source
 tree and install it on your system:
@@ -94,7 +112,7 @@ sudo make install
 \note In-Source-Builds polute the source tree by newly created files.
 
 
-*Out-Of-Source-Build*
+### Out-Of-Source-Build  {#SubSubSecISB}
 
 The following command quintuple will create a new *build* folder,
 change to that folder, compile the executable and install it on your
@@ -111,9 +129,9 @@ sudo make install
 \note Omit `sudo` in case of non-LINUX systems.
 
 
-*Documentation-Build*
+### Documentation-Build  {#SubSubSecDocB}
 
-In order to build the documentation, all optional packages listed in
+In order to build the documentation, all recommended packages listed in
 section \ref SecTools have to get installed. The following command will
 build the documentation in form of an HTML file tree and in form of a
 PDF file (either in-source or out-of-source):
@@ -133,21 +151,14 @@ make doc_pdf
 ~~~
 
 
-Manual Compiling  {#SubSecManual}
-----------------
+## Manual Build  {#SubSecManual}
 
+Manual builds are laborious. They're necessary when you don't have the
+recommended tools installed. Find the source code in folder src/bas.
+Beside the module files this folder contains a file named fb-doc.bas,
+which collects all modules in to a single source tree, in order to
+compile all-in-one by executing
 
-
-build your personal binary of \Proj.
-It gets shipped as a FreeBASIC source tree. Find the code in the
-folder *src* in your *fb-doc.zip* archive. To create your binary you
-need to install the [FreeBASIC compiler
-fbc](http://www.freebasic.net/get) for your operating system. Then just
-extract the \Proj folder to any place on your hard disk, change to
-the folder *src* and compile the main file *fb-doc.bas*. Ie load the
-file in to Geany IDE and choose menu <em>Build -> Compile</em>. Or call
-the FreeBASIC compiler at the command line (in the extracted
-folder *src*)
 ~~~{.sh}
 cd src/bas
 fbc -w all fb-doc.bas
@@ -159,7 +170,7 @@ This creates an executable binary named
 - *fb-doc.exe* (on other systems).
 
 That's all you need to get started. Now you can use \Proj and check
-its features, ie translate FB code to intermediate C format or generate
+its features, ie. translate FB code to intermediate C format or generate
 templates.
 
 Therefor you don't need a complex installation. Just place the compiled
@@ -176,7 +187,7 @@ you have to install an additional back-end for C source, like
 
 Download one of these packages for your operating system and follow the
 installation instruction. Both can get extended by using further tools.
-Consider to install them too. (Ie the package
+Consider to install them too. (Ie. the package
 [GraphViz](http://www.graphviz.org/) is used to generate the
 caller / callee graphs in this documentation.)
 
@@ -191,13 +202,31 @@ different folders for several projects, it's best to install \Proj on
 your system, as specified in one of the two following sections.
 
 
+
+
+
+
+
+
+build your personal binary of \Proj.
+It gets shipped as a FreeBASIC source tree. Find the code in the
+folder *src* in your *fb-doc.zip* archive. To create your binary you
+need to install the [FreeBASIC compiler
+fbc](http://www.freebasic.net/get) for your operating system. Then just
+extract the \Proj folder to any place on your hard disk, change to
+the folder *src* and compile the main file *fb-doc.bas*. Ie. load the
+file in to Geany IDE and choose menu <em>Build -> Compile</em>. Or call
+the FreeBASIC compiler at the command line (in the extracted
+folder *src*)
+
+
 UNIX Installation  {#SubSecInsLin}
 -----------------
 
 It's recommended to create a link to the executable and move this link
 to a folder in the system `PATH`. Using a link allows
 
-- recompiling of the source (ie for a new release) and also
+- recompiling of the source (ie. for a new release) and also
 - using the fresh executable from any directory.
 
 This can be done by executing in a terminal
@@ -217,7 +246,7 @@ fb-doc --version
 and you should see the version information text in the terminal. This
 solution works on your personal user account. When you need a system
 wide installation that allows all users to access \Proj, then you need
-admin privileges to place the link in a similar system folder, ie in like
+admin privileges to place the link in a similar system folder, ie. in like
 ~~~{.sh}
 cd .../fb-doc/src
 sudo cp -l fb-doc /usr/bin/fb-doc
@@ -308,7 +337,7 @@ to get a hint for solving the problem.
 \note This setting only works when \Proj is installed in your system
        `PATH` (see previous sections for details). If you don't want to
        install \Proj, you have to use the full path and the original
-       name of the executable (ie like `/home/me/proj/fb-doc/src/fb-doc
+       name of the executable (ie. like `/home/me/proj/fb-doc/src/fb-doc
        -g Doxy`).
 
 

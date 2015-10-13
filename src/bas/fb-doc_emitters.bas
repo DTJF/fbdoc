@@ -212,7 +212,7 @@ END SUB
 
 Create a declaration for the construct at the current parser
 position using FB style. All FB keywords gets mangled to a single
-word to get a FreeBASIC look-and-feel in the documentation. Ie we emit
+word to get a FreeBASIC look-and-feel in the documentation. Ie. we emit
 
  - "SUB Name();" (instead of "void Name(void);")
  - "INTEGER varnam" (instead of "int varname")
@@ -259,7 +259,7 @@ END SUB
 \param P the parser calling this emitter
 
 Create a C declaration for the construct at the current parser
-position. All FB keywords gets translated to their C expressions. Ie
+position. All FB keywords gets translated to their C expressions. Ie.
 we emit
 
  - "void Name(void);" (instead of "SUB Name();")
@@ -649,8 +649,6 @@ SUB cEntryBlockENUM CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-'DECLARE SUB c_Block CDECL(BYVAL AS Parser PTR)
-
 /'* \brief Handler for a context line (TYPE / UNION block)
 \param P the parser calling this handler
 
@@ -852,6 +850,6 @@ SUB geanyExit CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-'/'* \brief An empty emitter to initialize the interface
-'\param P the parser calling this handler '/
+/'* \brief An empty emitter to initialize the interface
+\param P the parser calling this handler '/
 SUB null_emitter CDECL(BYVAL P AS Parser PTR) : END SUB

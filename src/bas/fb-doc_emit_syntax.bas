@@ -9,7 +9,7 @@ output.
 
 The code includes links to the documentation. These links are extracted
 from the original Doxygen output. Since the names in the link tags
-change the repairing process can be done only once (ie the name of the
+change the repairing process can be done only once (ie. the name of the
 constructor *Parser::Parser* in intermediate format gets just *Parser*
 in FB source).
 
@@ -22,22 +22,6 @@ in FB source).
 #INCLUDE ONCE "fb-doc_version.bi"
 #INCLUDE ONCE "fb-doc_doxyfile.bi"
 
-
-'/'* \brief A container for string replacements
-
-'This class is to store two tables, one of search strings and a second
-'one of their replacements. It's used to collect the links from the
-'original source and replace symbol names in the emitter output, as well
-'as referenced line numbers and \#`INCLUDE` files.
-
-''/
-'TYPE RepData
-  'AS STRING _
-      'O _                 '*< The output (a list of counters and strings)
-    ', I = MKl(0) & CHR(1) '*< The input (a list of strings to search for)
-  'DECLARE FUNCTION add(BYREF AS STRING, BYREF AS STRING) AS ZSTRING PTR
-  'DECLARE FUNCTION rep(BYREF AS STRING) AS ZSTRING PTR
-'END TYPE
 
 /'* \brief Add a new element pair
 \param S The string to search for
@@ -330,7 +314,7 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
                   & OPT->scanFiles("*_8bi_source.tex", "")
         IF LEN(DoxyFiles) > 1 THEN
           MSG_END("scanned")
-          FBDOC_MARK = @"%** Syntax-highlighting by fb-doc **%"
+          FBDOC_MARK = @"%%% Syntax-highlighting by fb-doc %%%"
           KEYW_A = @"\textcolor{keyword}{"
           KWTP_A = @"\textcolor{keywordtype}{"
           KWFL_A = @"\textcolor{keywordflow}{"
@@ -1312,10 +1296,12 @@ FUNCTION Highlighter.prepare_tex(BYVAL Hgh AS Highlighter PTR) AS STRING
       LINE INPUT #.Ifnr, .LastLine
       Code(.LastLine & NL)
       IF .LastLine = "\begin{DoxyCode}" THEN EXIT WHILE
+      'IF .LastLine = *.FBDOC_MARK THEN EXIT WHILE
     WEND
 
     IF EOF(.Ifnr) THEN RETURN ""
     LINE INPUT #.Ifnr, .LastLine : IF .LastLine = *.FBDOC_MARK THEN RETURN ""
+    'LINE INPUT #.Ifnr, .LastLine : IF .LastLine = "\begin{DoxyCode}" THEN RETURN ""
     Code(*.FBDOC_MARK & NL)
 
     DO '                                                search for links

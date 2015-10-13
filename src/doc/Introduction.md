@@ -1,5 +1,5 @@
 Introduction  {#PagIntro}
-===========
+============
 \tableofcontents
 
 It's state-of-the-art in software development to write and edit the
@@ -7,111 +7,120 @@ documentation context inside the source code. The programmer(s) can
 adapt the documentation on each improvement or bug fix at one place.
 All work is done in the source file(s), the documentation is placed in
 special comments in the source code so that the compiler doesn't see
-them. Beside the compiler, which extracts information for the CPU, an
-additional tool-chain is used to parse the special comments and the
-related source code to build the documentation, avoiding redundand
-data in separate files and keeping comments to a minimal size.
+them. Beside the software compiler tool-chain, which extracts
+information for the CPU, an additional tool-chain is used to parse the
+special comments and the related source code constructs to build the
+documentation, avoiding redundand data in separate files and keeping
+documentational comments to a minimal size.
 
 Powerful tool-chains (back-ends) exist for several programming
-languages (like C) to generate output in different formats (ie like
-*html*, *pdf*, *man-pages* and others). But previous to \Proj
-there is nothing for FreeBASIC source code yet.
+languages (like C) to generate output in different formats (ie. like
+*html*, *pdf*, *man-pages* and others). Unfortunatelly there is no such
+tool-chain for FreeBASIC source code yet (effective 2012 April, 29).
+The \Proj project is designed to close that gap.
 
-Rather than being a complete tool-chain \Proj is designed as a bridge
+Rather than being a complete tool-chain, \Proj works as a bridge
 to existing C back-ends, since it's a lot of work to build and test
 such a complete tool-chain for several output formats and keep it up to
 date. Instead \Proj creates an intermediate format (similar to the FB
 source code, but with C-like syntax) that can be used with existing,
 well developed and tested C documenting back-ends. \Proj has been
 tested with
+
 - [gtk-doc](http://developer.gnome.org/gtk-doc-manual/stable/index.html)
 - [Doxygen](http://www.doxygen.org/)
-The later is used for this documentation.
+
+The later is used for this documentation (the text you're currently
+reading).
 
 The steps to generate a well documented project are
--# generate source code, compile and test it
--# add documentation comments inside the source code and keep them up
+-# generate source code, compile and test
+-# add documentational comments inside the source code and keep them up
    to date
 -# run \Proj on the FreeBASIC source code to build a C-like
    intermediate format
 -# run the C-back-end on the intemediate format to build the
-   documentation output in one or more output formats (ie \em html,
+   documentation output in one or more output formats (ie. \em html,
    \em pdf, \em manpage, ...)
 
-This intermediate format doesn't contain complete C source and
-cannot get compiled by a C compiler. Instead it just contains all
-information the lexical scanner of the back-end needs to build the
-documentation output. Therefor \Proj itself doesn't parse the complete
-FreeBASIC source code. Instead it also acts as a lexical scanner to
-extract just the necessary information.
-
-\note That's why \Proj shouldn't be executed on buggy source (be
-       prepared to face fancy output in that case).
+In case of \ref SecUseDoxy step 3 can get integrated in step 4.
 
 
-fb-doc  {#SecIntFbdoc}
-======
+# Executable  {#SecIntExe}
 
 \Proj is a multi functional tool, supporting the complete process of
-documenting FB source code. You can use it at the command line and
-manually control its operations by individual command line options.
-It's also designed to operate as an automated tool to act
+documenting any FB project. As an FB source code it can get compiled on
+all operting systems supported by the compiler, which is currently
+(effective 2015, Oct.)
 
-- in a *Makefile*,
-- as a filter for *Doxygen* or
-- as a custom command for *Geany*.
+- DOS
+- windows
+- LINUX / UNIX
 
-Several run modes control where to get input from and where to write
-output at. Several emitters are available do generate different kinds
-of output. Each run mode has its default emitter, but an individual
-emitter can be selected instead. A plugin system makes it possible to
-extend \Proj by external emitters.
+The executable is a
 
-All this gets controlled by the command line interface. It may be a bit
-overhelming at the beginning. It's recommended to concentrate on the
-examples to get startet.
+- command line tool, that
+- reads input (FB source code) from STDIN or file[s],
+- parses related constructs,
+- transfers the constructs to a specific format (depending on the choosen emitter), and
+- writes the emitter output to STDOUT or file[s].
+
+Several run modi control where to get input from and where to write
+output at. Several emitters (named bracketed) are available do generate
+different kinds of output formats, in order to
+
+- generate a C-like intermediate syntax (C_Source) for the C back-ends,
+- generate templates for gtk-doc (GtkDocTemplates) or Doxygen (DoxyTemplates),
+- generate a list of function names (FunctionNames), and
+- generate correct source code listings for Doxygen output (SyntaxHighLighting).
+
+Each run mode has its default emitter, but an individual emitter can be
+selected instead. A plugin interface makes it possible to extend \Proj
+by an external emitter, loaded at run-time.
+
+\Proj gets invoked in diffenrent manners,
+
+- by the build system in a *Makefile*,
+- by *geany* as a custom command,
+- by *doxygen* as a filter, or
+- manualy at the command line (special tasks).
+
+In combination with \ref SecUseDoxy several extra functions are
+available, in order to
+
+- generate caller / callee graphs, and
+- generate source code listings with correct syntax highlighting and hyperlinks
+
+for output formats HTML, TEX, PDF and XML. Therefor \Proj also reads
+and parses the Doxygen configuration file, in order to determine some
+related settings, folders and file patterns. Then it operates (like
+Doxygen) on multiple files in one go.
+
+Here's a grafical overview on the \Proj data flow
+
+![Data Flow Diagram for fb-doc](Overview.png)
 
 
-Documentation Context  {#SecIntDocu}
-=====================
+# About this Text  {#SecIntSelf}
 
-The documentation context gets build from the FB source code and its
-surrounding comments. \Proj exports both in a C-like intermediate
-format as input for the used back-end.
+Finally some words about this documentation (the text you're currently
+reading). It's self-hosted. \Proj is used to build its own
+documentation in combination with the Doxygen back-end. This is, you
+can
 
-Not all comments get exported. Only comments starting with a magic
-character are used to build the documentation, see \ref SecExaComments
-for details.
+- find examples for a lot of topics by studying the files and folders
+  in the \Proj package, and
 
-Also, not all FB source code gets exported. The output is reduced to
-the minimal set of constructs to build the documentation, see \ref
-SecEmmCSource for details. This makes the execution of the
-tool-chain faster and avoids confusion due to the foreign language for
-the lexical scanner.
+- use the package files to experiment with \Proj (ie. for trial and error testing).
 
-This constructs and their comments get emitted at the same line number
-in the intermediate format to enable the tool-chain referencing to a
-certain line.
+To be honest: in some cases this documentation may be a bit overloaded
+and serve more information than necessary. But one of the reasons for
+creating it is to demonstrate the features of \Proj in combination with
+the Doxygen back-end. Therefor not all possibilities are used to reduce
+the output to the bare essentials.
 
-
-About this Text  {#SecIntSelf}
-===============
-
-And finally some words about this documentation (the text you're
-currently reading). It is generated by Doxygen back-end with \Proj
-filter. Find examples for a lot of topics by studying the files in the
-folder *src* of the \Proj package. Beside this you may want to check
-the files in the folder *doc*. configurations for Doxygen to extract
-this pages. A good start may be to use these files and create your
-customized \Proj documentation and play around with the parameters,
-see \ref SecExaCli.
-
-To be honest: in some cases this documentation may be a bit
-overloaded and serve more information than necessary. But one of the
-reasons for creating it is to demonstrate the features of \Proj and
-Doxygen. Therefor not all possibilities are used to reduce the
-output to the essentials (see the Doxygen manual for details).
-
-\note It's not under the scope of this documentation to describe the
-       usage of any (or all possible) tool-chain(s). Please refer to
-       the respective manual(s) for further information.
+\note This documentation contains information on how to integrate \Proj
+      in to the workflow of some C-style documentational tool-chains.
+      It's not under the scope of this documentation to describe the
+      usage of any (or all possible) tool-chain(s). Please refer to the
+      respective manual(s) for further information.

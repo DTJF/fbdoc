@@ -81,7 +81,7 @@ other context.
 Further usage may be generating templates for a complete file
 
 
-Doxygen Templages  {#SecEmmDoxy}
+Doxygen Templates  {#SecEmmDoxy}
 =================
 
 | Emitter                           | DoxygenTemplates                  |
@@ -164,7 +164,7 @@ these categories (replacing the '...' in the above tag format examples)
 Doxygen supports a further style class named `keywordflow`, meant to be
 used for keywords like `WHILE ... WEND`, `DO ...LOOP` and so on. This
 doesn't work for FB code since some keywords are used in different
-meanings (ie `FOR ... next` and also `open(... FOR input)`). So \Proj
+meanings (ie. `FOR ... next` and also `open(... FOR input)`). So \Proj
 doesn't use this style class.
 
 This emitter is designed to be used in mode `--syntax_mode` to repair
@@ -185,5 +185,5 @@ line numbers increase continuously.
 
 To use the output in any Html page it needs a header (or file)
 defining the above mentioned style classes. As an example check any
-Doxygen output (ie the Html tree of this documentation and the file
+Doxygen output (ie. the Html tree of this documentation and the file
 *fb-doc.css*).

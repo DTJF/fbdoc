@@ -8,12 +8,13 @@ Further Development  {#SecToDo}
 
 In combination with Doxygen \Proj is a powerful documentation
 system for FreeBASIC source code. The Doxygen support for FreeBasic
-is much better than for any other BASIC dialect (ie like VB6). But
+is much better than for any other BASIC dialect (ie. like VB6). But
 there's still some room for optimization, for Doxygen support as
 well as for other features, like:
 
 - additional emitters to support further documentation systems or other tools
 - extended SUB / FUNCTION detection for caller / callee graph when using operators `.` or `->`
+- implementation of NAMESPACE, SCOPE
 - a hash table for callees to speed up the execution
 - currently \Proj only works with clean FB code. When one of the
   used standard keywords get \#`UNDEF`ined, grazy things may happen.
@@ -22,7 +23,7 @@ well as for other features, like:
 Feel free to post your ideas, bug reports, wishes or patches, either
 to the project page at
 
-- \Page
+- \Webs
 
 or to the
 
@@ -40,16 +41,18 @@ New:
 - CMake build scripts, modular compiling (in-source / out-of-source)
 - separate doc building: doc_htm, doc_pdf
 - Doxyfile parsing supports `@INCLUDE` tag now
-- modular Doxyfile, auto-includes PROJ constants
 - source listings: documentational comments get removed now (as in Doxygen listings)
 - source listings: new option --doc-comments (-d) to force inclusion of documentational comments
 - example plugin py_ctypes to create language bindings for python
 
 Bugfixes:
 
-- syntax highlighter: files in subfolders found now (TEX, XML)
-- syntax highlighter: supports #`INCLUDE` now (HTM, TEX, XML)
-- fixed interface for external emitter plugins, renewed examples
+- syntax highlighter: finds FB source files in subfolders now (TEX, XML)
+- syntax highlighter: suppressed #`INCLUDE` statements work now (HTM, TEX, XML)
+- fixed interface for external emitter plugins
+- plugin example fixed
+- parsing problem `EXTERN "..."` fixed
+- parsing problem `DECLARE ...` after bitfields fixed
 
 Released on 2015 October, ??.
 

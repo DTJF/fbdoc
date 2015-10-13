@@ -9,11 +9,11 @@ the syntax of the back-end in use.
 
 So to test \Proj and to learn about its usage and features you'll need
 
--# source code to work on (ie the \Proj code in the `src` folder)
--# an executable of \Proj (ie compiled by `fbc fb-doc.bas`)
+-# source code to work on (ie. the \Proj code in the `src` folder)
+-# an executable of \Proj (ie. compiled by `fbc fb-doc.bas`)
 -# a documentation back-end (\Proj comments are formated for Doxygen)
--# optional a GUI frontend (ie Doxywizard)
--# optional further tools (ie *GraphViz* (graphs), *LaTeX* (pdf), ...)
+-# optional a GUI frontend (ie. Doxywizard)
+-# optional further tools (ie. *GraphViz* (graphs), *LaTeX* (pdf), ...)
 
 
 
@@ -39,7 +39,7 @@ variables in the parameter list.
 
 Its different when using gtk-doc tool-chain. Here the documentation
 context is collected in blocks. Such a block contains the name of
-the relevant construct (ie a ENUM block) and the names of all its
+the relevant construct (ie. a ENUM block) and the names of all its
 members, followed by its decription. (Doxygen can handle such blocks
 as well, but it isn't well supported.)
 
@@ -251,7 +251,7 @@ C Headers  {#SecUseCHeader}
 Since \Proj needs to generate C-like code for the back-end parsers, it
 can also be useful to create a set of C headers for a library written
 in FreeBASIC (= FB). By default the FB types get mangled in to one word
-(for documentation purposes). Ie a FB parameter <em>byref Nam as const
+(for documentation purposes). Ie. a FB parameter <em>byref Nam as const
 short</em> gets the pseudo C code <em>byref_as_const_short Nam</em>.
 This mangling can get suppressed by option `--cstyle` and \Proj emitts
 real C types. In that case the example gets <em>const short* Nam</em>
@@ -278,7 +278,7 @@ its output to STDOUT. We can switch to STDIN input by option \em
 --geany-mode and then use the operating system commands to control the
 data flow in and from \Proj.
 
-Ie this is useful when we don't use Geany IDE or when we want to get
+Ie. this is useful when we don't use Geany IDE or when we want to get
 templates for a complete file or a bunch of files at once. We can
 pipe the files context to the \Proj STDIN channel and the fb-doc
 output to a file.
