@@ -924,10 +924,14 @@ FUNCTION Parser.tokenize(BYVAL Stop_ AS EoS_Modi) AS INTEGER
       SETOK(TOK_EOS, Po, 1)   : IF Stop_ >= TO_COLON   THEN EXIT DO
       IF newblock THEN endcount += 1 : newblock = 0
     CASE   ASC(",") : SETOK(TOK_COMMA, Po, 1)
+    CASE   ASC("-") : IF Buf[Po + 1] <> ASC(">")       THEN EXIT SELECT
+      SETOK(TOK_MEOP, Po, 2)         : Po += 2       : CONTINUE DO
     CASE   ASC(".")
-      IF Buf[Po + 1] <> ASC(".") ORELSE Buf[Po + 2] <> ASC(".") ORELSE Buf[Po + 3] = ASC(".") _
-        THEN SETOK(TOK_DOT, Po, 1) _
-        ELSE SETOK(TOK_TRIDO, Po, 3) : Po += 3        : CONTINUE DO
+      IF Buf[Po + 1] <> ASC(".") ORELSE _
+         Buf[Po + 2] <> ASC(".") ORELSE _
+         Buf[Po + 3] = ASC(".") _
+           THEN SETOK(TOK_DOT, Po, 1) _
+           ELSE SETOK(TOK_TRIDO, Po, 3) : Po += 3    : CONTINUE DO
     CASE   ASC("=") : SETOK(TOK_EQUAL, Po, 1)
     CASE   ASC("{"), ASC("[") : SETOK(TOK_KLOPN, Po, 1)
     CASE   ASC("}"), ASC("]") : SETOK(TOK_KLCLO, Po, 1)

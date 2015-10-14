@@ -26,6 +26,7 @@ option `--cstyle`.
 #INCLUDE ONCE "fb-doc_version.bi"
 
 
+'* The list of function names (for caller / callee graphs)
 COMMON SHARED AS STRING LOFN
 
 /'* \brief Handler for exporting comments
@@ -536,9 +537,11 @@ calls.
 '/
 SUB c_func_ CDECL(BYVAL P AS Parser PTR) ' ToDo: internal function calls for diagrams
   WITH *P
+    VAR fl = *.FunTok <> .TOK_CTOR ANDALSO _
+             *.FunTok <> .TOK_DTOR ANDALSO _
+              .NamTok[3] <> .TOK_DOT
     cEmitComments(P, .Tk1[1])
 
-    VAR f = (*.FunTok <> .TOK_CTOR) ANDALSO (*.FunTok <> .TOK_DTOR) ANDALSO (.NamTok[3] <> .TOK_DOT)
     OPT->CreateFunction(P)
     Code(" {")
 
@@ -556,20 +559,19 @@ SUB c_func_ CDECL(BYVAL P AS Parser PTR) ' ToDo: internal function calls for dia
               IF x < a THEN
                 SELECT CASE AS CONST LOFN[i]
                 CASE ASC(!"\n")
-                CASE ASC(".")
-                  SELECT CASE AS CONST .Buf[x]
-                  CASE ASC(" "), ASC(!"\t") : IF f                     THEN EXIT WHILE ' no class member
-                  CASE ASC(".")
-                    IF INSTRREV(LOFN, "." & .SubStr(t - 3) & !"\n", i) THEN EXIT FOR
-                  CASE ASC(">") : if.Buf[x - 1] <> ASC("-")            THEN EXIT WHILE
-                    IF INSTRREV(LOFN, "." & .SubStr(t - 3) & !"\n", i) THEN EXIT FOR
-                  CASE ELSE : EXIT WHILE
-                  END SELECT
+                CASE ASC("."), ASC(">")
+                  VAR tt = t - 9
+                  WHILE tt > .Tk1
+                    IF *tt <> .TOK_MEOP ORELSE *tt <> .TOK_DOT THEN EXIT WHILE
+                    tt -= 6
+                  WEND
+                  x = *(tt - 2)
+                  l += a - x - 1
                 CASE ELSE : EXIT WHILE
                 END SELECT
 
                 cEmitComments(P, a)
-                Code(" " & MID(LOFN, i + 2, l) & "();")
+                Code(" " & MID(.Buf, x + 2, l) & "();")
                 EXIT FOR
               END IF
             WEND

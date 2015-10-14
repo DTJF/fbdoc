@@ -21,9 +21,15 @@ IF(NOT DOXYGEN_FOUND)
 ENDIF()
 
 
-# HTML and PDF build here, always from scratch and in source directory
-SET(PDF_FILE ${CMAKE_CURRENT_BINARY_DIR}/latex/refman.pdf)
+# set variables
+SET(PDF_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJ_NAME}.pdf)
 SET(HTM_FILE ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
+SET(WWW_FILE ${CMAKE_CURRENT_BINARY_DIR}/DocWWW.time)
+SET(REF_FILE ${CMAKE_CURRENT_BINARY_DIR}/latex/refman.pdf)
+## HTML and PDF build here, always from scratch and in source directory
+#SET(PDF_FILE ${CMAKE_CURRENT_BINARY_DIR}/latex/refman.pdf)
+#SET(WWW_FILE ${CMAKE_CURRENT_BINARY_DIR}/DocWWW.time)
+#SET(HTM_FILE ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
 
 SET(htmcon ${CMAKE_CURRENT_BINARY_DIR}/HtmlDoc)
 SET(pdfcon ${CMAKE_CURRENT_BINARY_DIR}/PdfDoc)
@@ -83,7 +89,14 @@ ADD_CUSTOM_COMMAND(OUTPUT ${PDF_FILE}
   VERBATIM
   )
 
+# mirror the local html tree to the www
+ADD_CUSTOM_COMMAND(OUTPUT ${WWW_FILE}
+  COMMAND MirrorDoc.sh '--reverse --delete --verbose ${CMAKE_CURRENT_BINARY_DIR}/html public_html/Projekte/${PROJ_NAME}/doc/html'
+  COMMAND ${CMAKE_COMMAND} -E touch ${WWW_FILE}
+  )
+
 ADD_CUSTOM_TARGET(doc_htm DEPENDS ${HTM_FILE})
+ADD_CUSTOM_TARGET(doc_www DEPENDS ${WWW_FILE})
 ADD_CUSTOM_TARGET(doc_pdf DEPENDS ${PDF_FILE})
 ADD_CUSTOM_TARGET(doc)
 ADD_DEPENDENCIES(doc DEPENDS doc_htm doc_pdf)

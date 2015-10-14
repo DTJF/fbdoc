@@ -67,6 +67,7 @@ FreeBASIC source code.
     TOK_KLOPN '*< left other bracket
     TOK_KLCLO '*< right other bracket
     TOK_DOT   '*< a dot
+    TOK_MEOP  '*< the pointer to memory access operator "->"
     TOK_TRIDO '*< three dots
     TOK_QUOTE '*< a string constant (including quotes)
     TOK_LATTE '*< the '#' character
