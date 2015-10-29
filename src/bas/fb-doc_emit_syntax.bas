@@ -1327,8 +1327,8 @@ FUNCTION Highlighter.prepare_tex(BYVAL Hgh AS Highlighter PTR) AS STRING
       WEND
       IF EOF(.Ifnr) THEN RETURN "" ELSE LINE INPUT #.Ifnr, .LastLine
     LOOP UNTIL .LastLine = "\end{DoxyCode}"
+    RETURN fb_nam
   END WITH
-  RETURN fb_nam
 END FUNCTION
 
 /'* \brief Prepare a XML file for syntax repairing
