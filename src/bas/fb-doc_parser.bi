@@ -11,17 +11,20 @@ the \ref EmitterIF.
 
 
 #IF __FB_OUT_DLL__
-#DEFINE Code(_T_) P->writeOut(_T_) '*< Convenience macro for output (plugin)
+ '* Convenience macro for output (plugin)
+  #DEFINE Code(_T_) P->writeOut(_T_)
+'&/*
 #ELSE
-#DEFINE Code(_T_) PRINT #OPT->Ocha, _T_; '*< Convenience macro for output (\Proj)
+ #DEFINE Code(_T_) PRINT #OPT->Ocha, _T_; '*< Convenience macro for output (\Proj)
+'&*/
 #ENDIF
 
 #IFDEF __FB_UNIX__
  CONST _
    SLASH = "/" _ '*< separator for folders (unix version)
     , NL = !"\n" '*< separator for lines (unix version)
-#ELSE
 '&/*
+#ELSE
  CONST _
    SLASH = "\" _
     , NL = !"\r\n"
@@ -53,16 +56,19 @@ function \ref EmitterIF::Incl_() creates a new Parser for each file.
 TYPE Parser
 /'* \brief The tokens used by the parser
 
-Enumerators used to classify the type of a token found in the
-FreeBASIC source code.
+Enumerators used to classify the type of a token found in the FreeBASIC
+source code. Most of them are used in equal / not equal checks, but a
+few are used with greater or smaller operators. Those are marked as
+labeled enumerators. Don't change the order (without adapting the
+source code).
 
 '/
   ENUM ParserTokens
     MSG_STOP = -1 '*< end of file / token list reached
-    MSG_ERROR     '*< create error message, continue parsing
-    TOK_EOS   '*< end of statement (either new line or `":"`)
+    MSG_ERROR     '*< create error message, continue parsing (labeled enumerator)
+    TOK_EOS   '*< end of statement (either new line or `":"`, labeled enumerator)
     TOK_BRCLO '*< right parenthesis
-    TOK_COMMA '*< a comma
+    TOK_COMMA '*< a comma (labeled enumerator)
 
     TOK_KLOPN '*< left other bracket
     TOK_KLCLO '*< right other bracket
@@ -71,30 +77,32 @@ FreeBASIC source code.
     TOK_TRIDO '*< three dots
     TOK_QUOTE '*< a string constant (including quotes)
     TOK_LATTE '*< the '#' character
-    TOK_BROPN '*< left parenthesis
+    TOK_BROPN '*< left parenthesis (labeled enumerator)
     TOK_EQUAL '*< the '=' character
 
-    TOK_ABST  '*< the ABSTRACT keyword
+    TOK_ABST  '*< the ABSTRACT keyword (labeled enumerator)
     TOK_ALIA  '*< the ALIAS keyword
     TOK_AS    '*< the AS keyword
     TOK_BYRE  '*< the BYREF keyword
     TOK_BYVA  '*< the BYVAL keyword
+    TOK_CAST  '*< the CAST keyword
     TOK_CDEC  '*< the CDECL keyword
     TOK_CLAS  '*< the CLASS keyword
     TOK_COMM  '*< the COMMON keyword
     TOK_CONS  '*< the CONST keyword
     TOK_DECL  '*< the DECLARE keyword
-    TOK_DEFI  '*< the \#`DEFINE` keyword
+    TOK_DEFI  '*< the #`DEFINE` keyword
     TOK_DIM   '*< the DIM keyword
     TOK_END   '*< the END keyword
     TOK_ENUM  '*< the ENUM keyword
     TOK_EXDS  '*< the EXTENDS keyword
-    TOK_EMAC  '*< the \#`ENDMACRO` keyword
+    TOK_EMAC  '*< the #`ENDMACRO` keyword
     TOK_EXRN  '*< the EXTERN keyword
     TOK_EXPO  '*< the EXPORT keyword
-    TOK_INCL  '*< the \#`INCLUDE` keyword
+    TOK_INCL  '*< the #`INCLUDE` keyword
     TOK_LIB   '*< the LIB keyword
-    TOK_MACR  '*< the \#`MACRO` keyword
+    TOK_MACR  '*< the #`MACRO` keyword
+    TOK_WITH  '*< the WITH keyword
     TOK_NAMS  '*< the NAMESPACE keyword
     TOK_ONCE  '*< the ONCE keyword
     TOK_OVER  '*< the OVERLOAD keyword
@@ -103,10 +111,12 @@ FreeBASIC source code.
     TOK_PROT  '*< the PROTECTED keyword
     TOK_RDIM  '*< the REDIM keyword
     TOK_PTR   '*< the PTR or POINTER keyword
+    TOK_PEEK  '*< the PEEK keyword
     TOK_PUBL  '*< the PUBLIC keyword
     TOK_SCOP  '*< the SCOPE keyword
     TOK_SHAR  '*< the SHARED keyword
-    TOK_STAT  '*< the STAvarTIC keyword
+    TOK_PRES  '*< the PRESERVE keyword
+    TOK_STAT  '*< the STATIC keyword
     TOK_STCL  '*< the STDCALL keyword
     TOK_TYPE  '*< the TYPE keyword
     TOK_UNIO  '*< the UNION keyword
@@ -121,7 +131,7 @@ FreeBASIC source code.
     TOK_CTOR  '*< the CONSTRUCTOR keyword
     TOK_DTOR  '*< the DESTRUCTOR keyword
 
-    TOK_BYTE  '*< the BYTE data type
+    TOK_BYTE  '*< the BYTE data type (labeled enumerator)
     TOK_DOUB  '*< the DOUBLE data type
     TOK_INT   '*< the INTEGER data type
     TOK_LONG  '*< the LONG data type
@@ -138,7 +148,7 @@ FreeBASIC source code.
     TOK_ZSTR  '*< the ZSTRING data type
     TOK_WORD  '*< a word
 
-    TOK_COMSL '*< line end comment (single line)
+    TOK_COMSL '*< line end comment (single line, labeled enumerator)
     TOK_COMML '*< multi line comment
   END ENUM
 
@@ -214,7 +224,7 @@ about the state of the parser.
     SrcBgn, _     '*< start position to export FB source
     LineNo, _     '*< the current line in the input buffer \ref Parser::Buf
     LevelCount, _ '*< the level in nested blocks (one based)
-    InTree,     _ '*< flag to indicate if to follow source tree \#`INCLUDE`s
+    InTree,     _ '*< flag to indicate if to follow source tree #`INCLUDE`s
     ListCount     '*< the current entry in a list (zero based)
 
 '* \}

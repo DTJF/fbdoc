@@ -3,10 +3,10 @@
 
 This file contains the source code for a class used to read parameters
 from a Doxyfile, a file that contain settings to control the operations
-of Doxygen. \Proj reads this files to operate on the same folders and
-files as Doxygen.
+of Doxygen. \Proj reads this files to operate similar on the same
+folders and files as Doxygen.
 
-This is used in modes `--list-mode` and `--syntax-mode`.
+The Doxyfile is used in modes `--list-mode` and `--syntax-mode`.
 
 '/
 
@@ -22,31 +22,13 @@ This is used in modes `--list-mode` and `--syntax-mode`.
 
 The constructor tries to find, load and parse the Doxyfile. In case of
 failure the variable Errr contains an error message. Otherwise Errr is
-empty and the following tags get parsed from the Doxyfile by the
-function \ref Search().
+empty and the tags listed in enum DoxyTags get parsed from the Doxyfile
+by the member function Search().
 
-- GENERATE_HTML
-- SOURCE_BROWSER
-- GENERATE_LATEX
-- LATEX_SOURCE_CODE
-- GENERATE_XML
-- XML_PROGRAMLISTING
-- INPUT
-- RECURSIVE
-- OUTPUT_DIRECTORY
-- HTML_OUTPUT
-- HTML_FILE_EXTENSION
-- CREATE_SUBDIRS
-- LATEX_OUTPUT
-- XML_OUTPUT
+\note As in Doxygen, the second tag overrides the first.
 
-\note As in Doxygen, a second tag overrides the first.
-
-\note \Proj doesn't read tag lists, only the first entry of a list.
-
-\note Only the first parameter of the Doxyfile INPUT tag gets used as
-      source code path. So make sure that this tag contains the path to
-      the FB source code at first place.
+\note This is a toy implementation. \Proj doesn't read tag lists, it
+      catches only the first entry of a list.
 
 '/
 CONSTRUCTOR Doxyfile(BYREF Fnam AS STRING)
@@ -60,12 +42,12 @@ CONSTRUCTOR Doxyfile(BYREF Fnam AS STRING)
   VAR bytes_red = 0
   GET #fnr, 1, *Buffer, Length, bytes_red
   IF Length <> bytes_red THEN
-    Errr = "read error (red " & bytes_red & " of " & Length & " bytes)" : CLOSE #fnr : Length = 0 : EXIT CONSTRUCTOR
+    Errr = "read error (read " & bytes_red & " of " & Length & " bytes)" : CLOSE #fnr : Length = 0 : EXIT CONSTRUCTOR
   END IF
 
+  CLOSE #fnr
   Buffer[bytes_red] = 0
   Doxy = CAST(ZSTRING PTR, Buffer)
-  CLOSE #fnr
 
   VAR aa = INSTR(*Doxy, "@INCLUDE"), a = aa, t = ""
   WHILE a
@@ -106,9 +88,9 @@ CONSTRUCTOR Doxyfile(BYREF Fnam AS STRING)
   GET_TAG(XML_OUTPUT)
 END CONSTRUCTOR
 
-/'* \brief destructor freeing the memory used
+/'* \brief destructor freeing the used memory
 
-The destructor frees the memory allocated in the constructor, if any.
+The destructor frees the memory (allocated in the constructor, if any).
 
 '/
 DESTRUCTOR Doxyfile()
@@ -120,9 +102,10 @@ END DESTRUCTOR
 \param I the index of the tag to get
 \returns the tags value (if any)
 
-This property is designed to find the value of a Doxyfile tag. It
-return the tags context (or an empty string if the tag has no value).
-The position information gets dropped (if any).
+This property returns the value of a Doxyfile tag. This is the context
+of the tag array at index I (an empty `STRING` if the tag has no
+value). Use enumerators DoxyTags for index values (since there's no
+error checking agianst index out of range).
 
 '/
 PROPERTY Doxyfile.Tag(BYVAL I AS INTEGER) AS STRING
@@ -132,11 +115,11 @@ END PROPERTY
 
 /'* \brief find a single line tag in the Doxyfile and return its value
 \param Su the tag to search for
-\param Fl the position of the tag
+\param Po the position of the tag
 \returns the tags value (if any))
 
 This function is designed to find the value of a Doxyfile tag. It
-return the tags context or an empty string if the tag has no value
+returns the tag context, or an empty string if the tag has no value
 or cannot be found.
 
 The Doxyfile is searched in reverse direction (from end to start), in
@@ -146,27 +129,27 @@ order to find overrides first.
       entry gets returned.
 
 '/
-FUNCTION Doxyfile.Search(BYREF Su AS STRING, BYREF Fl AS INTEGER) AS STRING
+FUNCTION Doxyfile.Search(BYREF Su AS STRING, BYREF Po AS INTEGER) AS STRING
   VAR i = Length - 1 _
     , l = 0 _
     , p = 0 _
   , lsu = LEN(Su)
-  Fl = 0
+  Po = 0
   FOR i = i TO 0 STEP -1
     SELECT CASE AS CONST Doxy[i]
-    CASE ASC(!"\n") :        IF 0 = l THEN Fl = 0 : p = i : CONTINUE FOR
+    CASE ASC(!"\n") :        IF 0 = l THEN Po = 0 : p = i : CONTINUE FOR
     CASE ASC(!"\r"), ASC(!"\t"), ASC(!"\v"), ASC(" ")
                                               IF 0 = l THEN CONTINUE FOR
-    CASE ASC("=") : Fl = i :                                CONTINUE FOR
+    CASE ASC("=") : Po = i :                                CONTINUE FOR
     CASE ASC("A") TO ASC("Z"), ASC("a") TO ASC("z"), ASC("0") TO ASC("9"), ASC("_"), ASC("@")
-      l += IIF(Fl, 1, 0) :                                  CONTINUE FOR
+      l += IIF(Po, 1, 0) :                                  CONTINUE FOR
     CASE ELSE :                                             CONTINUE FOR
     END SELECT
     IF l = lsu ANDALSO MID(*Doxy, i + 2, lsu) = Su         THEN EXIT FOR
-    l = 0 : Fl = 0 : IF Doxy[i] = ASC(!"\n") THEN p = i
+    l = 0 : Po = 0 : IF Doxy[i] = ASC(!"\n") THEN p = i
   NEXT
-  IF Fl = 0 ORELSE l = 0 THEN RETURN ""
+  IF Po = 0 ORELSE l = 0 THEN RETURN ""
   IF i < 0 ANDALSO (l <> lsu ORELSE MID(*Doxy, i + 2, lsu) <> Su) THEN RETURN ""
-  RETURN TRIM(MID(*Doxy, Fl + 2, p - Fl - 1), ANY !" \t\v\\")
+  RETURN TRIM(MID(*Doxy, Po + 2, p - Po - 1), ANY !" \t\v\\")
 END FUNCTION
 

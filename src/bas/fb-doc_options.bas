@@ -1,8 +1,12 @@
 /'* \file fb-doc_options.bas
 \brief The source code for the \ref Options class
 
-This file contains the source code for the Options class. It's used
-to scan the command line options and control the execution of \Proj.
+This file contains the source code for the Options class. It's
+responsible for user interaction
+
+- parse the command line (options and file specs),
+- control the execution of \Proj, and
+- output messages about the current state.
 
 '/
 
@@ -115,11 +119,11 @@ FUNCTION Options.parseCLI() AS RunModes
         EmitTyp = SYNTAX_REPAIR
 
       CASE "-a", "--asterix" : Asterix = 1
-      CASE "-d", "--doc-comments" : Docom = 1
       CASE "-c", "--cstyle"
-            Types = C_STYLE
+                 Types = C_STYLE
         CreateFunction = @cCreateFunction
         CreateVariable = @cCreateTypNam
+      CASE "-d", "--doc-comments" : Docom = 1
       CASE "-t", "--tree" : InTree = 1
 
       CASE "-e", "--emitter"
@@ -238,13 +242,13 @@ END FUNCTION
 
 
 /'* \brief Add two directories
-\param P1 the path of the basic directory
+\param P1 the path of the basis directory
 \param P2 the path of the directory to add
 \returns a string of the combined directory
 
-Append second directory to first, if it's not an absolute path. In case
+Append second path to first, if it's not an absolute path. In case
 of an absolute path this path gets returned. The returned path has a
-SLASH at the end and all '..' sequences are removed.
+SLASH at the end and all '..' sequences are unscrambled.
 
 '/
 FUNCTION Options.addPath(BYREF P1 AS STRING, BYREF P2 AS STRING) AS STRING
@@ -294,7 +298,7 @@ FUNCTION Options.checkDir(BYREF P AS STRING) AS INTEGER
 END FUNCTION
 
 
-/'* \brief Operate on file(s) and / or pattern(s)
+/'* \brief Operate on file(s), single name and / or pattern(s)
 
 This SUB gets called in case of file input modes. It separates the file
 name specifiers from the \ref Options::InFiles list, expands file
@@ -304,7 +308,6 @@ patterns and executes the required operations.
 SUB Options.FileModi()
   StartPath = CURDIR()
   VAR cupa = StartPath
-  EmitIF->CTOR_(Pars)
 
   IF 0 = LEN(InFiles) THEN '                            InFiles defaults
     SELECT CASE AS CONST RunMode
@@ -328,6 +331,7 @@ SUB Options.FileModi()
     OPEN CONS FOR OUTPUT AS #Ocha
   END IF
 
+  EmitIF->CTOR_(Pars)
   VAR a = 0 _              ' Start character of next file name / pattern
     , i = a _              ' Counter for characters
     , inslsh = 0 _         ' Flag, set when filename name contains a path
@@ -385,14 +389,20 @@ output channel \ref Ocha.
 '/
 SUB Options.doFile(BYREF Fnam AS STRING)
   SELECT CASE AS CONST RunMode
-  CASE DEF_MODE  : Pars->File_(Fnam, InTree) : MSG_LINE(Fnam) : MSG_END(Pars->ErrMsg)
-  CASE SYNT_MODE : VAR nix = NEW Highlighter(Pars) : nix->doDoxy(Fnam) : DELETE nix
+  CASE DEF_MODE
+    MSG_LINE(Fnam)
+    Pars->File_(Fnam, InTree)
+    MSG_END(Pars->ErrMsg)
+  CASE SYNT_MODE
+    VAR nix = NEW Highlighter(Pars)
+    nix->doDoxy(Fnam)
+    DELETE nix
   CASE LIST_MODE
     IF LCASE(RIGHT(Fnam, 4)) = ".bas" ORELSE _
        LCASE(RIGHT(Fnam, 3)) = ".bi" THEN
       IF 0 = Ocha THEN
         MSG_LINE(OutPath & CALLEES_FILE)
-        Ocha = writeLFN(OutPath)
+        Ocha = startLFN(OutPath)
         IF 0 = Ocha THEN MSG_END("error (couldn't write)") : EXIT SUB
         MSG_END("opened")
       END IF
@@ -426,7 +436,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
         MSG_END("scanned") _
 
         MSG_LINE(StartPath & CALLEES_FILE)
-        Ocha = writeLFN(StartPath)
+        Ocha = startLFN(StartPath)
         IF 0 = Ocha THEN
           MSG_END("error (couldn't write)")
         ELSE

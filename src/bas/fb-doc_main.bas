@@ -15,12 +15,13 @@ This file includes the main function to execute.
 
 /'* \brief A dummy function
 
-This function is not in FB code. If it is omitted, then Doxygen doesn't
-create caller / callee graphs for the function calls in that code.
-That's why we cover the FB main part by a a pseudo C function.
+This function is not in FB code. It's necessary to make Doxygen create
+caller / callee graphs for the function calls in that code. That's why
+we cover the main code in FB source by a pseudo C function.
 
 '/
-'&int main () { /* dummy function for Doxygen */
+'&int main () { /* dummy function and calls for Doxygen */
+'&Parser.StdIn(); Options.FileModi()
 
 OPT = NEW Options()
 WITH *.OPT
@@ -34,11 +35,9 @@ WITH *.OPT
       .Ocha = FREEFILE
       OPEN CONS FOR OUTPUT AS #.Ocha
       .Pars->StdIn()
-'&    Parser.StdIn() /* dummy call for Doxygen */
       CLOSE #.Ocha
     CASE ELSE
       .FileModi()
-'&    Options.FileModi() /* dummy call for Doxygen */
     END SELECT
   END IF
 END WITH

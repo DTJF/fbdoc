@@ -1,22 +1,25 @@
 /'* \file fb-doc_emitters.bas
-\brief Default emitter to create pseudo C source, \#`INCLUDE`s the other emitters
+\brief Default emitter to create pseudo C source, #`INCLUDE`s the other emitters
 
-This file is the main file for emitters. It contains some helper
-functions to extract original source code and comments. And it
-contains the standard emitter to translate the FB source to pseudo C
-source.
+This file contains the main source for EmitterIF, used by emitters.
+The Parser calls the matching function in the active EmitterIF, after
+scanning a relevant construct. The emitter function extracts the
+necessary information from the parser data, formats it as desired and
+sends it to the output stream.
 
-The pseudo C emitter is designed to create C source out of the FB
-code including the documentation comments. Comments may be multi
-line comment blocks or line end comments. The emitter tries to place
-the comments similar as in the FB source (but a comment inside a
-statement will be placed at the end of the corresponding C statement).
+The file also includes some helper functions to extract code and
+comments from the original source. And it contains the standard emitter
+to translate to pseudo C intermediate format, either in C or CPP style
+(the later is default, used for the Doxygen documentation back-end).
 
-The emitter is designed to be used to generate output for the
-documentation tool-chain back-end. This may be written to the STDOUT
-pipe (default) or to one or more files (option `--fileoutout`). It
-also can be used to translate an FB header to C syntax by unsing
-option `--cstyle`.
+This format includes minimal C source code and all the documentation
+comments (multi line comment blocks or line end). In order to get the
+links working, which connects the documentation context and the source
+code listings, the emitter places all C constructs in the same line
+number as in the FB code. Also inside the lines, the emitter tries to
+place all constructs similar as in the FB source (but a comment inside
+a statement will be placed at the end of the corresponding C
+statement).
 
 '/
 
@@ -29,17 +32,17 @@ option `--cstyle`.
 '* The list of function names (for caller / callee graphs)
 COMMON SHARED AS STRING LOFN
 
-/'* \brief Handler for exporting comments
+/'* \brief Handler to export comments
 \param P the parser calling this handler
 \param Stop_ the end position in the input buffer
 
-Export the comments between the last position 'SrcBgn' (= source begin)
-and the Stop_ position. Then, the Stop_ position gets the new 'last
-position'.
+Export the comments between the last position `SrcBgn` (= source begin)
+and the Stop_ position. Afterwards, the Stop_ position gets the new
+`SrcBgn`.
 
 '/
 SUB cEmitComments CDECL(BYVAL P AS Parser PTR, BYVAL Stop_ AS INTEGER)
-  WITH *P
+  WITH *P '&Parser* P;
     VAR i = .SrcBgn
     WHILE i <= Stop_
       SELECT CASE AS CONST .Buf[i]
@@ -88,7 +91,7 @@ and emits all words, concatenated by double colons.
 
 '/
 SUB cppNam CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     VAR t = .NamTok
     Code(.SubStr(t))
     WHILE t < .EndTok
@@ -113,7 +116,7 @@ and emits all words as in the original source.
 
 '/
 SUB cNam CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     FOR i AS INTEGER = 1 TO .PtrCount : Code("*") : NEXT
     VAR t = .NamTok, a = t[1], l = t[2]
     WHILE t < .EndTok
@@ -135,7 +138,7 @@ unchanged. This may be a bunch of text in case of an array initializer.
 
 '/
 SUB cIni CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     VAR kl = 0, i = .IniTok[1], a = i, e = 0, atc = 0
     Code(" ")
     DO
@@ -187,7 +190,7 @@ This property reads the dimension of a construct from the input buffer.
 
 '/
 SUB cArrDim CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     VAR t = .DimTok, kl = 0
     DO
       SELECT CASE AS CONST *t
@@ -233,7 +236,7 @@ Exeptions handled in this SUB:
 
 '/
 SUB cppCreateTypNam CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF .TypTok THEN
       IF .Co1Tok THEN Code(.SubStr(.Co1Tok) & "_")
                       Code(.SubStr(.TypTok))
@@ -282,7 +285,7 @@ Exeptions handled in this SUB:
 
 '/
 SUB cCreateTypNam CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF .TypTok THEN
       IF .Co1Tok THEN             Code("const ")
 
@@ -323,7 +326,7 @@ SUB cCreateTypNam CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-/'* \brief Handler for a parameter declaration
+/'* \brief Handler for a parameter declaration in CPP style
 \param P the parser calling this handler
 
 Generate a declaration for a parameter list. The declaration may be
@@ -336,7 +339,7 @@ replaced by a ')'.
 
 '/
 SUB cppEntryListParameter CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitComments(P, .Tk1[1])
 
     IF .FunTok THEN
@@ -357,7 +360,7 @@ SUB cppEntryListParameter CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-/'* \brief Handler for a parameter declaration
+/'* \brief Handler for a parameter declaration in C-style
 \param P the parser calling this handler
 
 Generate a declaration for a parameter list. The declaration may be
@@ -372,7 +375,7 @@ replaced by a ')'.
 
 '/
 SUB cEntryListParameter CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitComments(P, .Tk1[1])
 
     IF .FunTok THEN
@@ -403,7 +406,7 @@ Exceptions:
 
 '/
 SUB cppCreateFunction CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF .DivTok THEN Code(.SubStr(.DivTok) & " ")
 
     SELECT CASE AS CONST *.FunTok
@@ -443,7 +446,7 @@ Exceptions:
 
 '/
 SUB cCreateFunction CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF .DivTok THEN Code(.SubStr(.DivTok) & " ")
 
     SELECT CASE AS CONST *.FunTok
@@ -468,10 +471,10 @@ SUB cCreateFunction CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-/'* \brief Emitter to generate an \#`INCLUDE` translation
+/'* \brief Emitter to generate an #`INCLUDE` translation
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds an \#`INCLUDE`
+This emitter gets called when the parser finds an #`INCLUDE`
 statement. It creates a C translation and sends it to the output
 stream. When option `--tree` is given it checks if the file has
 been done already. If not, it creates a new #Parser and starts its
@@ -479,7 +482,7 @@ scanning process.
 
 '/
 SUB c_include CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitComments(P, .Tk1[1])
     VAR fnam = .SubStr(.NamTok)
     IF OPT->Types = OPT->C_STYLE THEN
@@ -497,13 +500,13 @@ END SUB
 /'* \brief Emitter to generate a macro translation
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds a macro (\#`DEFINE`
-\#`MACRO`). It generates a C translation of the macro and sends it
+This emitter gets called when the parser finds a macro (#`DEFINE`,
+#`MACRO`). It generates a C translation of the macro and sends it
 to the output stream.
 
 '/
 SUB c_defi_ CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitComments(P, .Tk1[1])
 
     Code("#define ")
@@ -536,49 +539,91 @@ calls.
 
 '/
 SUB c_func_ CDECL(BYVAL P AS Parser PTR) ' ToDo: internal function calls for diagrams
-  WITH *P
-    VAR fl = *.FunTok <> .TOK_CTOR ANDALSO _
-             *.FunTok <> .TOK_DTOR ANDALSO _
-              .NamTok[3] <> .TOK_DOT
+  WITH *P '&Parser* P;
+    var futo = .FunTok, nato = .NamTok
     cEmitComments(P, .Tk1[1])
 
     OPT->CreateFunction(P)
     Code(" {")
 
     IF LEN(LOFN) THEN
-      VAR t = .CurTok, e = .EndTok - 6
+      VAR cfl = .TOK_CTOR = *futo orelse _
+                .TOK_DTOR = *futo orelse _
+                .TOK_DOT  = nato[3] _
+        , cna = .SubStr(nato) _
+      , wtype = "" _
+          , t = .CurTok _
+          , e = .EndTok - 6
       WHILE t < e
-        IF *t = .TOK_BROPN THEN
-          VAR l = *(t - 1) _
-            , a = *(t - 2)
+        SELECT CASE AS CONST *t
+        CASE .TOK_END
+          t += 3
+          IF *t = .TOK_WITH THEN wtype = ""
+        CASE .TOK_WITH
+          VAR p = t[1] + t[2]
+          t += 3
+          WHILE t < e
+            IF *t > .TOK_EOS andalso *t < .TOK_COMSL THEN t += 3 ELSE EXIT WHILE
+          WEND
+          wtype = TRIM(MID(.Buf, p + 2, *(t-2) + *(t-1) - p - 1))
+          IF wtype[0] = ASC("*") THEN wtype = MID(wtype, 2) & "->" ELSE wtype &= "."
+        CASE .TOK_BROPN
+          VAR a = *(t - 2) _
+            , l = *(t - 1) _
+            , g = 0
           FOR i AS INTEGER = LEN(LOFN) - 2 TO 0 STEP -1
             VAR x = a + l - 1
             WHILE (.Buf[x] AND &b11011111) = (LOFN[i] AND &b11011111)
               i -= 1
               x -= 1
+              VAR tt = t - 6
               IF x < a THEN
                 SELECT CASE AS CONST LOFN[i]
-                CASE ASC(!"\n")
-                CASE ASC("."), ASC(">")
-                  VAR tt = t - 9
-                  WHILE tt > .Tk1
-                    IF *tt <> .TOK_MEOP ORELSE *tt <> .TOK_DOT THEN EXIT WHILE
-                    tt -= 6
-                  WEND
-                  x = *(tt - 2)
-                  l += a - x - 1
+                CASE ASC(!"\n") : g = 0 : x += 2
+                CASE ASC(".")
+                  IF .Buf[x] = ASC(".") orelse .Buf[x] = ASC(">") THEN
+                    WHILE tt > .Tk1
+                      IF *tt = .TOK_MEOP ORELSE *tt = .TOK_DOT _
+                                         THEN tt -= 3 ELSE tt += 3 : x = tt[1] + 1 : g = 0 : EXIT WHILE ' symbol()
+                      if .Buf[tt[4] - 1] < ASC("A")   then tt += 3 : x = tt[1] + 2 : g = 1 : EXIT WHILE ' .symbol()
+                      IF *tt = .TOK_WORD THEN tt -= 3 ELSE tt += 6 : x = tt[1] + 1 : g = 1 : EXIT WHILE ' .symbol()
+                    WEND
+                    l += a - x + 1
+                  else
+                     if 0 = cfl                            then exit while
+                     var p = i : i = INSTRREV(LOFN, !"\n", p)
+                     if cna <> mid(LOFN, i + 1, p - i)     then exit while
+                     'var nam = mid(LOFN, i + 1, p - i)
+  'MSG_END("HEIR: " & nam & " -> " & classna & " -> " & .SubStr(.NamTok))
+                     g = 0 : x += 2
+                  end if
                 CASE ELSE : EXIT WHILE
                 END SELECT
-
                 cEmitComments(P, a)
-                Code(" " & MID(.Buf, x + 2, l) & "();")
+                IF g THEN Code(" " & wtype & MID(.Buf, x, l) & "();") _
+                     ELSE Code(" " &         MID(.Buf, x, l) & "();")
+
+'SUB Parser.Include(BYVAL N AS STRING)
+  'WITH *OPT ' &Options* OPT;
+    'IF .RunMode = .GEANY_MODE THEN EXIT SUB
+
+    'VAR i = INSTRREV(N, SLASH)
+    'VAR fnam = .addPath(InPath, LEFT(N, i)) & MID(N, i + 1)
+''&OPT* dummy; Options.addPath();
+
+               'IF fl THEN Code(" " & wtype) ELSE Code(" ")
+                'Code(.SubStr(tt))
+                'FOR i AS LONG PTR = tt + 6 TO t step 6
+                  'Code("." & .SubStr(i))
+                'NEXT
+                'Code("();")
                 EXIT FOR
               END IF
             WEND
 
             WHILE i > 0 ANDALSO LOFN[i] <> ASC(!"\n") : i -= 1 : WEND
           NEXT
-        END IF : t += 3
+        END SELECT : t += 3
       WEND
     END IF
 
@@ -588,7 +633,7 @@ SUB c_func_ CDECL(BYVAL P AS Parser PTR) ' ToDo: internal function calls for dia
 END SUB
 
 
-/'* \brief Emitter to generate a declaration translation
+/'* \brief Emitter to generate a `DECLARE` translation
 \param P the parser calling this emitter
 
 This emitter gets called when the parser is in a declaration (VAR /
@@ -601,7 +646,7 @@ it's better to place each declaration in a single line.)
 
 '/
 SUB c_decl_ CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitComments(P, .Tk1[1])
 
     IF 0 = .ListCount THEN
@@ -640,7 +685,7 @@ AND are not handled jet.
 
 '/
 SUB cEntryBlockENUM CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitComments(P, .Tk1[1])
 
     IF 0 = .ListCount THEN Code(STRING(.LevelCount * 2, " "))
@@ -660,7 +705,7 @@ operators like SHL or AND are not handled jet.
 
 '/
 SUB cEntryBlockTypeUnion CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitComments(P, .Tk1[1])
 
     SELECT CASE AS CONST *.Tk1
@@ -680,18 +725,18 @@ SUB cEntryBlockTypeUnion CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-/'* \brief Emitter to generate a block translation
+/'* \brief Emitter to generate a block translation (ENUM, TYPE, UNION)
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds a block (TYPE / UNION
-/ ENUM). It generates a C translation of the block and sends it to
-the output stream.
+This emitter gets called when the parser finds a block declaration like
+TYPE, UNION or ENUM. It generates a C translation of the block and
+sends it to the output stream.
 
 Nested blocks get parsed recursivly.
 
 '/
 SUB c_Block CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitComments(P, .Tk1[1])
 
     IF .LevelCount THEN Code(STRING(.LevelCount * 2, " "))
@@ -734,7 +779,7 @@ status line (or in the debug window).
 
 '/
 SUB c_error CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     SELECT CASE AS CONST OPT->RunMode
     CASE OPT->GEANY_MODE ': EXIT SUB ' or shall we output?
       Code(NL & "'!!! " & PROJ_NAME & .ErrMsg & "!" & NL)
@@ -806,7 +851,7 @@ WITH_NEW_EMITTER(EmitterTypes.C_SOURCE)
 END WITH
 
 
-/'* \brief Handler for exporting FreeBASIC source code
+/'* \brief Handler to exporting FreeBASIC source code
 \param P the parser calling this handler
 \param E the end position in the input buffer
 
@@ -817,7 +862,7 @@ end before the given position. This line end gets stored as the new
 
 '/
 SUB cEmitSource CDECL(BYVAL P AS Parser PTR, BYVAL E AS INTEGER)
-  WITH *P
+  WITH *P '&Parser* P;
     DO : IF E > 0 THEN E -= 1 ELSE EXIT SUB
     LOOP UNTIL .Buf[E] = ASC(!"\n")
     VAR a = .SrcBgn, l = E - a : .SrcBgn = E + 1
@@ -826,32 +871,32 @@ SUB cEmitSource CDECL(BYVAL P AS Parser PTR, BYVAL E AS INTEGER)
 END SUB
 
 
-/'* \brief Handler for initialize the export of source code
+/'* \brief Handler to initialize the source code export
 \param P the parser calling this handler
 
 This emitter gets called before the parser starts its parsing
 process. It initializes the FB source code emission.
 
 '/
-SUB geanyInit CDECL(BYVAL P AS Parser PTR)
+SUB geany_init CDECL(BYVAL P AS Parser PTR)
   P->SrcBgn = 0
 END SUB
 
 
-/'* \brief Handler for finalize the export of source code
+/'* \brief Handler to finalize the export of source code
 \param P the parser calling this handler
 
 This emitter gets called after the parser ends its parsing process.
 It sends the rest of the FB source code to the output stream.
 
 '/
-SUB geanyExit CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+SUB geany_exit CDECL(BYVAL P AS Parser PTR)
+  WITH *P '&Parser* P;
     Code(MID(.Buf, .SrcBgn + 1))
   END WITH
 END SUB
 
 
-/'* \brief An empty emitter to initialize the interface
+/'* \brief Emitter with no action, to initialize the interface
 \param P the parser calling this handler '/
 SUB null_emitter CDECL(BYVAL P AS Parser PTR) : END SUB

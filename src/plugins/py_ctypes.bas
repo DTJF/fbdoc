@@ -16,13 +16,13 @@ compiled in FB.
 '* Macro to place a comment in to the output (file name and line number)
 #DEFINE NEW_ENTRY Code(!"\n\n# " & MID(.Fnam, 23) & ": " & .LineNo)
 DIM SHARED AS LONG _
-  ENUM_COUNT
+  ENUM_COUNT '*< counter for ENUM blocks
 DIM SHARED AS STRING _
-    T0 _
-  , T1 _
-  , T2 _
-  , CLASSES _
-  , LIBRARY
+    T0 _      '*< first type block
+  , T1 _      '*< second type block
+  , T2 _      '*< the list of type names (, separated)
+  , CLASSES _ '*< the list of class names (NL separated)
+  , LIBRARY   '*< the name of the binary to include
 CLASSES = !"\n"
 LIBRARY = "libpruio.so"
 
@@ -59,7 +59,7 @@ transformed to `c_char_p`.
 
 '/
 FUNCTION doCType(BYVAL P AS Parser PTR) AS STRING
-  WITH *P
+  WITH *P '&Parser* P;
     VAR r = ""
     FOR i AS INTEGER = 1 TO .PtrCount : r = "POINTER(" : NEXT
     SELECT CASE UCASE(.SubStr(.TypTok))
@@ -95,7 +95,7 @@ variable `T2`, to be used in py_function().
 
 '/
 SUB py_entryListPara CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF 0 = .TypTok THEN T2 &= ", ???" _
                    ELSE T2 &= ", " & doCType(P)
   END WITH
@@ -110,7 +110,7 @@ variable.
 
 '/
 SUB py_emitEnumNames CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF 0 = .NamTok THEN EXIT SUB
     VAR v = ""
     IF .IniTok THEN
@@ -132,7 +132,7 @@ SUB py_emitEnumNames CDECL(BYVAL P AS Parser PTR)
       & !"\n    " & .SubStr(.NamTok) & " =" & v _
       & !"\nexcept:" _
       & !"\n    pass")
-'& py_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
+'&py_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
   END WITH
 END SUB
 
@@ -146,7 +146,7 @@ the output variable.
 '/
 SUB py_emitBlockNames CDECL(BYVAL P AS Parser PTR)
   STATIC AS STRING ctype
-  WITH *P
+  WITH *P '&Parser* P;
     SELECT CASE AS CONST *.Tk1
     CASE .TOK_PRIV, .TOK_PROT ': .SrcBgn = 0 ' !!! ToDo: hide private?
     CASE .TOK_PUBL            ': .SrcBgn = 1
@@ -181,13 +181,13 @@ SUB py_emitBlockNames CDECL(BYVAL P AS Parser PTR)
       T0 &=  !"\n    '" & .SubStr(.NamTok) & "',"
       T1 &= !"\n    ('" & .SubStr(.NamTok) & "', " & ctype & size & "),"
     END SELECT
-'& py_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
+'&py_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
   END WITH
 END SUB
 
 '* \brief Emitter called when the Parser is on top of a function body
 SUB py_function CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     VAR nam = .SubStr(IIF(.NamTok[3] = .TOK_DOT, .NamTok + 6, .NamTok)) _
       , typ = ""
     IF .TypTok THEN
@@ -215,7 +215,7 @@ END SUB
 
 '* \brief Emitter called when the Parser is at a variable declaration
 SUB py_declare CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF .FunTok THEN py_function(P) : EXIT SUB
 
     NEW_ENTRY
@@ -229,7 +229,7 @@ END SUB
 
 '* \brief Emitter called when the Parser is at the start of a ENUM block
 SUB py_enum CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     NEW_ENTRY
     ENUM_COUNT = -1
     .parseBlockEnum(@py_emitEnumNames)
@@ -238,7 +238,7 @@ END SUB
 
 '* \brief Emitter called when the Parser is at the start of a UNION block
 SUB py_union CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     .parseBlockTyUn(@py_emitBlockNames)
     NEW_ENTRY
   END WITH
@@ -246,7 +246,7 @@ END SUB
 
 '* \brief Emitter called when the Parser is at the start of a TYPE block
 SUB py_class CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     T0 = "struct_" & .BlockNam & ".__slots__ = ["
     T1 = "struct_" & .BlockNam & ".__fields__ = ["
     .parseBlockTyUn(@py_emitBlockNames)
@@ -264,9 +264,9 @@ SUB py_class CDECL(BYVAL P AS Parser PTR)
   END WITH
 END SUB
 
-'* \brief Emitter called when the Parser is at an \#`DEFINE` line or at the start of a \#`MACRO`
+'* \brief Emitter called when the Parser is at an #`DEFINE` line or at the start of a #`MACRO`
 SUB py_define CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF .ParTok THEN EXIT SUB ' no MACRO or DEFINE with parameter list
 
     VAR a = .NamTok[1] + .NamTok[2] + 1 _
@@ -283,9 +283,9 @@ SUB py_define CDECL(BYVAL P AS Parser PTR)
   END WITH
 END SUB
 
-'* \brief Emitter called when the Parser is at an \#`INCLUDE` line
+'* \brief Emitter called when the Parser is at an #`INCLUDE` line
 SUB py_include CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF .InTree THEN .Include(TRIM(.SubStr(.NamTok), """"))
   END WITH
 END SUB
@@ -340,12 +340,3 @@ WITH_NEW_EMITTER(EmitterTypes.EXTERNAL)
   '.CTOR_ = @py_CTOR
   .DTOR_ = @py_DTOR
 END WITH
-
-
-'* \brief Function called by fb-doc to get the \ref EmitterIF
-FUNCTION EmitterInit CDECL() AS EmitterIF PTR EXPORT
-  'PRINT __FUNCTION__
-  'RETURN Emitters(0)
-  RETURN Emitters(EmitterTypes.EXTERNAL)
-END FUNCTION
-

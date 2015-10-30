@@ -1,29 +1,33 @@
 /'* \file fb-doc_emit_doxy.bas
 \brief Emitter for Doxygen templates
 
-This file contains emitter functions for the \ref EmitterIF to
-generate template blocks for the Doxygen Back-end. It's designed to
-be used in Geany mode (see section \ref SubSecExaDoxy for an example).
+This file contains the emitter called "DoxygenTemplates", used to
+generate templates for the Doxygen back-end in `--geany-mode`. No mode
+uses this emitter as default.
 
-The emitters return all original source code unchanged. Additionally
-relevant lines (or code blocks) get prepended by a multi line block
-of documentation. This works for `SUB`s, `FUNCTION`s, `TYPE, UNION` and
-`ENUM` blocks, declarations (`VAR  DIM  CONST  COMMON  EXTERN
-STATIC`) and \#`DEFINE`s or \#`MACRO`s.
+The emitters returns all original source code unchanged. Additionally,
+relevant constructs (statements or code blocks) get prepended by a multi line block
+of documentation in Doxygen syntax. This works for
 
-The block starts with the C declaration of the construct and a line
-for the brief description. Then the members are listed with leading
-param or var keyword and followed by a line for the brief
-description. The block ends by a `FIXME` text for the detailed
-description.
+- blocks like `TYPE, UNION` and `ENUM`, and
 
-Since the prefered way to document variables with Doxygen is to
-write the comment behind the variable, this emitter is mostly
-helpful for documenting functions and their parameter lists.
+- statements like `SUB`, `FUNCTION`, `VAR`, `DIM`, `CONST`, `COMMON`, `EXTERN`, `STATIC`, #`DEFINE` and #`MACRO`
 
-When an empty line is send by Geany, the text of the \ref doxy_empty()
-function gets emitted. This is a comment block template to describe
-the source file.
+The documentation template contains
+
+- the C declaration of the construct
+- a line for the brief description
+- the list of members (including keyword like `param` or `var`)
+- the description area
+- a footer
+
+The placeholder `FIXME` is used to mark the positions where the
+documentation context should get filled in. See section \ref
+SubSecExaDoxy for an example.
+
+\note Since the prefered way to document with Doxygen is to write the
+      comment in front of or behind a statement, this emitter is mostly
+      helpful for documenting functions and their parameter lists.
 
 '/
 
@@ -50,7 +54,7 @@ output stream.
 
 '/
 SUB doxy_entryListPara CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF .NamTok THEN Code(NL & "\param " & .SubStr(.NamTok) & " " & FIXME)
   END WITH
 END SUB
@@ -66,14 +70,14 @@ sends it to the output stream.
 
 '/
 SUB doxy_func_ CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     VAR a = .StaTok[1], b = .ParTok, t = .TypTok
     cEmitSource(P, .StaTok[1])
     Code(     DOXY_START & "\fn ")
     OPT->CreateFunction(P)
     Code(NL & "\brief " & FIXME)
     IF b THEN .ParTok = b : .parseListPara(@doxy_entryListPara)
-'& doxy_entryListPara(); // pseudo function call (helps Doxygen documenting the interface)
+'&doxy_entryListPara(); // pseudo function call (helps Doxygen documenting the interface)
     IF t THEN Code(NL & "\returns " & FIXME)
     Code(DOXY_END)
     .SrcBgn = a
@@ -90,7 +94,7 @@ each variable name and sends it (them) to the output stream.
 
 '/
 SUB doxy_decl_ CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF 0 = .ListCount THEN
       cEmitSource(P, .StaTok[1])
       Code(DOXY_START)
@@ -112,7 +116,7 @@ SUB doxy_decl_ CDECL(BYVAL P AS Parser PTR)
       OPT->CreateFunction(P)
       Code(NL & "\brief " & FIXME)
       IF b THEN .ParTok = b : .parseListPara(@doxy_entryListPara)
-'& doxy_entryListPara(); // pseudo function call (helps Doxygen documenting the interface)
+'&doxy_entryListPara(); // pseudo function call (helps Doxygen documenting the interface)
       IF t THEN Code(NL & "\returns: " & FIXME)
       Code(DOXY_END)
       .SrcBgn = a
@@ -133,13 +137,13 @@ END SUB
 /'* \brief Emitter to generate a templates for a macro
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds a macro (\#`DEFINE`
-\#`MACRO`). It generates a template to document the macro and sends it
+This emitter gets called when the parser finds a macro (#`DEFINE`
+#`MACRO`). It generates a template to document the macro and sends it
 to the output stream.
 
 '/
 SUB doxy_defi_ CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitSource(P, .StaTok[1])
     Code(  DOXY_START & "\def " & .SubStr(.NamTok) & _
       NL & "\brief " & FIXME & _
@@ -157,7 +161,7 @@ the output stream.
 
 '/
 SUB doxy_emitBlockNames CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     SELECT CASE AS CONST *.Tk1
     CASE .TOK_PRIV, .TOK_PROT ': .SrcBgn = 0 ' !!! ToDo: hide private?
     CASE .TOK_PUBL            ': .SrcBgn = 1
@@ -169,7 +173,7 @@ SUB doxy_emitBlockNames CDECL(BYVAL P AS Parser PTR)
       Code(NL & "\var " & .BlockNam & "::" & .SubStr(.NamTok) &  " " & FIXME & _
            NL & "\brief " & FIXME)
     END SELECT
-'& doxy_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
+'&doxy_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
   END WITH
 END SUB
 
@@ -183,7 +187,7 @@ for each member and sends it to the output stream.
 
 '/
 SUB doxy_Block CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitSource(P, .StaTok[1])
     SELECT CASE AS CONST *.Tk1
     CASE .TOK_ENUM
@@ -211,7 +215,7 @@ SUB doxy_Block CDECL(BYVAL P AS Parser PTR)
         NL)
       .parseBlockTyUn(@doxy_emitBlockNames)
     END SELECT
-'& doxy_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
+'&doxy_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
     Code(COMM_END)
   END WITH
 END SUB
@@ -226,7 +230,7 @@ output stream.
 
 '/
 SUB doxy_empty CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     Code(  DOXY_START & "\file " & FIXME & _
       NL & "\brief " & FIXME & _
            DOXY_END)
@@ -245,8 +249,8 @@ WITH_NEW_EMITTER(EmitterTypes.DOXYGEN_TEMPLATES)
    .Enum_ = @doxy_Block
    .Unio_ = @doxy_Block
    .Clas_ = @doxy_Block
-   .Init_ = @geanyInit '        ... and the Geany init / exit functions
-   .Exit_ = @geanyExit
+   .Init_ = @geany_init '       ... and the Geany init / exit functions
+   .Exit_ = @geany_exit
   .Empty_ = @doxy_empty
 END WITH
 

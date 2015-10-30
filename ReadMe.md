@@ -25,7 +25,7 @@ or at the world wide web:
  - de: http://www.freebasic-portal.de/downloads/ressourcencompiler/fb-doc-229.html
 
 
-Licence (GPLv3)  {#SecLicence}
+License (GPLv3)
 ===============
 
 Copyright &copy; 2012-2015 by Thomas{ At ]Freiherr{ at }gmx[ dOt ]net

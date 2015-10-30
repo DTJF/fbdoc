@@ -1,12 +1,7 @@
 /'* \file fb-doc_emitters.bi
 \brief Header file for \ref EmitterIF
 
-This file contains the declaration of the emitters interface, a UDT
-(User Defined Type) that contains function pointers. The \ref
-Parser calls the matching function in the active emitter after
-scanning a relevant construct. The emitter function extracts the
-necessary information from the parser data, formats it as desired
-and sends it to the output stream.
+This file contains the declaration code for the EmitterIF.
 
 '/
 
@@ -74,54 +69,54 @@ TYPE EmitterIF
    , Enum_ = @null_emitter _ '*< handler for `ENUM` blocks
    , Unio_ = @null_emitter _ '*< handler for `UNION` blocks
    , Clas_ = @null_emitter _ '*< handler for `TYPE  CLASS` blocks
-   , Defi_ = @null_emitter _ '*< handler for \#`DEFINE` \#`MACRO`
-   , Incl_ = @null_emitter _ '*< handler for \#`INCLUDE`
+   , Defi_ = @null_emitter _ '*< handler for #`DEFINE`, #`MACRO`
+   , Incl_ = @null_emitter _ '*< handler for #`INCLUDE`
    , Init_ = @null_emitter _ '*< handler for start-up
   , Error_ = @null_emitter _ '*< handler for errors
   , Empty_ = @null_emitter _ '*< handler for empty Geany block
    , Exit_ = @null_emitter _ '*< handler for end-up
    , CTOR_ = @null_emitter _ '*< CONSTRUCTOR for emitter
    , DTOR_ = @null_emitter _ '*< DESTRUCTOR for emitter
-'& ... but the following pseudo inline members instead */
+'&... but the following pseudo inline members instead */
 
-'* function called before parsing a source code
-'& inline void Init_ (void){c_Init(); geanyInit(); synt_init();};
+'*function called before parsing a source code
+'&inline void Init_ (void){c_Init(); geany_init(); synt_init();};
 
-'* emitter for a declaration (VAR / DIM / CONST / COMMON / EXTERN / STATIC)
-'& inline void Decl_ (void){c_decl_(); gtk_decl_(); doxy_decl_(); callees_decl_();};
+'*emitter for a declaration (VAR / DIM / CONST / COMMON / EXTERN / STATIC)
+'&inline void Decl_ (void){c_decl_(); gtk_decl_(); doxy_decl_(); callees_decl_();};
 
-'* emitter for a function (SUB / FUNCTION / PROPERTY / CONSTRUCTOR / DESTRUCTOR)
-'& inline void Func_ (void){c_func_(); gtk_func_(); doxy_func_(); callees_func_(); synt_func_();};
+'*emitter for a function (SUB / FUNCTION / PROPERTY / CONSTRUCTOR / DESTRUCTOR)
+'&inline void Func_ (void){c_func_(); gtk_func_(); doxy_func_(); callees_func_(); synt_func_();};
 
-'* emitter for a ENUM block
-'& inline void Enum_ (void){c_Block(); gtk_Block(); doxy_Block();};
+'*emitter for a ENUM block
+'&inline void Enum_ (void){c_Block(); gtk_Block(); doxy_Block();};
 
-'* emitter for a UNION block
-'& inline void Unio_ (void){c_Block(); gtk_Block(); doxy_Block(); callees_class_();};
+'*emitter for a UNION block
+'&inline void Unio_ (void){c_Block(); gtk_Block(); doxy_Block(); callees_class_();};
 
-'* emitter for a struct (TYPE / CLASS block)
-'& inline void Clas_ (void){c_Block(); gtk_Block(); doxy_Block(); callees_class_();};
+'*emitter for a struct (TYPE / CLASS block)
+'&inline void Clas_ (void){c_Block(); gtk_Block(); doxy_Block(); callees_class_();};
 
-'* emitter for a macro (\#`DEFINE` / \#`MACRO`)
-'& inline void Defi_ (void){c_defi_(); gtk_defi_(); doxy_defi_();};
+'*emitter for a macro (#`DEFINE`, #`MACRO`)
+'&inline void Defi_ (void){c_defi_(); gtk_defi_(); doxy_defi_();};
 
-'* emitter for includes (\#`INCLUDE`)
-'& inline void Incl_ (void){c_include(); callees_include(); synt_incl();};
+'*emitter for includes (#`INCLUDE`)
+'&inline void Incl_ (void){c_include(); callees_include(); synt_incl();};
 
-'* emitter for an error message
-'& inline void Error_ (void){c_error();};
+'*emitter for an error message
+'&inline void Error_ (void){c_error();};
 
-'* emitter for an empty Geany block
-'& inline void Empty_ (void){gtk_empty(); doxy_empty(); synt_empty();};
+'*emitter for an empty Geany block
+'&inline void Empty_ (void){gtk_empty(); doxy_empty(); synt_empty();};
 
-'* function called after parsing the source code
-'& inline void Exit_ (void){c_exit(); geanyExit(); synt_exit();};
+'*function called after parsing the source code
+'&inline void Exit_ (void){c_exit(); geany_exit(); synt_exit();};
 
-'* function called at program start-up (once)
-'& inline void CTOR_ (void){synt_CTOR();};
+'*function called at program start-up (once)
+'&inline void CTOR_ (void){synt_CTOR();};
 
-'* function called at program end (once)
-'& inline void DTOR_ (void){synt_DTOR();};
+'*function called at program end (once)
+'&inline void DTOR_ (void){synt_DTOR();};
 END TYPE
 
 DECLARE SUB c_Block CDECL(BYVAL P AS Parser_ PTR)
@@ -129,8 +124,8 @@ DECLARE SUB cNam CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB cEmitSource CDECL(BYVAL AS Parser_ PTR, BYVAL AS INTEGER)
 DECLARE SUB cIni CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB c_error CDECL(BYVAL AS Parser_ PTR)
-DECLARE SUB geanyInit CDECL(BYVAL AS Parser_ PTR)
-DECLARE SUB geanyExit CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB geany_init CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB geany_exit CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB cppCreateFunction CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB cCreateFunction CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB cppCreateTypNam CDECL(BYVAL AS Parser_ PTR)
@@ -139,6 +134,7 @@ DECLARE SUB cCreateTypNam CDECL(BYVAL AS Parser_ PTR)
 '* the SHARED array for the emitter interfaces
 COMMON SHARED AS EmitterIF PTR Emitters()
 REDIM PRESERVE SHARED AS EmitterIF PTR Emitters(0 TO EmitterTypes.EXTERNAL)
+'&typedef struct EmitterIF* EmitterIF_PTR; /**< Doxygen internal (ignore this). */
 
 /'* \brief Snippet to create a new \ref EmitterIF (for new customized emitter modules) '/
 #MACRO WITH_NEW_EMITTER(_N_)

@@ -65,7 +65,7 @@ END SUB
 
 '* \brief Emitter called when the Parser is on top of a function body
 SUB dll_function CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     VAR nam = .SubStr(IIF(.NamTok[3] = .TOK_DOT, .NamTok + 6, .NamTok))
     Code(NL & __FUNCTION__ & ": " & .LineNo & " " & nam)
   END WITH
@@ -86,14 +86,14 @@ SUB dll_class CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__)
 END SUB
 
-'* \brief Emitter called when the Parser is at an \#`DEFINE` line or at the start of a \#`MACRO`
+'* \brief Emitter called when the Parser is at an #`DEFINE` line or at the start of a #`MACRO`
 SUB dll_define CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__)
 END SUB
 
-'* \brief Emitter called when the Parser is at an \#`INCLUDE` line
+'* \brief Emitter called when the Parser is at an #`INCLUDE` line
 SUB dll_include CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     VAR nam = .SubStr(.NamTok)
     Code(NL & __FUNCTION__ & ": " & .LineNo & " " & nam)
     IF .InTree THEN .Include(TRIM(nam, """"))
@@ -148,11 +148,3 @@ WITH_NEW_EMITTER(EmitterTypes.EXTERNAL)
   .CTOR_ = @dll_CTOR
   .DTOR_ = @dll_DTOR
 END WITH
-
-
-'* \brief Function called by fb-doc to get the \ref EmitterIF
-FUNCTION EmitterInit CDECL() AS EmitterIF PTR EXPORT
-  PRINT __FUNCTION__
-  RETURN Emitters(0)
-END FUNCTION
-

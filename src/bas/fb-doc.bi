@@ -1,9 +1,8 @@
 /'* \file fb-doc.bi
 \brief Header for the main source file
 
-This file contains \#`DEFINE`s for the user communication at the
+This file contains #`DEFINE`s for the user communication at the
 command prompt and adjusts some operation system specific settings.
-It also includes the headers for the modules.
 
 '/
 

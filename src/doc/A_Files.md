@@ -245,13 +245,15 @@ context when needed and continues without the context when the files
 aren't present. \Proj searches for the files in the EXEPATH (the
 folder of the \Proj binary).
 
-\section sectFileCsrc ../doc/c_src
+
+# ../doc/c_src  {#SecFileCsrc}
 
 This folder gets created by \Proj to write the file output. It's
 used to collect the translations from the \em C_Source emitter. The
 back-end read its input from here.
 
-\section sectFileLfn fb-doc.lfn
+
+# fb-doc.lfn  {#SecFileLfn}
 
 The suffix lfn means list of function names. This file is used in the
 C_Source emitter to create pseudo function calls in a function body. It
@@ -281,7 +283,7 @@ Since in this mode Doxygen serves the file names in any order and
 \Proj gets started new for each file, it doesn't know about a
 function declaration from file A when working on file B. Therefor the
 function names have to be served from an external source. They get
-red from this file at each program start.
+read from this file at each program start.
 
 The file offers an additional way to control the context of the caller
 and callees graphs. Only functions listed in this file gets included
@@ -292,7 +294,7 @@ message and the function bodys of the pseudo C code are empty. This
 means no caller or callees graphs will be created.
 
 
-\section sectFilePlugin External Moduls (*.so / *.dll)
+# External Moduls (*.so / *.dll)  {#SecFilePlugin}
 
 \Proj can use external emitter modules. These are executable
 binaries, compiled and linked as a library for dynamic linkage,

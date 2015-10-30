@@ -1,23 +1,4 @@
 +++ List of Function Names +++
-doNLiterals
-doCType
-py_entryListPara
-py_emitEnumNames
-py_emitBlockNames
-py_function
-py_declare
-py_enum
-py_union
-py_class
-py_define
-py_include
-py_init
-py_error
-py_empty
-py_exit
-py_CTOR
-py_DTOR
-EmitterInit
 RepData.add
 RepData.rep
 html_specials
@@ -31,6 +12,7 @@ Highlighter.do_files
 Highlighter.generate_all
 Highlighter.word_type
 Highlighter.generate_code
+Highlighter.searchPathNam
 Highlighter.prepare_html
 Highlighter.prepare_tex
 Highlighter.prepare_xml
@@ -38,7 +20,7 @@ synt_init
 synt_exit
 synt_incl
 synt_func_
-writeLFN
+startLFN
 callees_decl_
 callees_class_
 callees_func_
@@ -66,8 +48,8 @@ c_Init
 c_exit
 c_CTOR
 cEmitSource
-geanyInit
-geanyExit
+geany_init
+geany_exit
 null_emitter
 gtk_emit_Name
 gtk_defi_
@@ -84,6 +66,7 @@ doxy_emitBlockNames
 doxy_Block
 doxy_empty
 Doxyfile.Tag
+Doxyfile.Search
 Parser.skipOverComma
 Parser.skipOverBrclo
 Parser.skipOverColon
@@ -138,7 +121,6 @@ dll_empty
 dll_exit
 dll_CTOR
 dll_DTOR
-EmitterInit
 doNLiterals
 doCType
 py_entryListPara
@@ -157,4 +139,3 @@ py_empty
 py_exit
 py_CTOR
 py_DTOR
-EmitterInit

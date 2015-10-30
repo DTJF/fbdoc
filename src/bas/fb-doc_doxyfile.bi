@@ -1,12 +1,8 @@
 /'* \file fb-doc_doxyfile.bi
-\brief The source code for the \ref Doxyfile class
+\brief Declarations for the \ref Doxyfile class
 
-This file contains the declaration code for a class used to read
-parameters from a Doxyfile, a file that contain settings to control the
-operations of Doxygen. \Proj reads this files to operate on the same
-folders and files as Doxygen.
-
-This is used in modes `--list-mode` and `--syntax-mode`.
+This file contains the declaration code for the Doxyfile class, used to
+read parameters from a Doxyfile.
 
 '/
 
@@ -15,24 +11,24 @@ This is used in modes `--list-mode` and `--syntax-mode`.
 
 Enumerators used for the STRING array Tags() in UDT Doxyfile. They're
 named after the tag names in the Doxyfile. Exeption: INPUT gets
-INPUT_TAG.
+INPUT_TAG (due to FB keyword collision).
 
 '/
-ENUM
-  GENERATE_HTML
-  SOURCE_BROWSER
-  GENERATE_LATEX
-  LATEX_SOURCE_CODE
-  GENERATE_XML
-  XML_PROGRAMLISTING
-  INPUT_TAG
-  RECURSIVE
-  OUTPUT_DIRECTORY
-  HTML_OUTPUT
-  HTML_FILE_EXTENSION
-  CREATE_SUBDIRS
-  LATEX_OUTPUT
-  XML_OUTPUT
+ENUM DoxyTags
+  GENERATE_HTML       '*< the tag GENERATE_HTML
+  SOURCE_BROWSER      '*< the tag SOURCE_BROWSER
+  GENERATE_LATEX      '*< the tag GENERATE_LATEX
+  LATEX_SOURCE_CODE   '*< the tag LATEX_SOURCE_CODE
+  GENERATE_XML        '*< the tag GENERATE_XML
+  XML_PROGRAMLISTING  '*< the tag XML_PROGRAMLISTING
+  INPUT_TAG           '*< the tag INPUT
+  RECURSIVE           '*< the tag RECURSIVE
+  OUTPUT_DIRECTORY    '*< the tag OUTPUT_DIRECTORY
+  HTML_OUTPUT         '*< the tag HTML_OUTPUT
+  HTML_FILE_EXTENSION '*< the tag HTML_FILE_EXTENSION
+  CREATE_SUBDIRS      '*< the tag CREATE_SUBDIRS
+  LATEX_OUTPUT        '*< the tag LATEX_OUTPUT
+  XML_OUTPUT          '*< the tag XML_OUTPUT
 END ENUM
 
 /'* \brief handle a Doxyfile
@@ -46,11 +42,13 @@ parameter of a lists).
 
 '/
 TYPE Doxyfile
-  AS INTEGER Length
-  AS UBYTE PTR Buffer
-  AS ZSTRING PTR Doxy = @"empty"
-  AS STRING Errr _
-  , Tags(XML_OUTPUT)
+  AS INTEGER Length   '*< the length of the buffer
+  AS UBYTE PTR Buffer '*< the buffer data
+  AS ZSTRING PTR _
+    Doxy = @"empty"   '*< a pointer to interprete the data as STRING
+  AS STRING _
+    Errr _            '*< an error message (if any)
+  , Tags(XML_OUTPUT)  '*< an array containing the tags context
 
   DECLARE CONSTRUCTOR(BYREF AS STRING)
   DECLARE DESTRUCTOR()

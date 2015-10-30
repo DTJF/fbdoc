@@ -37,7 +37,7 @@ values for each entry:
 -# its length in bytes
 
 The token list contains the complete construct. This is a single line
-in case of an \#`INCLUDE`, but also may be a bunch of lines in case of
+in case of an #`INCLUDE`, but also may be a bunch of lines in case of
 a block (\#`MACRO  ENUM  TYPE  SUB  ...`). The tokenizer uses just a
 subset of the FB keywords (~50 from ~400), check function \ref
 Parser::getToken() for details. All other words from the source code
@@ -74,17 +74,17 @@ Parser for details. But not all pointers are set or reset for each
 construct. Find further information the source code of these parser
 functions:
 
-|                 Function | Constructs                                                     |
-| -----------------------: | :------------------------------------------------------------- |
+|                 Function | Constructs                                                    |
+| -----------------------: | :------------------------------------------------------------ |
 | \ref Parser::FUNCTION_() | `SUB  FUNCTION  PROPERTY  OPERERATOR  CONSTRUTOR  DESTRUCTOR` |
 | \ref Parser::VAR_()      | `DIM  REDIM  VAR  CONST  COMMON  EXTERN  EXPORT  STATIC`      |
 | \ref Parser::TYPE_()     | `TYPE  CLASS`                                                 |
 | \ref Parser::UNION_()    | `UNION`                                                       |
 | \ref Parser::ENUM_()     | `ENUM`                                                        |
 | \ref Parser::DECLARE_()  | `DECLARE`                                                     |
-| \ref Parser::DEFINE_()   | \#`DEFINE`                                                    |
-| \ref Parser::MACRO_()    | \#`MACRO`                                                     |
-| \ref Parser::INCLUDE_()  | \#`INCLUDE`                                                   |
+| \ref Parser::DEFINE_()   | #`DEFINE`                                                     |
+| \ref Parser::MACRO_()    | #`MACRO`                                                      |
+| \ref Parser::INCLUDE_()  | #`INCLUDE`                                                    |
 
 Some functions are available to parse advanced constructs like lists of
 several variable declarations:

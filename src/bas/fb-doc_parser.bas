@@ -505,7 +505,7 @@ END FUNCTION
 /'* \brief Evaluate a variable declaration
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found a VAR, DIM, CONST, EXTERN, COMMON or STATIC
+The pre-parser found a VAR, DIM, REDIM, CONST, EXTERN, COMMON or STATIC
 keyword. We tokenize the current line and send the result to the
 emitter, or we call Errr() on syntax problems.
 
@@ -513,6 +513,7 @@ emitter, or we call Errr() on syntax problems.
 FUNCTION Parser.VAR_() AS INTEGER
   IF 3 > tokenize(TO_COLON) THEN _
          RETURN IIF(*StaTok = TOK_EXRN, MSG_ERROR, Errr("syntax error"))
+  IF *Tk <> TOK_PRES THEN DivTok = 0 ELSE DivTok = Tk : SKIP
   IF *Tk <> TOK_SHAR THEN ShaTok = 0 ELSE ShaTok = Tk : SKIP
 
   IF *Tk = TOK_AS THEN
@@ -558,7 +559,7 @@ FUNCTION Parser.ENUM_() AS INTEGER
 END FUNCTION
 
 
-/'* \brief Evaluate an UNION block
+/'* \brief Evaluate a UNION block
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
 The pre-parser found an UNION keyword. We tokenize the context of the
@@ -569,7 +570,7 @@ syntax problems.
 FUNCTION Parser.UNION_() AS INTEGER
   IF 9 > tokenize(TO_END_BLOCK) THEN RETURN Errr("syntax error")
   IF *Tk <> TOK_WORD THEN RETURN Errr("name expectedH")
-  BlockNam = SubStr
+  BlockNam = SubStr()
   skipOverColon()
   Tk1 = StaTok
   Emit->Unio_(@THIS)
@@ -627,10 +628,10 @@ FUNCTION Parser.DECLARE_() AS INTEGER
 END FUNCTION
 
 
-/'* \brief Evaluate an \#`INCLUDE` line
+/'* \brief Evaluate an #`INCLUDE` line
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found an \#`INCLUDE` line. We tokenize the line and call
+The pre-parser found an #`INCLUDE` line. We tokenize the line and call
 the emitter, or we call Errr() handler on syntax problems. It's up
 to the emitter function to follow the source tree (= create a new
 parser and load the file).
@@ -645,10 +646,10 @@ FUNCTION Parser.INCLUDE_() AS INTEGER
 END FUNCTION
 
 
-/'* \brief Evaluate a \#`MACRO` declaration
+/'* \brief Evaluate a #`MACRO` declaration
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found a \#`MACRO` block. We tokenize the block and call
+The pre-parser found a #`MACRO` block. We tokenize the block and call
 the emitter, or we call Errr() handler on syntax problems.
 
 '/
@@ -664,10 +665,10 @@ FUNCTION Parser.MACRO_() AS INTEGER
 END FUNCTION
 
 
-/'* \brief Evaluate a \#`DEFINE` declaration
+/'* \brief Evaluate a #`DEFINE` declaration
 \returns MSG_ERROR (or MSG_STOP on the end of the token list)
 
-The pre-parser found a \#`DEFINE` line. We tokenize the line and call
+The pre-parser found a #`DEFINE` line. We tokenize the line and call
 the emitter, or we call Errr() handler on syntax problems.
 
 '/
@@ -744,19 +745,20 @@ Parser::TOK_WORD gets returned.
 FUNCTION Parser.getToken() AS INTEGER
   SELECT CASE AS CONST Buf[*A]
   CASE ASC("A"), ASC("a")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "AS" : RETURN TOK_AS
     CASE "ALIAS" : RETURN TOK_ALIA
     CASE "ABSTRACT" : RETURN TOK_ABST
     END SELECT
   CASE ASC("B"), ASC("b")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "BYTE" : RETURN TOK_BYTE
     CASE "BYREF" : RETURN TOK_BYRE
     CASE "BYVAL" : RETURN TOK_BYVA
     END SELECT
   CASE ASC("C"), ASC("c")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
+    CASE "CAST" : RETURN TOK_CAST
     CASE "CDECL" : RETURN TOK_CDEC
     CASE "CLASS" : RETURN TOK_CLAS
     CASE "CONST" : RETURN TOK_CONS
@@ -764,7 +766,7 @@ FUNCTION Parser.getToken() AS INTEGER
     CASE "CONSTRUCTOR" : RETURN TOK_CTOR
     END SELECT
   CASE ASC("D"), ASC("d")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "DIM" : RETURN TOK_DIM
     CASE "DOUBLE" : RETURN TOK_DOUB
     CASE "DEFINE" : IF ToLast = TOK_LATTE THEN RETURN TOK_DEFI
@@ -772,7 +774,7 @@ FUNCTION Parser.getToken() AS INTEGER
     CASE "DESTRUCTOR" : RETURN TOK_DTOR
     END SELECT
   CASE ASC("E"), ASC("e")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "END" : RETURN TOK_END
     CASE "ENUM" : RETURN TOK_ENUM
     CASE "EXTERN" : RETURN TOK_EXRN
@@ -781,42 +783,44 @@ FUNCTION Parser.getToken() AS INTEGER
     CASE "ENDMACRO" : IF ToLast = TOK_LATTE THEN RETURN TOK_EMAC
     END SELECT
   CASE ASC("F"), ASC("f")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "FUNCTION" :  RETURN TOK_FUNC
     CASE "FIELD" : RETURN TOK_FILD
     END SELECT
   CASE ASC("I"), ASC("i")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "INCLUDE" : IF ToLast = TOK_LATTE THEN RETURN TOK_INCL
     CASE "INTEGER" : RETURN TOK_INT
     END SELECT
   CASE ASC("L"), ASC("l")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "LIB" : RETURN TOK_LIB
     CASE "LONG" : RETURN TOK_LONG
     CASE "LONGINT" : RETURN TOK_LINT
     END SELECT
-  CASE ASC("M"), ASC("m") : IF USubStr = "MACRO" THEN IF ToLast = TOK_LATTE THEN RETURN TOK_MACR
-  CASE ASC("N"), ASC("n") : IF USubStr = "NAMESPACE" THEN RETURN TOK_NAMS
+  CASE ASC("M"), ASC("m") : IF USubStr() = "MACRO" THEN IF ToLast = TOK_LATTE THEN RETURN TOK_MACR
+  CASE ASC("N"), ASC("n") : IF USubStr() = "NAMESPACE" THEN RETURN TOK_NAMS
   CASE ASC("O"), ASC("o")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "ONCE" : RETURN TOK_ONCE
     CASE "OPERATOR" : RETURN TOK_OPER
     CASE "OVERLOAD" : RETURN TOK_OVER
     END SELECT
   CASE ASC("P"), ASC("p")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "PTR" : RETURN TOK_PTR
+    CASE "PEEK" : RETURN TOK_PEEK
     CASE "POINTER" : RETURN TOK_PTR
-    CASE "PASCAL" : RETURN TOK_PASC
+    CASE "PRESERVE" : RETURN TOK_PRES
+    CASE "PROPERTY" : RETURN TOK_PROP
     CASE "PUBLIC" : RETURN TOK_PUBL
     CASE "PRIVATE" : RETURN TOK_PRIV
-    CASE "PROPERTY" : RETURN TOK_PROP
     CASE "PROTECTED" : RETURN TOK_PROT
+    CASE "PASCAL" : RETURN TOK_PASC
     END SELECT
-  CASE ASC("R"), ASC("r") : IF USubStr = "REDIM" THEN RETURN TOK_RDIM
+  CASE ASC("R"), ASC("r") : IF USubStr() = "REDIM" THEN RETURN TOK_RDIM
   CASE ASC("S"), ASC("s")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "SUB" : RETURN TOK_SUB
     CASE "SCOPE" : RETURN TOK_SCOP
     CASE "SHORT" : RETURN TOK_SHOR
@@ -826,9 +830,9 @@ FUNCTION Parser.getToken() AS INTEGER
     CASE "STATIC" : RETURN TOK_STAT
     CASE "STDCALL" : RETURN TOK_STCL
     END SELECT
-  CASE ASC("T"), ASC("t") : IF USubStr = "TYPE" THEN RETURN TOK_TYPE
+  CASE ASC("T"), ASC("t") : IF USubStr() = "TYPE" THEN RETURN TOK_TYPE
   CASE ASC("U"), ASC("u")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "UNION" : RETURN TOK_UNIO
     CASE "UBYTE" : RETURN TOK_UBYT
     CASE "ULONG" : RETURN TOK_ULNG
@@ -837,12 +841,16 @@ FUNCTION Parser.getToken() AS INTEGER
     CASE "USHORT" : RETURN TOK_USHO
     END SELECT
   CASE ASC("V"), ASC("v")
-    SELECT CASE USubStr
+    SELECT CASE USubStr()
     CASE "VAR" : RETURN TOK_VAR
     CASE "VIRTUAL" : RETURN TOK_VIRT
     END SELECT
-  CASE ASC("W"), ASC("w") : IF USubStr = "WSTRING" THEN RETURN TOK_WSTR
-  CASE ASC("Z"), ASC("z") : IF USubStr = "ZSTRING" THEN RETURN TOK_ZSTR
+  CASE ASC("W"), ASC("w")
+    SELECT CASE USubStr()
+    CASE "WITH" : RETURN TOK_WITH
+    CASE "WSTRING" : RETURN TOK_WSTR
+    END SELECT
+  CASE ASC("Z"), ASC("z") : IF USubStr() = "ZSTRING" THEN RETURN TOK_ZSTR
   END SELECT : RETURN TOK_WORD
 END FUNCTION
 
@@ -927,11 +935,11 @@ FUNCTION Parser.tokenize(BYVAL Stop_ AS EoS_Modi) AS INTEGER
     CASE   ASC("-") : IF Buf[Po + 1] <> ASC(">")       THEN EXIT SELECT
       SETOK(TOK_MEOP, Po, 2)         : Po += 2       : CONTINUE DO
     CASE   ASC(".")
-      IF Buf[Po + 1] <> ASC(".") ORELSE _
-         Buf[Po + 2] <> ASC(".") ORELSE _
-         Buf[Po + 3] = ASC(".") _
-           THEN SETOK(TOK_DOT, Po, 1) _
-           ELSE SETOK(TOK_TRIDO, Po, 3) : Po += 3    : CONTINUE DO
+      IF Buf[Po + 1] = ASC(".") ANDALSO _
+         Buf[Po + 2] = ASC(".") ANDALSO _
+         Buf[Po + 3] <> ASC(".") _
+           THEN SETOK(TOK_TRIDO, Po, 3) : Po += 3    : CONTINUE DO
+      SETOK(TOK_DOT, Po, 1)
     CASE   ASC("=") : SETOK(TOK_EQUAL, Po, 1)
     CASE   ASC("{"), ASC("[") : SETOK(TOK_KLOPN, Po, 1)
     CASE   ASC("}"), ASC("]") : SETOK(TOK_KLCLO, Po, 1)
@@ -1049,7 +1057,7 @@ END SUB
 
 /'* \brief Read a buffer from a file and parse
 \param File the name of the file to translate
-\param Tree if to follow source tree \#`INCLUDE`
+\param Tree if to follow source tree #`INCLUDE`
 \returns the translated code (if any)
 
 Read a file in to input buffer. Start detailed parsing on each
@@ -1194,10 +1202,10 @@ PROPERTY Parser.USubStr() AS STRING
 END PROPERTY
 
 
-/'* \brief start a new parser to \#`INCLUDE` a file
+/'* \brief start a new parser to #`INCLUDE` a file
 \param N the (path, if any, and) file name
 
-This procedure is used by the emitter handlers for \#`INCLUDE`
+This procedure is used by the emitter handlers for #`INCLUDE`
 statements. It checks if the file has been done already or can get
 opened. If one of these fails a message gets sent to STDERR and the
 file gets skipped.
@@ -1206,11 +1214,25 @@ Otherwise a new parser gets started to operate on that file.
 
 '/
 SUB Parser.Include(BYVAL N AS STRING)
-  WITH *OPT
+  WITH *OPT ' & typedef Options* Options_PTR;
     IF .RunMode = .GEANY_MODE THEN EXIT SUB
 
     VAR i = INSTRREV(N, SLASH)
     VAR fnam = .addPath(InPath, LEFT(N, i)) & MID(N, i + 1)
+' &{OPT* dummy; dummy->addPath();};
+' &{OPT dummy; dummy.addPath();};
+
+'&{OPT* dummy;} Options.addPath();
+' &OPT* dummy; Options.addPath();
+
+' &*OPT->Options.addPath();
+' &*OPT.Options.addPath();
+' &*OPT->addPath();
+' &*OPT.addPath();
+' &OPT->Options.addPath();
+' &OPT->Options::addPath();
+' &Options.addPath();
+' &type Options* Options_PTR; OPT.addPath();
     MSG_LINE(fnam)
     IF DivTok ANDALSO INSTR(.FileIncl, !"\n" & fnam & !"\r") THEN _
       MSG_END("skipped (already done)") : EXIT SUB

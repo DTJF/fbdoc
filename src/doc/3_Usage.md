@@ -244,6 +244,19 @@ cd ..
 rmdir bas
 ~~~
 
+???
+
+\note \Proj doesn't read tag lists in the Doxyfile, just the first
+      entry (see Doxyfile::Doxyfile for details). Therefor make sure
+      that the `INPUT` tag contains the path to the FB source code at
+      first place.
+
+\note This repairing process can be done only once (since the names in
+      the link tags change during the repairing process, ie. the name
+      of the constructor `Parser::Parser` in intermediate format gets
+      just `Parser` in FB source).
+
+
 
 C Headers  {#SecUseCHeader}
 =========

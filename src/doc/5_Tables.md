@@ -201,7 +201,7 @@ PagOptionDetails .
 <tr>
 <td> \ref SubSecOptTree
 <td> none
-<td> Follow the \#`INCLUDE` statements in the source tree (if
+<td> Follow the #`INCLUDE` statements in the source tree (if
      possible -- not available in run mode \ref SubSecOptGeany).
 <tr>
 <td> \ref SubSecOptVersion
@@ -312,8 +312,8 @@ on the emitted TYPEs and file names of include files.
 |                          `byref Z as byte` | `byref_as_byte Z`                  | `char *Z`             |
 |                          `byval Z as byte` | `byval_as_byte Z`                  | `char Z`              |
 |                    `TYPE Udt ... END TYPE` | `class Udt{ ... };`                | `typedef Udt{ ... };` |
-|                  \#`INCLUDE ONCE "abc.bi"` | \#`include "abc.bi"`               | \#`include "abc.h"`   |
-|                 \#`INCLUDE ONCE "xyz.bas"` | \#`include "xyz.bas"`              | \#`include "xyz.c"`   |
+|                   #`INCLUDE ONCE "abc.bi"` | #`include "abc.bi"`                | #`include "abc.h"`    |
+|                  #`INCLUDE ONCE "xyz.bas"` | #`include "xyz.bas"`               | #`include "xyz.c"`    |
 
 
 Files  {#SecTabFiles}

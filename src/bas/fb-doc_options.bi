@@ -25,7 +25,7 @@ execution.
 /'* \brief File name for list of function names (caller / callees graphs) '/
 CONST CALLEES_FILE = "fb-doc.lfn"
 
-/'* \brief Parameters red from the command line
+/'* \brief Parameters read from the command line
 
 The class to scan options and parameters from command line. the
 command line gets parsed once at the program start. Since this
@@ -136,7 +136,7 @@ TYPE Options
   AS CaseModes    CaseMode = CASE_ORIGN '*< the emitter type (defaults to \em C_Source)
   AS EmitterIF PTR  EmitIF = 0        '*< the emitter we use (set in \ref Options::parseCLI())
   AS ANY PTR    DllEmitter = 0        '*< the pointer for an external emitter
-#IFDEF __FB_UNIX__ '& ZSTRING_PTR DirUp = "../";  /* tricky declaration for Doxygen (miss-interpretes the @ character)
+#IFDEF __FB_UNIX__ '&ZSTRING_PTR DirUp = "../";  /* tricky declaration for Doxygen (miss-interpretes the @ character)
   AS ZSTRING PTR     DirUp = @"../"   '*< sequence to get one directory up
 #ELSE
   AS ZSTRING PTR     DirUp = @"..\"   '*< sequence to get one directory up
@@ -144,7 +144,7 @@ TYPE Options
   AS STRING _
        InFiles = "" _ '*< name or pattern of all input file[s]
    , StartPath = "" _ '*< path at program start
-    , FileIncl = "" _ '*< names of \#`INCLUDE` files
+    , FileIncl = "" _ '*< names of #`INCLUDE` files
      , OutPath = "" _ '*< path for file output (option `--outpath`)
         , Errr = ""   '*< path for file output (option `--outpath`)
   AS INTEGER _
@@ -153,7 +153,7 @@ TYPE Options
   , AllCallees = 0 _ '*< export external callee names as well (option `--list-mode`)
   , InRecursiv = 0 _ '*< flag set when InFiles should get scaned recursiv in subfolders
       , InTree = 0 _ '*< flag set when source tree should get scanned
-       , Level = 0 _ '*< counter for \#`INCLUDE`s
+       , Level = 0 _ '*< counter for #`INCLUDE`s
         , Efnr = 0 _ '*< file number for error messages (file modes)
         , Ocha = 0   '*< file number for output
   AS UBYTE _
@@ -177,5 +177,6 @@ TYPE Options
 END TYPE
 
 
-/'* \brief The global struct for all parameters red from the command line '/
+/'* \brief The global struct for all parameters read from the command line '/
 COMMON SHARED AS Options PTR OPT
+'&typedef struct Options* Options_PTR; /**< Doxygen internal (ignore this). */

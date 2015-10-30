@@ -17,7 +17,7 @@ well as for other features, like:
 - implementation of NAMESPACE, SCOPE
 - a hash table for callees to speed up the execution
 - currently \Proj only works with clean FB code. When one of the
-  used standard keywords get \#`UNDEF`ined, grazy things may happen.
+  used standard keywords get #`UNDEF`ined, grazy things may happen.
 - ...
 
 Feel free to post your ideas, bug reports, wishes or patches, either
@@ -29,7 +29,7 @@ or to the
 
 - [forum page](http://www.freebasic.net/forum/viewtopic.php?f=8&t=19810)
 
-or feel free to send your ideas directly to the author (\Email).
+or feel free to send your ideas directly to the author (\Mail).
 
 
 fb-doc-0.4 {#SecV-0-4}
@@ -51,8 +51,10 @@ Bugfixes:
 - syntax highlighter: suppressed #`INCLUDE` statements work now (HTM, TEX, XML)
 - fixed interface for external emitter plugins
 - plugin example fixed
+- parsing problem `REDIM PRESERVE "..."` fixed
 - parsing problem `EXTERN "..."` fixed
 - parsing problem `DECLARE ...` after bitfields fixed
+- better caller / callee graphs (with manual interaction in case of WITH blocks)
 
 Released on 2015 October, ??.
 

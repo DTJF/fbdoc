@@ -43,7 +43,7 @@ Then you can test the binary by executing in that folder.
    ~~~
    and compare the input and the output files. The file *fb-doc.c*
    contains just a part of the original code (variable declarations,
-   some special comments, \#`INCLUDE`s and an empty function `main()`).
+   some special comments, #`INCLUDE`s and an empty function `main()`).
    Each content is at the same line number.
 -# To test the output of the emitter `SyntaxHighLighting` execute
    ~~~{.sh}
@@ -63,7 +63,7 @@ Then you can test the binary by executing in that folder.
    only function declared in the code files matching this pattern.
 -# When we use `"fb-doc.bas"` as file specification we'll get empty
    output since this file contains no function declaration. But when we
-   add option `--tree` \Proj follows each \#`INCLUDE` statement in the
+   add option `--tree` \Proj follows each #`INCLUDE` statement in the
    source tree and generates a list of all function names.
    ~~~{.sh}
    ./fb-doc -e "FunctionNames" --tree "fb-doc.bas"
@@ -352,7 +352,7 @@ goo_axis_new:
          Note: to set the axis position and size, the properties
          #GooCanvasItemSimple:x, #GooCanvasItemSimple:y,
          #GooCanvasItemSimple:width and
-         #GooCanvasItemSimple:height will be red (and therefore
+         #GooCanvasItemSimple:height will be read (and therefore
          must be set in the background box item).
   @Text: the label text for the axis
  @Modus: the position and type (like %GOO_AXIS_SOUTH or
@@ -393,7 +393,7 @@ The corresponding <em>.c</em> file looks like
 *          Note: to set the axis position and size, the properties
 *          #GooCanvasItemSimple:x, #GooCanvasItemSimple:y,
 *          #GooCanvasItemSimple:width and
-*          #GooCanvasItemSimple:height will be red (and therefore
+*          #GooCanvasItemSimple:height will be read (and therefore
 *          must be set in the background box item).
 *   @Text: the label text for the axis
 *  @Modus: the position and type (like %GOO_AXIS_SOUTH or
@@ -438,7 +438,7 @@ and the corresponding <em>.c</em> file looks like
 *          Note: to set the axis position and size, the properties
 *          #GooCanvasItemSimple:x, #GooCanvasItemSimple:y,
 *          #GooCanvasItemSimple:width and
-*          #GooCanvasItemSimple:height will be red (and therefore
+*          #GooCanvasItemSimple:height will be read (and therefore
 *          must be set in the background box item).
 *   @Text: the label text for the axis
 *  @Modus: the position and type (like %GOO_AXIS_SOUTH or
@@ -569,7 +569,7 @@ see output (which is the Doxygen input) like
          Note: to set the axis position and size, the properties
          #GooCanvasItemSimple:x, #GooCanvasItemSimple:y,
          #GooCanvasItemSimple:width and
-         #GooCanvasItemSimple:height will be red (and therefore
+         #GooCanvasItemSimple:height will be read (and therefore
          must be set in the background box item).
 \param Text the label text for the axis
 \param Modus the position and type (like %GOO_AXIS_SOUTH or

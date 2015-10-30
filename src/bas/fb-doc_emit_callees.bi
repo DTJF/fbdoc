@@ -7,4 +7,4 @@ default emitter in mode `--list-mode`.
 
 '/
 
-DECLARE FUNCTION writeLFN(BYREF AS STRING) AS INTEGER
+DECLARE FUNCTION startLFN(BYREF AS STRING) AS INTEGER

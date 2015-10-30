@@ -1,102 +1,31 @@
-# build rules to create the documentation
+# Build / install the documentation.
+#
+# Note: this script needs an fb-doc version (0.4).
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
-# check for fb-doc tool
-INCLUDE(FindFb-Doc)
-IF(NOT FbDoc_WORKS)
-  MESSAGE(STATUS "fb-doc tool not found ==> targets doc, doc_htm and doc_pdf not available!")
-  FILE(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log
-    "Determining if fb-doc tool works failed\n\n")
-  RETURN()
+IF(NOT COMMAND FB_DOCUMENTATION)
+  INCLUDE(UseFb-Doc)
 ENDIF()
 
-# check for Doxygen
-INCLUDE(FindDoxygen)
-IF(NOT DOXYGEN_FOUND)
-  MESSAGE(STATUS "Doxygen not found ==> target doc not available!")
-  FILE(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log
-    "Determining if doxygen works failed\n\n")
-  RETURN()
-ENDIF()
-
-
-# set variables
-SET(PDF_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJ_NAME}.pdf)
-SET(HTM_FILE ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
-SET(WWW_FILE ${CMAKE_CURRENT_BINARY_DIR}/DocWWW.time)
-SET(REF_FILE ${CMAKE_CURRENT_BINARY_DIR}/latex/refman.pdf)
-## HTML and PDF build here, always from scratch and in source directory
-#SET(PDF_FILE ${CMAKE_CURRENT_BINARY_DIR}/latex/refman.pdf)
-#SET(WWW_FILE ${CMAKE_CURRENT_BINARY_DIR}/DocWWW.time)
-#SET(HTM_FILE ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
-
-SET(htmcon ${CMAKE_CURRENT_BINARY_DIR}/HtmlDoc)
-SET(pdfcon ${CMAKE_CURRENT_BINARY_DIR}/PdfDoc)
-SET(lfn ${CMAKE_CURRENT_SOURCE_DIR}/fb-doc.lfn)
-SET(MD_SRC
-    ../ReadMe.md
-    ../src/doc/ChangeLog.md
-    ../src/doc/Emitters.md
-    ../src/doc/Examples.md
-    ../src/doc/Extend.md
-    ../src/doc/Files.md
-    ../src/doc/Introduction.md
-    ../src/doc/Options.md
-    ../src/doc/Preparation.md
-    ../src/doc/RunModi.md
-    ../src/doc/Tables.md
-    ../src/doc/Usage.md
+FB_DOCUMENTATION(
+BAS_SRC
+  ${BAS_SRC}
+DEPENDS
+  ../ReadMe.md
+  ../src/doc/1_Introduction.md
+  ../src/doc/2_Preparation.md
+  ../src/doc/3_Usage.md
+  ../src/doc/4_Examples.md
+  ../src/doc/5_Tables.md
+  ../src/doc/6_RunModi.md
+  ../src/doc/7_Options.md
+  ../src/doc/8_Emitters.md
+  ../src/doc/9_Extend.md
+  ../src/doc/A_Files.md
+  ../src/doc/z_ChangeLog.md
+  ../CMakeLists.txt
+  Doxyfile
+  fb-doc.css
+  fb-doc.xml
   )
-
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/DoxyExtension.in ${CMAKE_CURRENT_BINARY_DIR}/DoxyExtension @ONLY)
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/HtmlDoc.in ${htmcon} @ONLY)
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/PdfDoc.in  ${pdfcon} @ONLY)
-
-ADD_CUSTOM_COMMAND(OUTPUT ${lfn}
-  COMMAND ${FbDoc_EXECUTABLE} -l
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-  )
-
-ADD_CUSTOM_COMMAND(OUTPUT ${HTM_FILE}
-  COMMAND ${DOXYGEN_EXECUTABLE} ${htmcon}
-  COMMAND ${FbDoc_EXECUTABLE} -s ${htmcon}
-  DEPENDS
-    ${lfn}
-    ${MD_SRC}
-    ${BAS_SRC}
-    ../_ReadMe.md.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/DoxyExtension.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/fb-doc.css
-    ${CMAKE_CURRENT_SOURCE_DIR}/fb-doc.xml
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-  )
-
-ADD_CUSTOM_COMMAND(OUTPUT ${PDF_FILE}
-  COMMAND ${DOXYGEN_EXECUTABLE} ${pdfcon}
-  COMMAND ${FbDoc_EXECUTABLE} -s ${pdfcon}
-  COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_BINARY_DIR}/latex make
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/latex/refman.pdf ${CMAKE_CURRENT_BINARY_DIR}/${PROJ_NAME}.pdf
-  DEPENDS
-    ${lfn}
-    ${MD_SRC}
-    ${BAS_SRC}
-    ../_ReadMe.md.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/DoxyExtension.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/fb-doc.css
-    ${CMAKE_CURRENT_SOURCE_DIR}/fb-doc.xml
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-  VERBATIM
-  )
-
-# mirror the local html tree to the www
-ADD_CUSTOM_COMMAND(OUTPUT ${WWW_FILE}
-  COMMAND MirrorDoc.sh '--reverse --delete --verbose ${CMAKE_CURRENT_BINARY_DIR}/html public_html/Projekte/${PROJ_NAME}/doc/html'
-  COMMAND ${CMAKE_COMMAND} -E touch ${WWW_FILE}
-  )
-
-ADD_CUSTOM_TARGET(doc_htm DEPENDS ${HTM_FILE})
-ADD_CUSTOM_TARGET(doc_www DEPENDS ${WWW_FILE})
-ADD_CUSTOM_TARGET(doc_pdf DEPENDS ${PDF_FILE})
-ADD_CUSTOM_TARGET(doc)
-ADD_DEPENDENCIES(doc DEPENDS doc_htm doc_pdf)

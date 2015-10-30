@@ -1,17 +1,8 @@
 /'* \file fb-doc_emit_syntax.bi
 \brief Declarations for syntax highlighting emitter.
 
-This file contains the emitter for html syntax highlighting. The
-emitter is designed to create code listings with high-linghting tags
-defined by Doxygen. This emitter reads the original Doxygen output
-files and replaces the code section. This works for html, LaTeX and XML
-output.
-
-The code includes links to the documentation. These links are extracted
-from the original Doxygen output. Since the names in the link tags
-change the repairing process can be done only once (ie. the name of the
-constructor *Parser::Parser* in intermediate format gets just *Parser*
-in FB source).
+This file contains the declaration code for the "SyntaxHighLighting"
+emitter, namely the classes RepData and Highlighter.
 
 '/
 
@@ -24,7 +15,7 @@ in FB source).
 This class is to store two tables, one of search strings and a second
 one of their replacements. It's used to collect the links from the
 original source and replace symbol names in the emitter output, as well
-as referenced line numbers and \#`INCLUDE` files.
+as referenced line numbers and #`INCLUDE` files.
 
 '/
 TYPE RepData
@@ -70,8 +61,8 @@ TYPE Highlighter
     , HtmlSuff _ '*< The filename suffix for html files
     , TexPath _  '*< The path for LaTeX files
     , XmlPath _  '*< The path for XML files
-    , LastLine   '*< The last line red from the input file
-  AS RepData PTR Symbols '*< The list of linked symbols
+    , LastLine   '*< The last line read from the input file
+  AS RepData PTR Symbols '*< A RepData class containing the list of linked symbols
   AS Parser PTR Pars '*< The parser to operate with
   AS ZSTRING PTR _
       FBDOC_MARK = @"<!-- Syntax-highlighting by fb-doc -->" _ '*< Text to mark the output
@@ -109,13 +100,13 @@ TYPE Highlighter
   DECLARE FUNCTION word_type(BYREF AS STRING) AS ZSTRING PTR
   DECLARE FUNCTION searchPathNam(BYREF AS STRING) AS STRING
 
-  '* \brief the function called to end a line and start a new one
+  '* \brief the function is called to end a line and start a new one
   eol AS FUNCTION(BYVAL AS RepData PTR, BYref AS INTEGER) AS STRING _
     = @html_eol()
-  '* \brief the function called to extract links from original files
+  '* \brief the function is called to extract links from original files
   prepare AS FUNCTION(BYVAL AS Highlighter PTR) AS STRING _
     = @prepare_html()
-  '* \brief the function called for normal code to replace special characters
+  '* \brief the function is called for normal code to replace special characters
   special_chars AS FUNCTION(BYVAL AS UBYTE PTR, BYVAL AS INTEGER, BYVAL AS INTEGER) AS STRING _
     = @html_specials()
 END TYPE

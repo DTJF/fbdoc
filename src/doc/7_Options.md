@@ -145,7 +145,7 @@ of the output file depends on the emitter in use:
 higher level directories get created if not existend. When an input
 file comes from a subfolder, a similar subfolder gets created in the
 output folder. When a subfolder is beyond the current path (ie. like
-`../../../src` form an \#`INCLUDE` statement in a source file) the ..
+`../../../src` form an #`INCLUDE` statement in a source file) the ..
 part(s) of the path get skipped and \Proj creates subfolders for the
 rest of the path.
 
@@ -393,7 +393,7 @@ special format only in the output for the back-end.
 
 This option makes \Proj to emit real C types instead of the FB-like
 mangled type names. It also infuences the translation of `TYPE` blocks
-and \#`INCLUDE` lines, see \ref SecTabInterForm for examples.
+and #`INCLUDE` lines, see \ref SecTabInterForm for examples.
 
 The standard output of the `C_Source` emitter is optimized for best
 matching documentation. Therefor the types in the source code get

@@ -9,21 +9,21 @@ C_Source  {#SecEmmCSource}
 | Emitter                 | C_Source                                        |
 | ----------------------: | :---------------------------------------------- |
 | `-a` *or* `--asterix`   | prepend "* " to each line in multi line comment |
-| `-c` *or* `--cstyle`    | emit real C types, \#`include "*.c" "*.h"`      |
-| `-t` *or* `--tree`      | follow source tree \#`INCLUDES`                 |
+| `-c` *or* `--cstyle`    | emit real C types, #`include "*.c" "*.h"`       |
+| `-t` *or* `--tree`      | follow source tree #`INCLUDES`                  |
 
 This emitter translates its input in to the intermediate format,
 usually used by the C back-end. It's not a real compiler, just the
 documentation relevant constructs get emitted. This is declarations and
 a few further constructs.
 
-|            Construct | Keywords                                               |
-| -------------------: | :----------------------------------------------------- |
-|            variables | `VAR  DIM  CONST  COMMON  EXTERN  STATIC`              |
-|               blocks | `ENUN  UNION  TYPE  CLASS`                             |
-| forward declarations | `TYPE  TYPE alias`                                     |
-|            functions | `SUB  FUNCTION  PORPERTY  CONSTRUCTOR  DESTRUCTOR`     |
-|               macros | \#`DEFINE`  \#`MACRO`                                  |
+|            Construct | Keywords                                           |
+| -------------------: | :------------------------------------------------- |
+|            variables | `VAR  DIM  CONST  COMMON  EXTERN  STATIC`          |
+|               blocks | `ENUN  UNION  TYPE  CLASS`                         |
+| forward declarations | `TYPE  TYPE alias`                                 |
+|            functions | `SUB  FUNCTION  PORPERTY  CONSTRUCTOR  DESTRUCTOR` |
+|               macros | #`DEFINE`  #`MACRO`                                |
 
 It doesn't handle SCOPE nor NAMESPACE blocks yet.
 
@@ -36,7 +36,7 @@ The translation can either contain type declarations in the mangeled
 second is set by option `--cstyle`. This option also influences the
 translation of `TYPE`s (`class{public:` *or* `typedef struct{`),
 `CONSTRUCTOR`s and `DESTRUCTOR`s (`name::name()` *or* `void()`) and the
-names in \#`include` statements (original *or* suffix `".c" ".h"`).
+names in #`include` statements (original *or* suffix `".c" ".h"`).
 
 Option `--asterix` makes \Proj to start each line in a special multi
 line comment block by the characters '* '. This is mandatory for the
@@ -51,7 +51,7 @@ back-end.
 Furthermore the output can be helpful when you intend to write a
 library in FB and later use this library in a C project. This emitter
 can translate the FB headers to real C headers by using option
-`--cstyle`. You just have to translate the \#`define` lines manually.
+`--cstyle`. You just have to translate the #`define` lines manually.
 
 
 GtkDoc Templates  {#SecEmmGtk}
@@ -104,11 +104,11 @@ Further usage may be
 FunctionNames  {#SecEmmLfn}
 =============
 
-| Emitter                 | FunctionNames                   |
-| ----------------------: | :------------------------------ |
-| `-a` *or* `--asterix`   | no effect                       |
-| `-c` *or* `--cstyle`    | no effect                       |
-| `-t` *or* `--tree`      | follow source tree \#`INCLUDES` |
+| Emitter                 | FunctionNames                  |
+| ----------------------: | :----------------------------- |
+| `-a` *or* `--asterix`   | no effect                      |
+| `-c` *or* `--cstyle`    | no effect                      |
+| `-t` *or* `--tree`      | follow source tree #`INCLUDES` |
 
 This emitter outputs the function names from FB source code. It emitts
 a list with one name per line for `SUB`s, `FUNCTION`s and `PROPERTY`s.
@@ -130,11 +130,11 @@ between the output from different input files. But when used in mode
 SyntaxHighLighting  {#SecEmmSyntax}
 ===================
 
-| Emitter                 | SyntaxHighLighting              |
-| ----------------------: | :------------------------------ |
-| `-a` *or* `--asterix`   | no effect                       |
-| `-c` *or* `--cstyle`    | no effect                       |
-| `-t` *or* `--tree`      | follow source tree \#`INCLUDES` |
+| Emitter                 | SyntaxHighLighting             |
+| ----------------------: | :----------------------------- |
+| `-a` *or* `--asterix`   | no effect                      |
+| `-c` *or* `--cstyle`    | no effect                      |
+| `-t` *or* `--tree`      | follow source tree #`INCLUDES` |
 
 This emitter outputs the the original source code, wherein the FB
 syntax is highlighted by enclosing tags. In mode `--syntax-mode`
@@ -156,7 +156,7 @@ these categories (replacing the '...' in the above tag format examples)
 |          `line` | normal code no special highlighting                                 |
 |       `keyword` | FB keywords like `FOR, NEXT, DECLARE, ...`                          |
 |   `keywordtype` | inbuild types like `UBYTE, INTEGER, ...` and also `BYREF, AS, ...`  |
-|  `preprocessor` | preprocessor statements like \#`if`, \#`INCLUDE`, ...               |
+|  `preprocessor` | preprocessor statements like #`if`, #`INCLUDE`, ...                 |
 | `stringliteral` | string literals like `"Hello world"`                                |
 |       `comment` | comments (multi line /&apos; ... &apos;/ or single line &apos; ...) |
 |        `lineno` | style class for the line number (starting at 1)                     |

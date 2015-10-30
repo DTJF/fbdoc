@@ -1,17 +1,21 @@
 /'* \file fb-doc_emit_syntax.bas
 \brief Emitter for repairing the Doxygen syntax highlighting.
 
-This file contains the emitter for html syntax highlighting. The
-emitter is designed to create code listings with high-linghting tags
-defined by Doxygen. This emitter reads the original Doxygen output
-files and replaces the code section. This works for html, LaTeX and XML
+This file contains the emitter called "SyntaxHighLighting", used as
+default emitter to generate accurate source code listings for Doxygen
+back-end in `--syntax-mode`.
+
+This emitter replaces the code section in the original Doxygen output
+files, containing the C-like intermediate formate (used as Doxygen
+input). The code section gets replaced by real FB source code in
+accurate syntax highlighting. Also links get transfered from the old
+Doxygen output to the new context. This works for Html, LaTeX and XML
 output.
 
-The code includes links to the documentation. These links are extracted
-from the original Doxygen output. Since the names in the link tags
-change the repairing process can be done only once (ie. the name of the
-constructor *Parser::Parser* in intermediate format gets just *Parser*
-in FB source).
+In `--syntax-mode` \Proj doesn't operate on single FB source input
+files. Instead it parses some tags in the Doxygen configuration file
+Doxyfile and operates in a similar way on the Doxygen input. The code
+for this feature is also contained here.
 
 '/
 
@@ -234,7 +238,8 @@ END FUNCTION
 /'* \brief Constructor executing the complete process
 \param P The parser for input
 
-This constructor connects to the parser in use.
+This constructor just connects to the parser in use and establishes
+itself as UserTok.
 
 '/
 CONSTRUCTOR Highlighter(BYVAL P AS Parser PTR)
@@ -248,10 +253,10 @@ END CONSTRUCTOR
 
 This SUB controls the complete repairing process
 
-- load and parse Doxyfile for paths and output types
+- load and parse Doxyfile for settings, paths and output types
 - scan FB directory for file names
-- switch to matching emitter parameters
-- scan output directories and process files
+- scan output directories and
+- process source listing files.
 
 '/
 SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
@@ -1083,7 +1088,7 @@ END FUNCTION
 This macro is used for single source reasons. It reads the current word
 from the input buffer and checks if it matches
 
--# an entry in the container \ref Highlighter::Symbols (links red from orig. file),
+-# an entry in the container \ref Highlighter::Symbols (links read from orig. file),
 -# the FB keyword list
 
 The result is in the typ variable:
@@ -1391,7 +1396,7 @@ It initializes the FB source code emission.
 
 '/
 SUB synt_init CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF 0 = .UserTok THEN  ' not in --syntax.mode, create new Highlighter
       VAR x = NEW Highlighter(P)
       IF 0 = OPT->InTree THEN .Po = .Fin '              skip all parsing
@@ -1399,7 +1404,7 @@ SUB synt_init CDECL(BYVAL P AS Parser PTR)
     END IF
     .SrcBgn = 0
   END WITH
-  WITH *CAST(Highlighter PTR, P->UserTok)
+  WITH *CAST(Highlighter PTR, P->UserTok) '&Highlighter* P->UserTok
     IF .GenAny THEN .LineNo = 1 ELSE .Pars = P
     Code(.eol(.Symbols, .LineNo))
   END WITH
@@ -1414,7 +1419,7 @@ It sends the rest of the FB source code to the output stream.
 
 '/
 SUB synt_exit CDECL(BYVAL P AS Parser PTR)
-  WITH *CAST(Highlighter PTR, P->UserTok)
+  WITH *CAST(Highlighter PTR, P->UserTok) '&Highlighter* P->UserTok
     .generate_all(SADD(P->Buf), P->Fin)
     'IF OPT->Level > 0 ORELSE OPT->RunMode <> OPT->FILE_MODE THEN EXIT SUB ' we're in #INCLUDE
     IF OPT->Level > 0 THEN EXIT SUB ' we're in #INCLUDE
@@ -1439,7 +1444,7 @@ checked for linkage.
 
 '/
 SUB synt_incl CDECL(BYVAL P AS Parser PTR)
-  WITH *CAST(Highlighter PTR, P->UserTok)
+  WITH *CAST(Highlighter PTR, P->UserTok) '&Highlighter* P->UserTok
     VAR fnam = TRIM(P->SubStr(P->NamTok), """")
     fnam = .special_chars(SADD(fnam), 0, LEN(fnam)) '   LaTeX underscore
     VAR res = IIF(.Symbols, .Symbols->rep(fnam), SADD(fnam))
@@ -1475,7 +1480,7 @@ and DESTRUCTORs vary between intermediate format and FB source.
 
 '/
 SUB synt_func_ CDECL(BYVAL P AS Parser PTR)
-  WITH *CAST(Highlighter PTR, P->UserTok)
+  WITH *CAST(Highlighter PTR, P->UserTok) '&Highlighter* P->UserTok
     VAR t = P->NamTok, nam = P->SubStr(t)
 
     SELECT CASE AS CONST *P->FunTok ' create a Doxygen name to search link

@@ -1,13 +1,13 @@
 /'* \file fb-doc_emit_callees.bas
-\brief Emitter for the file \em fb-doc.lfn.
+\brief Emitter to generate the file \em fb-doc.lfn.
 
-This file contains emitter functions for the \ref EmitterIF to
-generate the file \em fb-doc.lfn for the Doxygen Back-end. It's the
-default emitter in mode `--list-mode`.
+This file contains the emitter called "FunctionNames", used to generate
+the file \em fb-doc.lfn for the Doxygen Back-end filter feature. It's
+the default emitter in mode `--list-mode`.
 
-The emitters writes the names of all functions (SUB / FUNCTION /
-PROPERTY) to the output stream, one in a line, separated by a new
-line character "CHR(10)".
+The emitter writes the names of all functions (`SUB` / `FUNCTION` /
+`PROPERTY`) to the output stream, one in a line, separated by a new
+line character `CHR(10)`.
 
 '/
 
@@ -18,8 +18,8 @@ line character "CHR(10)".
 CONST CALLEE_TR = !"\n" '*< Separator for entries in file \em fb-doc.lfn.
 
 
-FUNCTION writeLFN(BYREF Path AS STRING) AS INTEGER
-  var fnr = FREEFILE
+FUNCTION startLFN(BYREF Path AS STRING) AS INTEGER
+  VAR fnr = FREEFILE
   IF OPEN(Path & CALLEES_FILE FOR OUTPUT AS #fnr) THEN RETURN 0
   PRINT #fnr, "+++ List of Function Names +++"
   RETURN fnr
@@ -34,7 +34,7 @@ each variable name and sends it (them) to the output stream.
 
 '/
 SUB callees_decl_ CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     SELECT CASE AS CONST *.StaTok
     CASE .TOK_SUB, .TOK_FUNC, .TOK_PROP
     CASE ELSE : EXIT SUB
@@ -54,7 +54,7 @@ ENUM`). It starts the scanning process in the block.
 
 '/
 SUB callees_class_ CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF OPT->AllCallees THEN .parseBlockTyUn(@callees_decl_)
   END WITH
 END SUB
@@ -69,7 +69,7 @@ function and sends it to the output stream.
 
 '/
 SUB callees_func_ CDECL(BYVAL P AS Parser PTR) ' !!! ToDo member functions
-  WITH *P
+  WITH *P '&Parser* P;
     SELECT CASE AS CONST *.StaTok
     CASE .TOK_SUB, .TOK_FUNC, .TOK_PROP
     CASE ELSE : EXIT SUB
@@ -84,14 +84,14 @@ END SUB
 /'* \brief Emitter to import a source file
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds an \#`INCLUDE`
+This emitter gets called when the parser finds an #`INCLUDE`
 statement and option `--recursiv` is given. It checks if the file
 has been done already. If not, it creates a new #Parser and starts
 the scanning process.
 
 '/
 SUB callees_include CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF OPT->InTree THEN .Include(TRIM(.SubStr(.NamTok), """"))
   END WITH
 END SUB

@@ -1,24 +1,28 @@
 /'* \file fb-doc_emit_gtk.bas
 \brief Emitter for gtk-doc templates
 
-This file contains the emitter for gtk-doc templates. The emitter is
-designed to create documentation comment blocks for the gtk-doc
-back-and and it's designed to be used in Geany mode (see section \ref
-SubSecExaGtkdoc for an example).
+This file contains the emitter called "GtkDocTemplates", used as
+default emitter to generate templates for the gtk-doc back-end in
+`--geany-mode`.
 
-The emitter returns all original source code. Relevant lines (or
-code blocks) get prepended by a multi line block of documentation.
-This works for `SUB`s/`FUNCTION`s, `TYPE, UNION` and `ENUM` blocks and
-\#`DEFINE`s / \#`MACRO`s.
+The emitters returns all original source code unchanged. Additionally,
+relevant constructs (statements or code blocks) get prepended by a multi line block
+of documentation in Doxygen syntax. This works for
 
-The first line of the comment block contains the name of the
-construct, appended by a colon. Then the members are listed with a
-leading @ character (parameters in case of a `SUB  FUNCTION` or
-member variables in case of a block). The block ends by a `FIXME`
-text and a line with a since keyword.
+- blocks like `TYPE, UNION` and `ENUM`, and
 
-When an empty line is send by Geany, a comment block template to
-describe the file gets emitted.
+- statements like `SUB`, `FUNCTION`, `VAR`, `DIM`, `CONST`, `COMMON`, `EXTERN`, `STATIC`, #`DEFINE` and #`MACRO`
+
+The documentation template contains
+
+- the name of the construct, appended by a colon
+- the list of members with a leading @ character (parameters in case of a SUB FUNCTION or member variables in case of a block)
+- the description area
+- a footer
+
+The placeholder `FIXME` is used to mark the positions where the
+documentation context should get filled in. See section \ref
+SubSecExaGtkdoc for an example.
 
 '/
 
@@ -46,7 +50,7 @@ line to document the variable and sends it to the output stream.
 
 '/
 SUB gtk_emit_Name CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF .NamTok THEN Code(NL & "@" & P->SubStr(P->NamTok) & ": " & FIXME)
   END WITH
 END SUB
@@ -55,13 +59,13 @@ END SUB
 /'* \brief Emitter to generate a macro template
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds a macro (\#`DEFINE` /
-\#`MACRO`). It generates a template to document the macro and sends it
+This emitter gets called when the parser finds a macro (#`DEFINE` /
+#`MACRO`). It generates a template to document the macro and sends it
 to the output stream.
 
 '/
 SUB gtk_defi_ CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitSource(P, .StaTok[1])
     Code(GTK_START & .SubStr(.NamTok) & ":" & GTK_END)
   END WITH
@@ -77,7 +81,7 @@ each variable name and sends it (them) to the output stream.
 
 '/
 SUB gtk_decl_ CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     IF 0 = .ListCount THEN
       cEmitSource(P, .Tk1[1])
       Code(GTK_START & .SubStr(.NamTok) & ":")
@@ -85,7 +89,7 @@ SUB gtk_decl_ CDECL(BYVAL P AS Parser PTR)
 
     IF 0 = .FunTok THEN gtk_emit_Name(P) _
                    ELSE IF .ParTok THEN .parseListPara(@gtk_emit_Name)
-'& gtk_emit_Name(); // pseudo function call (helps Doxygen documenting the interface)
+'&gtk_emit_Name(); // pseudo function call (helps Doxygen documenting the interface)
 
     IF *.CurTok > .TOK_EOS THEN EXIT SUB
     Code(GTK_END)
@@ -106,12 +110,12 @@ sends it to the output stream.
 
 '/
 SUB gtk_func_ CDECL(BYVAL P AS Parser PTR) ' !!! ToDo member functions
-  WITH *P
+  WITH *P '&Parser* P;
     VAR t = .TypTok
     cEmitSource(P, .StaTok[1])
     Code(GTK_START & .SubStr(.NamTok) & ":")
     IF .ParTok THEN .parseListPara(@gtk_emit_Name)
-'& gtk_emit_Name(); // pseudo function call (helps Doxygen documenting the interface)
+'&gtk_emit_Name(); // pseudo function call (helps Doxygen documenting the interface)
 
     Code( _
         NL & _
@@ -134,13 +138,13 @@ the output stream.
 
 '/
 SUB gtk_emitBlockNames CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     SELECT CASE AS CONST *.Tk1
     CASE .TOK_PRIV, .TOK_PROT ': .SrcBgn = 0 ' !!! ToDo: hide private?
     CASE .TOK_PUBL            ': .SrcBgn = 1
     CASE .TOK_CLAS, .TOK_TYPE, .TOK_UNIO
       .parseBlockTyUn(@gtk_emitBlockNames)
-'& gtk_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
+'&gtk_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
     CASE .TOK_ENUM
       .parseBlockEnum(@gtk_emit_Name)
     CASE ELSE : IF 0 = .NamTok THEN EXIT SUB
@@ -159,7 +163,7 @@ for each member and sends it to the output stream.
 
 '/
 SUB gtk_Block CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     cEmitSource(P, .StaTok[1])
     Code( GTK_START)
     IF LEN(.BlockNam) THEN Code(.BlockNam & ":")
@@ -168,7 +172,7 @@ SUB gtk_Block CDECL(BYVAL P AS Parser PTR)
     CASE .TOK_ENUM : .parseBlockEnum(@gtk_emit_Name)
     CASE ELSE :      .parseBlockTyUn(@gtk_emitBlockNames)
     END SELECT
-'& gtk_emit_Name(); gtk_emitBlockNames(); // pseudo function calls (help Doxygen documenting the interface)
+'&gtk_emit_Name(); gtk_emitBlockNames(); // pseudo function calls (help Doxygen documenting the interface)
 
     Code(GTK_END)
   END WITH
@@ -184,7 +188,7 @@ output stream.
 
 '/
 SUB gtk_empty CDECL(BYVAL P AS Parser PTR)
-  WITH *P
+  WITH *P '&Parser* P;
     Code(  GTK_START & _
            "SECTION: " & FIXME & _
       NL & "@short_description: " & FIXME & _
@@ -211,8 +215,8 @@ WITH_NEW_EMITTER(EmitterTypes.GTK_DOC_TEMPLATES)
    .Enum_ = @gtk_Block
    .Unio_ = @gtk_Block
    .Clas_ = @gtk_Block
-   .Init_ = @geanyInit
-   .Exit_ = @geanyExit
+   .Init_ = @geany_init
+   .Exit_ = @geany_exit
   .Empty_ = @gtk_empty
 END WITH
 
