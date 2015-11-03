@@ -140,8 +140,8 @@ PDF file (either in-source or out-of-source):
 make doc
 ~~~
 
-\note Find the HTML start file at *doc/html/index.html*.
-\note Find the PDF file at *doc/fb-doc.pdf*.
+\note Find the HTML start file at `doxy/html/index.html`.
+\note Find the PDF file at `doxy/fb-doc.pdf`.
 
 Both targets can get build separately by executing
 

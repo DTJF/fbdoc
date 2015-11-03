@@ -17,7 +17,7 @@ fb-doc.geany
 build*/**/*
 test*/**/*
 src/test*/**/*
-doc/html/**/*
-doc/latex/**/*
+doxy/html/**/*
+doxy/latex/**/*
 CMakeFiles/**/*
 _CPack*/**/*

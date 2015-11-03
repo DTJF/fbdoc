@@ -589,7 +589,7 @@ call Errr() on syntax problems.
 '/
 FUNCTION Parser.FUNCTION_() AS INTEGER
   SELECT CASE AS CONST ToLast
-  CASE TOK_PUBL, TOK_PRIV : DivTok = StaTok
+  CASE TOK_PUBL, TOK_PRIV, TOK_ABST, TOK_VIRT : DivTok = StaTok
   CASE ELSE : DivTok = 0
   END SELECT
   IF 9 > tokenize(TO_END_BLOCK) THEN RETURN Errr("syntax error")
@@ -1044,7 +1044,7 @@ SUB Parser.pre_parse()
       CASE TOK_DEFI : IF   DEFINE_() = MSG_STOP THEN EXIT DO
       CASE TOK_MACR : IF    MACRO_() = MSG_STOP THEN EXIT DO
       CASE TOK_INCL : IF  INCLUDE_() = MSG_STOP THEN EXIT DO
-      CASE TOK_PUBL, TOK_PRIV
+      CASE TOK_PUBL, TOK_PRIV, TOK_ABST, TOK_VIRT
         SETOK(*StaTok, *A, *L) : *L = 0 : CONTINUE DO
       'CASE TOK_NAMS : ' !!! ToDo
       'CASE TOK_SCOP : ' !!! ToDo

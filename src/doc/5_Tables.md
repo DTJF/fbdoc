@@ -10,16 +10,30 @@ Overview  {#SecTabOverview}
 \Proj is a multi functional tool. The choosen Emitter specifies which
 kind of output to generate. And the choosen Run Mode specifies where to
 get input from and where to write the output at. Here's a table of all
-run modes against the inbuild emitters ("DEF" = default configuration,
-"+" = useful combination, "-" = combination not useful).
+run modi (lines) against the inbuild emitters (columns).
 
-| Emitter \ Run Mode | default | `--file-mode` | `--list-mode` | `--syntax-mode` | `--geany-mode` |
-| -----------------: | :-----: | :-----------: | :-----------: | :-------------: | :------------: |
-| \ref SecEmmCSource |   DEF   |      DEF      |       -       |        -        |        +       |
-| \ref SecEmmGtk     |    +    |       +       |       -       |        -        |       DEF      |
-| \ref SecEmmDoxy    |    +    |       +       |       -       |        -        |        +       |
-| \ref SecEmmLfn     |    +    |       +       |      DEF      |        -        |        +       |
-| \ref SecEmmSyntax  |    +    |       +       |       -       |       DEF       |        +       |
+|                    | \ref SecEmmCSource | \ref SecEmmGtk | \ref SecEmmDoxy | \ref SecEmmLfn | \ref SecEmmSyntax |
+| -----------------: | :----------------: | :------------: | :-------------: | :------------: | :---------------: |
+| \ref SecModDefault |        DEF         |        +       |        +        |        +       |          +        |
+| \ref SecModFile    |        DEF         |        +       |        +        |        +       |          +        |
+| \ref SecModList    |         -          |        -       |        -        |       DEF      |          -        |
+| \ref SecModSyntax  |         -          |        -       |        -        |        -       |         DEF       |
+| \ref SecModGeany   |         +          |       DEF      |        +        |        +       |          +        |
+
+Each run mode (line) has its default emitter (DEF) and some useful
+combinations (+). Some combinations are possible, but not useful (-).
+
+Additional options specify details on how to handle input and output
+(mode options) and how to generate the output (emitter options)
+
+|  Run Mode          | \ref SecOptTree | \ref SecOptRecursiv | \ref SecOptPath || \ref SecOptEmitter || \ref SecOptDocom | \ref SecOptCStyle | \ref SecOptAsterix | Emitter            |
+| -----------------: | :-------------- | :------------------ | :-------------- || :----------------: || ---------------: | ----------------: | -----------------: | :----------------- |
+| \ref SecModDefault |        +        |          -          |         -       ||          *         ||        -         |         +         |          +         | \ref SecEmmCSource |
+| \ref SecModFile    |        -        |         ???         |         +       ||          *         ||        -         |         -         |          -         | \ref SecEmmGtk     |
+| \ref SecModList    |        -        |         ???         |         +       ||          *         ||        -         |         +         |          -         | \ref SecEmmDoxy    |
+| \ref SecModSyntax  |        +        |         ???         |        ???      ||          *         ||        -         |         -         |          -         | \ref SecEmmLfn     |
+| \ref SecModGeany   |       ???       |          -          |         -       ||          *         ||        +         |         -         |          -         | \ref SecEmmSyntax  |
+
 
 
 Emitter  {#SecTabEmitter}

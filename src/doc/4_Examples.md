@@ -101,18 +101,14 @@ Then you can test the binary by executing in that folder.
 -# When you installed [Doxygen](http://www.doxygen.org/) and
    [GraphViz](http://www.graphviz.org/) you're ready to generate your
    first documentation from FB source. Just execute in the folder *doc*
-   ~~~{.sh}
-   doxygen
-   ./src/fb-doc -s
-   ~~~
-   The first command generates a lot of Doxygen messages (depending on
-   the settings in *Doxyfile*). It should end with message '`***
-   Doxygen has finished`'. The second command makes \Proj run in \ref
-   SubSecOptSyntax and repair the listing sections in the Doxygen
-   output files. After all you should have a new folder *html* (in the
-   folder *doc*) containing your personal version of this
-   documentation. Test it by loading `..doc/html/index.html` in to your
-   browser.
+   ~~~{.sh} doxygen ./src/fb-doc -s ~~~ The first command generates a
+   lot of Doxygen messages (depending on the settings in *Doxyfile*).
+   It should end with message '`*** Doxygen has finished`'. The second
+   command makes \Proj run in \ref SubSecOptSyntax and repair the
+   listing sections in the Doxygen output files. After all you should
+   have a new folder *html* (in the folder *doc*) containing your
+   personal version of this documentation. Test it by loading
+   `../doxy/html/index.html` in to your browser.
 
 As a summary steps 1. to 8. are informal examples. You need steps 9.
 and 10. for your personal projects.

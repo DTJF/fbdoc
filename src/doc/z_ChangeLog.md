@@ -49,6 +49,7 @@ Bugfixes:
 
 - syntax highlighter: finds FB source files in subfolders now (TEX, XML)
 - syntax highlighter: suppressed #`INCLUDE` statements work now (HTM, TEX, XML)
+- syntax highlighter: suppressed code before multi line comment work now
 - fixed interface for external emitter plugins
 - plugin example fixed
 - parsing problem `REDIM PRESERVE "..."` fixed

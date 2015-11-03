@@ -12,6 +12,7 @@ FB_DOCUMENTATION(
 BAS_SRC
   ${BAS_SRC}
 DEPENDS
+  ../CMakeLists.txt
   ../ReadMe.md
   ../src/doc/1_Introduction.md
   ../src/doc/2_Preparation.md
@@ -24,7 +25,6 @@ DEPENDS
   ../src/doc/9_Extend.md
   ../src/doc/A_Files.md
   ../src/doc/z_ChangeLog.md
-  ../CMakeLists.txt
   Doxyfile
   fb-doc.css
   fb-doc.xml

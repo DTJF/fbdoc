@@ -472,8 +472,9 @@ SUB Highlighter.generate_all(BYVAL Buf AS ZSTRING PTR, BYVAL Stop_ AS INTEGER)
         start = i
         CONTINUE WHILE
       CASE ASC("/") : IF Buf[i + 1] <> ASC("'") THEN EXIT SELECT
+        IF i >= start THEN Code(generate_code(Buf, start, i - start))
+        start = i
         i += 2
-        start = i - 2
         VAR fl = Buf[i] <> OPT->JoComm OR OPT->Docom
         DO
           SELECT CASE AS CONST Buf[i]
@@ -1468,15 +1469,16 @@ END SUB
 /'* \brief Emitter to generate a function name
 \param P the parser calling this emitter
 
-This emitter operates on SUB / FUNCTION / PROPERTY definitions
-(function body, not declaration). It extracts the function name and
-checks the \ref Highlighter::Symbols table for a matching link. If
-there is no link, nothing is done.
+This emitter operates on `SUB`, `FUNCTION`, `PROPERTY`, `OPERATOR`,
+`CONSTRUCTOR and `DESTRUCTOR` definitions (function body, not
+declaration). It extracts the function name and checks the \ref
+Highlighter::Symbols table for a matching link. If there is no link,
+nothing is done.
 
 In case of a matching link the source code gets emitted up to the link.
 
-Funktion names need special handling because the names of CONSTRUCTORs
-and DESTRUCTORs vary between intermediate format and FB source.
+Funktion names need special handling because they vary between
+intermediate format and FB source (`::` vs. `.`).
 
 '/
 SUB synt_func_ CDECL(BYVAL P AS Parser PTR)
@@ -1503,7 +1505,7 @@ SUB synt_func_ CDECL(BYVAL P AS Parser PTR)
     .generate_all(SADD(P->Buf), P->Tk1[1])
     VAR i = INSTR(*res, nam) _
       , j = i + LEN(nam) _
-      , a = P->StaTok[1] _
+      , a = IIF(P->DivTok, P->DivTok[1], P->StaTok[1]) _ ' ABSTRACT, VIRTUAL, ...
       , l = P->NamTok[1] - a
     P->SrcBgn = *(t - 2) + *(t - 1)
     nam = .special_chars(SADD(P->Buf), a + l, P->SrcBgn - P->NamTok[1]) ' orig. name

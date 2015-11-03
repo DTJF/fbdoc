@@ -99,7 +99,7 @@ switch to the folder where our FB source is placed. Then, we execute
 fb-doc --asterix --file-mode
 ~~~
 
-This makes \Proj creating a new folder <em>../doc/c_src</em> (if
+This makes \Proj creating a new folder `../doc/c_src` (if
 not present) and write pseudo C files similar to our FB source
 (overriding existing files). *.\em bas files get translated to *.\em
 c and *.\em bi files get translated to *.\em h. Our documentation

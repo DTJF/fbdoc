@@ -16,13 +16,13 @@ SET(PROJ_LICE "GPLv3"              CACHE STRING "project licence" FORCE)
 STRING(TIMESTAMP tmp "%Y" UTC)
 SET(PROJ_YEAR "${tmp}"             CACHE STRING "project year" FORCE)
 
-CONFIGURE_FILE(_ReadMe.md.in ${CMAKE_SOURCE_DIR}/ReadMe.md @ONLY)
+CONFIGURE_FILE(src/doc/_ReadMe.md.in ${CMAKE_SOURCE_DIR}/ReadMe.md @ONLY)
 
 # the source folders
 ADD_SUBDIRECTORY(src/bas)
 
 # the documentation construction folder
-ADD_SUBDIRECTORY(doc)
+ADD_SUBDIRECTORY(doxy)
 
 #SET(CPACK_GENERATOR "TBZ2")
 
