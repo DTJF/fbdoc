@@ -44,6 +44,7 @@ New:
 - source listings: documentational comments get removed now (as in Doxygen listings)
 - source listings: new option --doc-comments (-d) to force inclusion of documentational comments
 - example plugin py_ctypes to create language bindings for python
+- support for inherritance (`EXTENDS`)
 
 Bugfixes:
 
@@ -55,7 +56,7 @@ Bugfixes:
 - parsing problem `REDIM PRESERVE "..."` fixed
 - parsing problem `EXTERN "..."` fixed
 - parsing problem `DECLARE ...` after bitfields fixed
-- better caller / callee graphs (with manual interaction in case of WITH blocks)
+- better caller / callee graphs (with manual interaction in case of `WITH` blocks)
 
 Released on 2015 October, ??.
 

@@ -740,10 +740,13 @@ SUB c_Block CDECL(BYVAL P AS Parser PTR)
     cEmitComments(P, .Tk1[1])
 
     IF .LevelCount THEN Code(STRING(.LevelCount * 2, " "))
-    SELECT CASE AS CONST *.Tk1
+    SELECT CASE AS CONST IIF(.LevelCount, *.Tk1, *.StaTok)
     CASE .TOK_TYPE, .TOK_CLAS
       IF OPT->Types = OPT->FB_STYLE THEN
-        Code("class " & .BlockNam & !"{ public:")
+         Code("class " & .BlockNam)
+        VAR t = .Tk1 + 3
+        IF *t = .TOK_EXDS THEN Code(" : public " & .SubStr(t + 3)) ' ToDo: parse list of names
+        Code("{ public:")
         .parseBlockTyUn(@cEntryBlockTypeUnion)
         .BlockNam = ""
       ELSE
