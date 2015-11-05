@@ -194,15 +194,19 @@ SUB cArrDim CDECL(BYVAL P AS Parser PTR)
     VAR t = .DimTok, kl = 0
     DO
       SELECT CASE AS CONST *t
-      CASE .TOK_COMMA ':           Code(" + 1][")
-        if t[-3] = .TOK_TRIDO then Code("][") _
-                              else Code(" + 1][")
+      CASE .TOK_COMMA
+        SELECT CASE AS CONST t[-3]
+        CASE .TOK_3DOT, .TOK_ANY : Code("][")
+        CASE ELSE :                Code(" + 1][")
+        END SELECT
       CASE .TOK_BROPN : kl += 1 : Code("[")
         IF t[3] = .TOK_COMMA ORELSE t[3] = .TOK_BRCLO THEN _
           Code(MID(.Buf, t[1] + 2, t[4] - t[1] - 1))
-      CASE .TOK_BRCLO : kl -= 1 ': Code(" + 1]") : IF kl <= 0 THEN EXIT DO
-        if t[-3] = .TOK_TRIDO then Code("]") _
-                              else Code(" + 1]")
+      CASE .TOK_BRCLO : kl -= 1
+        SELECT CASE AS CONST t[-3]
+        CASE .TOK_3DOT, .TOK_ANY : Code("]")
+        CASE ELSE :                Code(" + 1]")
+        END SELECT
         IF kl <= 0 THEN EXIT DO
       CASE ELSE                 : Code(.SubStr(t))
       END SELECT : t += 3
@@ -350,7 +354,7 @@ SUB cppEntryListParameter CDECL(BYVAL P AS Parser PTR)
       IF .By_Tok THEN Code(.SubStr(.By_Tok) & "_")
       Code(.SubStr(.As_Tok) & "_")
       cppCreateTypNam(P)
-    ELSEIF *.NamTok = .TOK_TRIDO THEN
+    ELSEIF *.NamTok = .TOK_3DOT THEN
       Code("...)") : EXIT SUB
     END IF
 
@@ -382,7 +386,7 @@ SUB cEntryListParameter CDECL(BYVAL P AS Parser PTR)
       cCreateFunction(P)
     ELSEIF .TypTok THEN
       cCreateTypNam(P)
-    ELSEIF .NamTok = .TOK_TRIDO THEN
+    ELSEIF .NamTok = .TOK_3DOT THEN
       Code("...")
     ELSE
       Code("void")
@@ -407,7 +411,8 @@ Exceptions:
 '/
 SUB cppCreateFunction CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
-    IF .DivTok THEN Code(.SubStr(.DivTok) & " ")
+    'IF .DivTok THEN Code(.SubStr(.DivTok) & " ")
+    IF .DivTok THEN Code(LCASE(.SubStr(.DivTok)) & " ")
 
     SELECT CASE AS CONST *.FunTok
     CASE .TOK_CTOR

@@ -126,16 +126,16 @@ FUNCTION Parser.demuxNam(BYVAL MinTk AS INTEGER = TOK_WORD, BYVAL DeclMod AS INT
       IF 0 = LevelCount ORELSE *Tk < MinTk   THEN NamTok = 0 : RETURN MSG_ERROR
       SKIP : EXIT DO
     END SELECT : SKIP
-  LOOP : IF DeclMod THEN                                       RETURN Tk - NamTok
+  LOOP : IF DeclMod                                       THEN RETURN Tk - NamTok
 
   IF *Tk = TOK_BROPN THEN DimTok = Tk : skipOverBrclo()
 
   IF *Tk = TOK_AS THEN                                         RETURN Tk - NamTok
 
-  IF *Tk = TOK_EQUAL THEN IniTok = Tk                        : RETURN Tk - NamTok
+  IF *Tk = TOK_EQUAL                        THEN IniTok = Tk : RETURN Tk - NamTok
   IF 0 = LevelCount ORELSE _
      *Tk <> TOK_EOS ORELSE _
-     Buf[Tk[1]] <> ASC(":") THEN                               RETURN Tk - NamTok
+     Buf[Tk[1]] <> ASC(":")                               THEN RETURN Tk - NamTok
 
   VAR x = Tk + 3 '                        check for bitfield declaration
   IF *x >= MinTk THEN
@@ -260,9 +260,7 @@ FUNCTION Parser.demuxTyp(BYVAL DeclMod AS INTEGER = 0) AS INTEGER
     IF *Tk = TOK_EOS THEN RETURN IIF(*FunTok = TOK_FUNC, MSG_ERROR, TOK_EOS)
 
     SELECT CASE AS CONST *Tk
-    CASE TOK_CDEC : CalTok = Tk : SKIP
-    CASE TOK_STCL : CalTok = Tk : SKIP
-    CASE TOK_PASC : CalTok = Tk : SKIP
+    CASE TOK_CDEC, TOK_STCL, TOK_PASC : CalTok = Tk : SKIP
     END SELECT
 
     IF *Tk = TOK_OVER THEN SKIP
@@ -474,7 +472,7 @@ SUB Parser.parseListPara(BYVAL Export_ AS EmitFunc) EXPORT
     SELECT CASE AS CONST *Tk
     CASE TOK_BRCLO : IF count > 0 THEN Errr("parameter expected")
       ListCount = count : EXIT DO
-    CASE TOK_TRIDO : NamTok = Tk : TypTok = 0 : FunTok = 0
+    CASE TOK_3DOT : NamTok = Tk : TypTok = 0 : FunTok = 0
     CASE ELSE
       IF *Tk = TOK_BYVA ORELSE *Tk = TOK_BYRE THEN By_Tok = Tk : SKIP
       IF *Tk <> TOK_AS ANDALSO *Tk >= TOK_ABST THEN
@@ -731,31 +729,32 @@ FUNCTION Parser.Errr(BYREF E AS STRING) AS INTEGER
       IF Buf[i] = ASC(!"\n") THEN z -= 1
     NEXT
   END IF
-  ErrMsg = "-error(" & z & "): " & E ' & _
+  ErrMsg = "-error(" & z & "): " & E & ", found '" & SubStr(Tk) & "' "
+  'ErrMsg = "-error(" & z & "): " & E ' & _
            '"! (... " & MID(Buf, IIF(Po > 20, Po - 40, 1), 20)
   SELECT CASE AS CONST *StaTok
-  CASE TOK_DIM  : ErrMsg &= " (DIM)"
-  CASE TOK_RDIM : ErrMsg &= " (REDIM)"
-  CASE TOK_VAR  : ErrMsg &= " (VAR)"
-  CASE TOK_CONS : ErrMsg &= " (CONST)"
-  CASE TOK_STAT : ErrMsg &= " (STATIC)"
-  CASE TOK_COMM : ErrMsg &= " (COMMON)"
-  CASE TOK_EXRN : ErrMsg &= " (EXTERN)"
-  CASE TOK_TYPE : ErrMsg &= " (TYPE)"
-  CASE TOK_CLAS : ErrMsg &= " (CLASS)"
-  CASE TOK_SUB  : ErrMsg &= " (SUB)"
-  CASE TOK_FUNC : ErrMsg &= " (FUNCTION)"
-  CASE TOK_PROP : ErrMsg &= " (PROPERTY)"
-  CASE TOK_CTOR : ErrMsg &= " (CONSTRUCTOR)"
-  CASE TOK_DTOR : ErrMsg &= " (DESTRUCTOR)"
-  CASE TOK_NAMS : ErrMsg &= " (NAMESPACE)"
-  CASE TOK_SCOP : ErrMsg &= " (SCOPE)"
-  CASE TOK_ENUM : ErrMsg &= " (ENUM)"
-  CASE TOK_UNIO : ErrMsg &= " (UNION)"
-  CASE TOK_DECL : ErrMsg &= " (DECLARE)"
-  CASE TOK_DEFI : ErrMsg &= " (#DEFINE)"
-  CASE TOK_MACR : ErrMsg &= " (#MACRO)"
-  CASE ELSE : ErrMsg &= " (???)"
+  CASE TOK_DIM  : ErrMsg &= "(DIM)"
+  CASE TOK_RDIM : ErrMsg &= "(REDIM)"
+  CASE TOK_VAR  : ErrMsg &= "(VAR)"
+  CASE TOK_CONS : ErrMsg &= "(CONST)"
+  CASE TOK_STAT : ErrMsg &= "(STATIC)"
+  CASE TOK_COMM : ErrMsg &= "(COMMON)"
+  CASE TOK_EXRN : ErrMsg &= "(EXTERN)"
+  CASE TOK_TYPE : ErrMsg &= "(TYPE)"
+  CASE TOK_CLAS : ErrMsg &= "(CLASS)"
+  CASE TOK_SUB  : ErrMsg &= "(SUB)"
+  CASE TOK_FUNC : ErrMsg &= "(FUNCTION)"
+  CASE TOK_PROP : ErrMsg &= "(PROPERTY)"
+  CASE TOK_CTOR : ErrMsg &= "(CONSTRUCTOR)"
+  CASE TOK_DTOR : ErrMsg &= "(DESTRUCTOR)"
+  CASE TOK_NAMS : ErrMsg &= "(NAMESPACE)"
+  CASE TOK_SCOP : ErrMsg &= "(SCOPE)"
+  CASE TOK_ENUM : ErrMsg &= "(ENUM)"
+  CASE TOK_UNIO : ErrMsg &= "(UNION)"
+  CASE TOK_DECL : ErrMsg &= "(DECLARE)"
+  CASE TOK_DEFI : ErrMsg &= "(#DEFINE)"
+  CASE TOK_MACR : ErrMsg &= "(#MACRO)"
+  CASE ELSE     : ErrMsg &= "(???)"
   END SELECT
   Emit->Error_(@THIS) : ErrMsg = ""
 
@@ -778,6 +777,7 @@ FUNCTION Parser.getToken() AS INTEGER
     SELECT CASE USubStr()
     CASE "AS" : RETURN TOK_AS
     CASE "ALIAS" : RETURN TOK_ALIA
+    CASE "ANY" : RETURN TOK_ANY
     CASE "ABSTRACT" : RETURN TOK_ABST
     END SELECT
   CASE ASC("B"), ASC("b")
@@ -968,7 +968,7 @@ FUNCTION Parser.tokenize(BYVAL Stop_ AS EoS_Modi) AS INTEGER
       IF Buf[Po + 1] = ASC(".") ANDALSO _
          Buf[Po + 2] = ASC(".") ANDALSO _
          Buf[Po + 3] <> ASC(".") _
-           THEN SETOK(TOK_TRIDO, Po, 3) : Po += 3    : CONTINUE DO
+           THEN SETOK(TOK_3DOT, Po, 3) : Po += 3     : CONTINUE DO
       SETOK(TOK_DOT, Po, 1)
     CASE   ASC("=") : SETOK(TOK_EQUAL, Po, 1)
     CASE   ASC("{"), ASC("[") : SETOK(TOK_KLOPN, Po, 1)
@@ -1249,20 +1249,7 @@ SUB Parser.Include(BYVAL N AS STRING)
 
     VAR i = INSTRREV(N, SLASH)
     VAR fnam = .addPath(InPath, LEFT(N, i)) & MID(N, i + 1)
-' &{OPT* dummy; dummy->addPath();};
-' &{OPT dummy; dummy.addPath();};
 
-'&{OPT* dummy;} Options.addPath();
-' &OPT* dummy; Options.addPath();
-
-' &*OPT->Options.addPath();
-' &*OPT.Options.addPath();
-' &*OPT->addPath();
-' &*OPT.addPath();
-' &OPT->Options.addPath();
-' &OPT->Options::addPath();
-' &Options.addPath();
-' &type Options* Options_PTR; OPT.addPath();
     MSG_LINE(fnam)
     IF DivTok ANDALSO INSTR(.FileIncl, !"\n" & fnam & !"\r") THEN _
       MSG_END("skipped (already done)") : EXIT SUB
@@ -1280,11 +1267,6 @@ SUB Parser.Include(BYVAL N AS STRING)
     .Level += 1
     .doFile(fnam)
     .Level -= 1
-
-    'SELECT CASE AS CONST .RunMode
-    'CASE .LIST_MODE, .FILE_MODE
-    'CASE ELSE : MSG_LINE(fnam) : MSG_END("included")
-    'END SELECT
 
     DELETE .Pars : .Pars = pars_old
   END WITH

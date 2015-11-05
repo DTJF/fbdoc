@@ -74,7 +74,7 @@ source code).
     TOK_KLCLO '*< right other bracket
     TOK_DOT   '*< a dot
     TOK_MEOP  '*< the pointer to memory access operator "->"
-    TOK_TRIDO '*< three dots
+    TOK_3DOT  '*< three dots
     TOK_QUOTE '*< a string constant (including quotes)
     TOK_LATTE '*< the '#' character
     TOK_BROPN '*< left parenthesis (labeled enumerator)
@@ -146,7 +146,8 @@ source code).
     TOK_USHO  '*< the USHORT data type
     TOK_WSTR  '*< the ZSTRING data type
     TOK_ZSTR  '*< the ZSTRING data type
-    TOK_WORD  '*< a word
+    TOK_ANY   '*< the ANY keyword
+    TOK_WORD  '*< a word (labeled enumerator)
 
     TOK_COMSL '*< line end comment (single line, labeled enumerator)
     TOK_COMML '*< multi line comment
