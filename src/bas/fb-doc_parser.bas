@@ -129,6 +129,9 @@ FUNCTION Parser.demuxNam(BYVAL MinTk AS INTEGER = TOK_WORD, BYVAL DeclMod AS INT
   LOOP : IF DeclMod THEN                                       RETURN Tk - NamTok
 
   IF *Tk = TOK_BROPN THEN DimTok = Tk : skipOverBrclo()
+
+  IF *Tk = TOK_AS THEN                                         RETURN Tk - NamTok
+
   IF *Tk = TOK_EQUAL THEN IniTok = Tk                        : RETURN Tk - NamTok
   IF 0 = LevelCount ORELSE _
      *Tk <> TOK_EOS ORELSE _
@@ -306,8 +309,8 @@ SUB Parser.parseListNam(BYVAL Export_ AS EmitFunc) EXPORT
   TypTok = 0 : FunTok = 0
   DO
     Tk1 = Tk
-    IF MSG_ERROR >= demuxNam() THEN : Errr("name expected") : skipOverComma() : ELSE
-    skipOverComma() : ListCount = count : Export_(@THIS) : count += 1 : END IF
+    IF MSG_ERROR >= demuxNam() THEN Errr("name expected") : skipOverComma() : CONTINUE DO
+    skipOverComma() : ListCount = count : Export_(@THIS) : count += 1
   LOOP UNTIL *Tk <= TOK_COMMA
 END SUB
 
@@ -321,11 +324,12 @@ UBYTE = {0,1,2,3,4,5}, Nam3 AS STRING, ...).
 
 '/
 SUB Parser.parseListNamTyp(BYVAL Export_ AS EmitFunc) EXPORT
+  VAR count = 1
   DO
     Tk1 = Tk
-    IF MSG_ERROR >= demuxNam() THEN : Errr("name expected") : skipOverComma() : ELSE
-    IF MSG_ERROR >= demuxTyp() THEN : Errr("type expected") : skipOverComma() : ELSE
-    skipOverComma() : ListCount = 0 : Export_(@THIS) : END IF : END IF
+    IF MSG_ERROR >= demuxNam() THEN Errr("name expected") : skipOverComma() : CONTINUE DO
+    IF MSG_ERROR >= demuxTyp() THEN Errr("type expected") : skipOverComma() : CONTINUE DO
+    skipOverComma() : ListCount = count : Export_(@THIS) : count += 1
   LOOP UNTIL *Tk <= TOK_COMMA
 END SUB
 
@@ -367,27 +371,54 @@ handler one-by-one.
 
 '/
 SUB Parser.parseBlockTyUn(BYVAL Export_ AS EmitFunc) EXPORT
-  VAR in_tk1 = *Tk1
+  VAR in_tk1 = iif(LevelCount, *Tk1, *StaTok)
   LevelCount += 1
-
   DO
     Tk1 = Tk
     VAR nextok = Tk[3]
     SELECT CASE AS CONST nextok
     CASE TOK_AS, TOK_BROPN
       BitTok = 0
-      IF MSG_ERROR >= demuxNam(TOK_ABST) THEN _
-        IF Errr("name expected") = MSG_ERROR THEN CONTINUE DO _
-                                             ELSE EXIT DO
-      IF MSG_ERROR >= demuxTyp() THEN _
-        IF Errr("type expected") = MSG_ERROR THEN CONTINUE DO _
-                                             ELSE EXIT DO
-      *NamTok = TOK_WORD : ListCount = 0 : Export_(@THIS)
+      SELECT CASE AS CONST *Tk1
+      CASE TOK_DIM, TOK_RDIM : SKIP
+        IF MSG_ERROR >= demuxTyp() THEN _
+          IF Errr("type expected1") = MSG_ERROR THEN CONTINUE DO _
+                                               ELSE EXIT DO
+        IF MSG_ERROR >= demuxNam(TOK_ABST) THEN _
+          IF Errr("name expected1") = MSG_ERROR THEN CONTINUE DO _
+                                               ELSE EXIT DO
+        skipOverComma()
+        *NamTok = TOK_WORD : ListCount = 0 : Export_(@THIS)
+        IF *Tk >= TOK_ABST THEN parseListNam(Export_)
+      CASE ELSE
+        IF MSG_ERROR >= demuxNam(TOK_ABST) THEN _
+          IF Errr("name expected") = MSG_ERROR THEN CONTINUE DO _
+                                               ELSE EXIT DO
+        IF MSG_ERROR >= demuxTyp() THEN _
+          IF Errr("type expected") = MSG_ERROR THEN CONTINUE DO _
+                                               ELSE EXIT DO
+        skipOverComma()
+        *NamTok = TOK_WORD : ListCount = 0 : Export_(@THIS)
+        IF *Tk >= TOK_ABST THEN parseListNamTyp(Export_)
+      END SELECT
       skipOverColon()
-
     CASE ELSE
       SELECT CASE AS CONST *Tk1
       CASE TOK_LATTE : skipOverColon()
+      CASE TOK_DIM, TOK_RDIM : SKIP
+        IF MSG_ERROR >= demuxNam(TOK_ABST) THEN _
+          IF Errr("name expected") = MSG_ERROR THEN CONTINUE DO _
+                                               ELSE EXIT DO
+        IF *Tk <> TOK_AS THEN _
+          IF Errr("'AS' expected->" & SubStr(Tk) & "<-") = MSG_ERROR THEN CONTINUE DO _
+                                               ELSE EXIT DO
+        IF MSG_ERROR >= demuxTyp() THEN _
+          IF Errr("type expected") = MSG_ERROR THEN CONTINUE DO _
+                                               ELSE EXIT DO
+        skipOverComma()
+        *NamTok = TOK_WORD : ListCount = 0 : Export_(@THIS)
+        IF *Tk >= TOK_ABST THEN parseListNamTyp(Export_)
+        skipOverColon()
       CASE TOK_AS
         BitTok = 0
         IF MSG_ERROR >= demuxTyp() THEN _
@@ -396,7 +427,6 @@ SUB Parser.parseBlockTyUn(BYVAL Export_ AS EmitFunc) EXPORT
         IF MSG_ERROR >= demuxNam(TOK_ABST) THEN _
           IF Errr("name expected") = MSG_ERROR THEN CONTINUE DO _
                                                ELSE EXIT DO
-
         skipOverComma()
         *NamTok = TOK_WORD : ListCount = 0 : Export_(@THIS)
         IF *Tk >= TOK_ABST THEN parseListNam(Export_)
@@ -419,7 +449,7 @@ SUB Parser.parseBlockTyUn(BYVAL Export_ AS EmitFunc) EXPORT
         IF nextok = TOK_WORD THEN SKIP : BlockNam = SubStr ELSE BlockNam = ""
         skipOverColon() : Export_(@THIS) : BlockNam = n
       CASE ELSE
-        skipOverColon() : IF Errr("not supported") < MSG_ERROR THEN EXIT DO
+        skipOverColon() : IF Errr("not supported: " & SubStr(Tk1)) < MSG_ERROR THEN EXIT DO
       END SELECT
     END SELECT
   LOOP UNTIL Tk >= EndTok : skipOverColon() : LevelCount -= 1

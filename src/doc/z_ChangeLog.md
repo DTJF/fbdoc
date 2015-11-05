@@ -45,6 +45,7 @@ New:
 - source listings: new option --doc-comments (-d) to force inclusion of documentational comments
 - example plugin py_ctypes to create language bindings for python
 - support for inherritance (`EXTENDS`)
+- support for `DIM` and `REDIM` in `TYPE` and `UNION` blocks
 
 Bugfixes:
 
