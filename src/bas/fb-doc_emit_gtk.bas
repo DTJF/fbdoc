@@ -204,19 +204,27 @@ SUB gtk_empty CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-' place the handlers in the emitter interface
-WITH_NEW_EMITTER(EmitterTypes.GTK_DOC_TEMPLATES)
-     .Nam = "GtkDocTemplates"
-  .Error_ = @c_error  '*< we use the standard error emitter here
 
-   .Func_ = @gtk_func_
-   .Decl_ = @gtk_decl_
-   .Defi_ = @gtk_defi_
-   .Enum_ = @gtk_Block
-   .Unio_ = @gtk_Block
-   .Clas_ = @gtk_Block
-   .Init_ = @geany_init
-   .Exit_ = @geany_exit
-  .Empty_ = @gtk_empty
-END WITH
+/'* \brief FIXME
+\param P FIXME
+
+FIXME
+
+\since 0.4.0
+'/
+SUB gtk_init(BYVAL P AS EmitterIF PTR)
+  WITH *P
+    .Error_ = @c_error  '*< we use the standard error emitter here
+
+     .Func_ = @gtk_func_
+     .Decl_ = @gtk_decl_
+     .Defi_ = @gtk_defi_
+     .Enum_ = @gtk_Block
+     .Unio_ = @gtk_Block
+     .Clas_ = @gtk_Block
+     .Init_ = @geany_init
+     .Exit_ = @geany_exit
+    .Empty_ = @gtk_empty
+  END WITH
+END SUB
 

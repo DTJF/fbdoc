@@ -7,10 +7,13 @@ This chapter contains some information on \Proj in table format.
 Overview  {#SecTabOverview}
 ========
 
-\Proj is a multi functional tool. The choosen Emitter specifies which
-kind of output to generate. And the choosen Run Mode specifies where to
-get input from and where to write the output at. Here's a table of all
-run modi (lines) against the inbuild emitters (columns).
+\Proj is a multi functional tool, controlled by command line
+parameters. Several run modi specify where to get input from and where
+to send output at. Different emitters specify the context of the
+output. The following table shows all run modi (lines) and inbuild
+emitters (columns). Each run mode has its default emitter (DEF), but
+can also get combined with a customized emitter in useful (+) and less
+useful (-) combinations.
 
 |                    | \ref SecEmmCSource | \ref SecEmmGtk | \ref SecEmmDoxy | \ref SecEmmLfn | \ref SecEmmSyntax |
 | -----------------: | :----------------: | :------------: | :-------------: | :------------: | :---------------: |
@@ -20,11 +23,11 @@ run modi (lines) against the inbuild emitters (columns).
 | \ref SecModSyntax  |         -          |        -       |        -        |        -       |         DEF       |
 | \ref SecModGeany   |         +          |       DEF      |        +        |        +       |          +        |
 
-Each run mode (line) has its default emitter (DEF) and some useful
-combinations (+). Some combinations are possible, but not useful (-).
+Additional options modify the behaviour of the run modi or specific
+emitters. The next table contains those operational options (columns).
 
-Additional options specify details on how to handle input and output
-(mode options) and how to generate the output (emitter options)
+specify details on how to handle input and output
+(mode options) and how to generate the output (emitter options).
 
 |  Run Mode          | \ref SecOptTree | \ref SecOptRecursiv | \ref SecOptPath || \ref SecOptEmitter || \ref SecOptDocom | \ref SecOptCStyle | \ref SecOptAsterix | Emitter            |
 | -----------------: | :-------------- | :------------------ | :-------------- || :----------------: || ---------------: | ----------------: | -----------------: | :----------------- |

@@ -21,6 +21,9 @@ CONFIGURE_FILE(src/doc/_ReadMe.md.in ${CMAKE_SOURCE_DIR}/ReadMe.md @ONLY)
 # the source folders
 ADD_SUBDIRECTORY(src/bas)
 
+# the plugin examples folders
+ADD_SUBDIRECTORY(src/plugins)
+
 # the documentation construction folder
 ADD_SUBDIRECTORY(doxy)
 

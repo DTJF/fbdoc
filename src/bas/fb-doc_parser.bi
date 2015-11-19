@@ -9,13 +9,13 @@ the \ref EmitterIF.
 
 #INCLUDE ONCE "fb-doc_emitters.bi"
 
-
-#IF __FB_OUT_DLL__
- '* Convenience macro for output (plugin)
+#IF __FB_OUT_DLL__ OR DEFINED(__FB_DOC_PLUGIN__)
+ '* Convenience macro for output (plugins)
   #DEFINE Code(_T_) P->writeOut(_T_)
+#print __FB_OUT_DLL__ OR DEFINED(__FB_DOC_PLUGIN__)
 '&/*
 #ELSE
- #DEFINE Code(_T_) PRINT #OPT->Ocha, _T_; '*< Convenience macro for output (\Proj)
+ #DEFINE Code(_T_) PRINT #OPT->Ocha, _T_; ' Convenience macro for output (\Proj intern)
 '&*/
 #ENDIF
 
@@ -54,6 +54,8 @@ function \ref EmitterIF::Incl_() creates a new Parser for each file.
 
 '/
 TYPE Parser
+Public:
+
 /'* \brief The tokens used by the parser
 
 Enumerators used to classify the type of a token found in the FreeBASIC
@@ -245,7 +247,7 @@ gets returned.
   DECLARE SUB File_(BYREF AS STRING, BYVAL AS INTEGER)
   DECLARE SUB StdIn()
   DECLARE SUB Include(BYVAL AS STRING)
-  DECLARE STATIC SUB writeOut(BYREF AS STRING)
+  DECLARE SUB writeOut(BYREF AS STRING)
 '* \}
 
 /'* \name Properties to extract original source code

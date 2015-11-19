@@ -3,8 +3,7 @@ Changelog & Credits {#PagChangeLog}
 \tableofcontents
 
 
-Further Development  {#SecToDo}
-===================
+# Further Development  {#SecToDo}
 
 In combination with Doxygen \Proj is a powerful documentation
 system for FreeBASIC source code. The Doxygen support for FreeBasic
@@ -32,8 +31,7 @@ or to the
 or feel free to send your ideas directly to the author (\Mail).
 
 
-fb-doc-0.4 {#SecV-0-4}
-==========
+# fb-doc-0.4.0 {#SecV-0-4-0}
 
 New:
 
@@ -46,6 +44,8 @@ New:
 - example plugin py_ctypes to create language bindings for python
 - support for inherritance (`EXTENDS`)
 - support for `DIM` and `REDIM` in `TYPE` and `UNION` blocks
+- EmitterIF reviewed, new init process
+- command line options for plugins
 
 Bugfixes:
 
@@ -62,8 +62,7 @@ Bugfixes:
 Released on 2015 October, ??.
 
 
-fb-doc-0.2 {#SecV-0-2}
-==========
+# fb-doc-0.2 {#SecV-0-2}
 
 New:
 
@@ -84,15 +83,13 @@ New:
 Released on 2013 June, 1.
 
 
-fb-doc-0.0 {#SecV-0-0}
-==========
+# fb-doc-0.0 {#SecV-0-0}
 
 Initial release on 2012 April, 29.
 
 
 
-Credits {#SecCredits}
-=======
+# Credits {#SecCredits}
 
 Thanks go to:
 

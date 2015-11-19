@@ -238,19 +238,27 @@ SUB doxy_empty CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-' place the handlers in the emitter interface
-WITH_NEW_EMITTER(EmitterTypes.DOXYGEN_TEMPLATES)
-     .Nam = "DoxygenTemplates"
-  .Error_ = @c_error '           we use the standard error emitter here
 
-   .Func_ = @doxy_func_
-   .Decl_ = @doxy_decl_
-   .Defi_ = @doxy_defi_
-   .Enum_ = @doxy_Block
-   .Unio_ = @doxy_Block
-   .Clas_ = @doxy_Block
-   .Init_ = @geany_init '       ... and the Geany init / exit functions
-   .Exit_ = @geany_exit
-  .Empty_ = @doxy_empty
-END WITH
+/'* \brief FIXME
+\param P FIXME
+
+FIXME
+
+\since 0.4.0
+'/
+SUB doxy_init(BYVAL P AS EmitterIF PTR)
+  WITH *P
+    .Error_ = @c_error '           we use the standard error emitter here
+
+     .Func_ = @doxy_func_
+     .Decl_ = @doxy_decl_
+     .Defi_ = @doxy_defi_
+     .Enum_ = @doxy_Block
+     .Unio_ = @doxy_Block
+     .Clas_ = @doxy_Block
+     .Init_ = @geany_init '       ... and the Geany init / exit functions
+     .Exit_ = @geany_exit
+    .Empty_ = @doxy_empty
+  END WITH
+END SUB
 

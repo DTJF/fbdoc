@@ -9,22 +9,21 @@ compiled in FB.
 
 '/
 
-#INCLUDE ONCE "../bas/fb-doc_emitters.bi" ' declaration of the emitter interface
-#INCLUDE ONCE "../bas/fb-doc_parser.bi"   ' declaration of the Parser members (not used here)
+#INCLUDE ONCE "../bas/fb-doc_parser.bi"   ' declaration of the Parser members
 
 
 '* Macro to place a comment in to the output (file name and line number)
-#DEFINE NEW_ENTRY Code(!"\n\n# " & MID(.Fnam, 23) & ": " & .LineNo)
+#DEFINE NEW_ENTRY Code(!"\n\n# " & NAM & ": " & .LineNo)
 DIM SHARED AS LONG _
-  ENUM_COUNT '*< counter for ENUM blocks
+  ENUM_COUNT  '*< counter for ENUM blocks
 DIM SHARED AS STRING _
-    T0 _      '*< first type block
+   NAM _      '*< file name
+  , T0 _      '*< first type block
   , T1 _      '*< second type block
   , T2 _      '*< the list of type names (, separated)
   , CLASSES _ '*< the list of class names (NL separated)
   , LIBRARY   '*< the name of the binary to include
 CLASSES = !"\n"
-LIBRARY = "libpruio.so"
 
 
 /'* \brief Procedure to transform number literals
@@ -292,7 +291,10 @@ END SUB
 
 '* \brief Emitter called before the input gets parsed
 SUB py_init CDECL(BYVAL P AS Parser PTR)
-  Code(NL & __FUNCTION__)
+  'Code(NL & __FUNCTION__)
+  WITH *P
+    NAM = MID(.Fnam, instrrev(.Fnam, SLASH) + 1)
+  END WITH
 END SUB
 
 '* \brief Emitter called for an error
@@ -323,20 +325,38 @@ SUB py_DTOR CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-' place the handlers in the emitter interface
-WITH_NEW_EMITTER(EmitterTypes.EXTERNAL)
-    .Nam = "py_ctypes"
-  .Decl_ = @py_declare
-  .Func_ = @py_function
-  .Enum_ = @py_enum
-  .Unio_ = @py_union
-  .Clas_ = @py_class
-  .Defi_ = @py_define
-  .Incl_ = @py_include
-  '.Init_ = @py_init
- '.Error_ = @py_error
- '.Empty_ = @py_empty
-  '.Exit_ = @py_exit
-  '.CTOR_ = @py_CTOR
-  .DTOR_ = @py_DTOR
-END WITH
+
+/'* \brief FIXME
+\param Emi FIXME
+\param Par FIXME
+
+FIXME
+
+\since 0.4.0
+'/
+SUB EmitterInit CDECL(BYVAL Emi AS EmitterIF PTR, BYREF Par AS STRING) EXPORT
+  WITH *Emi
+    .Decl_ = @py_declare
+    .Func_ = @py_function
+    .Enum_ = @py_enum
+    .Unio_ = @py_union
+    .Clas_ = @py_class
+    .Defi_ = @py_define
+    .Incl_ = @py_include
+    .Init_ = @py_init
+   '.Error_ = @py_error
+   '.Empty_ = @py_empty
+    '.Exit_ = @py_exit
+    '.CTOR_ = @py_CTOR
+    .DTOR_ = @py_DTOR
+  END WITH
+  VAR a = INSTR(Par, !"\t-py=")
+  IF a THEN
+    VAR e = INSTR(a + 1, Par, !"\t")
+    IF 0 = e THEN e = LEN(Par) + 1
+    LIBRARY = MID(Par, a + 6,  e - a - 7)
+    Par = LEFT(Par, a - 1) & MID(Par, e + 1)
+  ELSE
+    LIBRARY = "FIXME.so"
+  END IF
+END SUB

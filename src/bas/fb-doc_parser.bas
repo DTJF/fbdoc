@@ -1261,7 +1261,7 @@ SUB Parser.Include(BYVAL N AS STRING)
     .FileIncl &= !"\n" & fnam & !"\r"
 
     VAR pars_old = .Pars : .Pars = NEW Parser(.EmitIF)
-    UserTok = pars_old->UserTok
+    .Pars->UserTok = pars_old->UserTok
 
     MSG_END("working ...")
     .Level += 1

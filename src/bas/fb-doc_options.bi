@@ -96,21 +96,6 @@ TYPE Options
 
   END ENUM
 
-  '/'* \brief In-build emitters
-
-  'By default these four emitters are available in \Proj. The
-  'enumerators are used for default settings in the Options class. The
-  'user can choose the emitter by option `--emitter`. The parameter
-  'gets checked against the \ref EmitterIF::Nam string (or parts of it). '/
-  'ENUM EmitterTypes
-    'C_SOURCE          '*< emit pseudo C source (default and option `--file-mode`)
-    'FUNCTION_NAMES    '*< emit a list of function names (option `--list-mode`)
-    'GTK_DOC_TEMPLATES '*< emit templates for gtk-doc (option `--geany-mode gtk`)
-    'DOXYGEN_TEMPLATES '*< emit templates for Doxygen (option `--geany-mode doxy`)
-    'SYNTAX_REPAIR     '*< fix syntax highlighting of Doxygen listings (option `--syntax-mode`)
-    'EXTERNAL          '*< external emitter loaded as plugin
-  'END ENUM
-
   /'* \brief The style of the types in the C source
 
   A FB type can be translated to a C type or it can be shown as a
@@ -167,7 +152,7 @@ TYPE Options
   DECLARE DESTRUCTOR()
   DECLARE FUNCTION parseCLI() AS RunModes
   DECLARE FUNCTION parseOptpara(BYREF Idx AS INTEGER) AS STRING
-  DECLARE SUB chooseEmitter(BYREF F AS STRING)
+  DECLARE FUNCTION chooseEmitter(BYREF F AS STRING, BYREF AS STRING) as EmitterIF PTR
   DECLARE SUB FileModi()
   DECLARE SUB doFile(BYREF AS STRING)
   DECLARE FUNCTION checkDir(BYREF AS STRING) AS INTEGER

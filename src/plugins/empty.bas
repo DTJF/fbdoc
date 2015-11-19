@@ -54,8 +54,7 @@ DLL_EXIT
 
 '/
 
-#INCLUDE ONCE "fb-doc_emitters.bi" ' declaration of the emitter interface
-#INCLUDE ONCE "fb-doc_parser.bi"   ' declaration of the Parser members (not used here)
+#INCLUDE ONCE "../bas/fb-doc_parser.bi"   ' declaration of the Parser members (not used here)
 
 
 '* \brief Emitter called when the Parser is at a variable declaration
@@ -131,20 +130,28 @@ SUB dll_DTOR CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-' place the handlers in the emitter interface
-WITH_NEW_EMITTER(EmitterTypes.EXTERNAL)
-    .Nam = "Plugin"
-  .Decl_ = @dll_declare
-  .Func_ = @dll_function
-  .Enum_ = @dll_enum
-  .Unio_ = @dll_union
-  .Clas_ = @dll_class
-  .Defi_ = @dll_define
-  .Incl_ = @dll_include
-  .Init_ = @dll_init
- .Error_ = @dll_error
- .Empty_ = @dll_empty
-  .Exit_ = @dll_exit
-  .CTOR_ = @dll_CTOR
-  .DTOR_ = @dll_DTOR
-END WITH
+/'* \brief FIXME
+\param P FIXME
+\param Par FIXME
+
+FIXME
+
+\since 0.4.0
+'/
+SUB EmitterInit CDECL(BYVAL P AS EmitterIF PTR, BYREF Par AS STRING) EXPORT
+  WITH *P
+    .Decl_ = @dll_declare
+    .Func_ = @dll_function
+    .Enum_ = @dll_enum
+    .Unio_ = @dll_union
+    .Clas_ = @dll_class
+    .Defi_ = @dll_define
+    .Incl_ = @dll_include
+    .Init_ = @dll_init
+   .Error_ = @dll_error
+   .Empty_ = @dll_empty
+    .Exit_ = @dll_exit
+    .CTOR_ = @dll_CTOR
+    .DTOR_ = @dll_DTOR
+  END WITH
+END SUB

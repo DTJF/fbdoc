@@ -59,8 +59,8 @@ the documentation.
 
 '/
 TYPE EmitterIF
-  AS STRING _
-       Nam = ""  '*< the emitters name
+  'AS STRING _
+       'Nam = ""  '*< the emitters name
 ' This is tricky code to make Doxygen document an interface:
 '&/* Doxygen shouldn't parse this ...
   AS EmitFunc _
@@ -130,14 +130,5 @@ DECLARE SUB cppCreateFunction CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB cCreateFunction CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB cppCreateTypNam CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB cCreateTypNam CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB csource_init(byval as EmitterIF PTR)
 
-'* the SHARED array for the emitter interfaces
-COMMON SHARED AS EmitterIF PTR Emitters()
-REDIM PRESERVE SHARED AS EmitterIF PTR Emitters(0 TO EmitterTypes.EXTERNAL)
-'&typedef struct EmitterIF* EmitterIF_PTR; /**< Doxygen internal (ignore this). */
-
-/'* \brief Snippet to create a new \ref EmitterIF (for new customized emitter modules) '/
-#MACRO WITH_NEW_EMITTER(_N_)
- Emitters(_N_) = NEW EmitterIF
- WITH *Emitters(_N_)
-#ENDMACRO

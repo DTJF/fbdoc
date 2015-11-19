@@ -39,12 +39,10 @@ WITH *.OPT
     CASE ELSE
       .FileModi()
     END SELECT
+    DELETE .EmitIF
   END IF
 END WITH
 
 DELETE OPT
-FOR i AS INTEGER = 0 TO UBOUND(Emitters)
-  DELETE Emitters(i)
-NEXT
 
 '&}

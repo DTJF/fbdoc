@@ -1515,11 +1515,19 @@ SUB synt_func_ CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-' place the handlers in the emitter interface
-WITH_NEW_EMITTER(EmitterTypes.SYNTAX_REPAIR)
-    .Nam = "SyntaxHighLighting"
-  .Init_ = @synt_init
-  .Exit_ = @synt_exit
-  .Incl_ = @synt_incl
-  .Func_ = @synt_func_
-END WITH
+
+/'* \brief FIXME
+\param P FIXME
+
+FIXME
+
+\since 0.4.0
+'/
+SUB syntax_init(BYVAL P AS EmitterIF PTR)
+  WITH *P
+    .Init_ = @synt_init
+    .Exit_ = @synt_exit
+    .Incl_ = @synt_incl
+    .Func_ = @synt_func_
+  END WITH
+END SUB

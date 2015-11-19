@@ -97,13 +97,21 @@ SUB callees_include CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-' place the handlers in the emitter interface
-WITH_NEW_EMITTER(EmitterTypes.FUNCTION_NAMES)
-    .Nam = "FunctionNames"
-  .Clas_ = @callees_class_
-  .Unio_ = @callees_class_
-  .Func_ = @callees_func_
-  .Decl_ = @callees_decl_
-  .Incl_ = @callees_include
-END WITH
+
+/'* \brief FIXME
+\param P FIXME
+
+FIXME
+
+\since 0.4.0
+'/
+SUB callees_init(BYVAL P AS EmitterIF PTR)
+  WITH *P
+    .Clas_ = @callees_class_
+    .Unio_ = @callees_class_
+    .Func_ = @callees_func_
+    .Decl_ = @callees_decl_
+    .Incl_ = @callees_include
+  END WITH
+END SUB
 

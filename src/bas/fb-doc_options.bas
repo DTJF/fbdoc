@@ -15,6 +15,9 @@ responsible for user interaction
 #INCLUDE ONCE "fb-doc_emitters.bi"
 #INCLUDE ONCE "fb-doc_emit_syntax.bi"
 #INCLUDE ONCE "fb-doc_emit_callees.bi"
+#INCLUDE ONCE "fb-doc_emit_gtk.bi"
+#INCLUDE ONCE "fb-doc_emit_doxy.bi"
+#INCLUDE ONCE "fb-doc_emit_syntax.bi"
 #INCLUDE ONCE "fb-doc_doxyfile.bi"
 
 
@@ -95,7 +98,7 @@ COMMAND strings because DYLIBLOAD destroys the COMMAND array.
 
 '/
 FUNCTION Options.parseCLI() AS RunModes
-  VAR i = 1, emi = ""
+  VAR i = 1, emi = "", par = ""
   WHILE LEN(COMMAND(i)) '                               evaluate options
     SELECT CASE AS CONST ASC(COMMAND(i))
     CASE ASC("-")
@@ -139,8 +142,8 @@ FUNCTION Options.parseCLI() AS RunModes
       CASE "-h", "--help" : RETURN HELP_MESSAGE
       CASE "-v", "--version" : RETURN VERSION_MESSAGE
 
-      CASE ELSE
-        ERROUT("unknown option: " & COMMAND(i))
+      CASE ELSE : par &= !"\t" & COMMAND(i)
+        'ERROUT("unknown option: " & COMMAND(i))
       END SELECT
     CASE ELSE
       SELECT CASE AS CONST ASC(COMMAND(i))
@@ -151,7 +154,8 @@ FUNCTION Options.parseCLI() AS RunModes
     END SELECT : i += 1
   WEND
 
-  IF LEN(emi) THEN chooseEmitter(emi) ELSE EmitIF = Emitters(EmitTyp)
+  EmitIF = chooseEmitter(emi, par)
+  if len(par) then Errr &= "unknown options '" & par & "'"
 
   IF 0 = LEN(InFiles) ANDALSO RunMode = DEF_MODE THEN RunMode = HELP_MESSAGE
   Pars = NEW Parser(EmitIF)
@@ -173,28 +177,40 @@ to load an external emitter. If this fails an error message gets
 created and \Proj stops execution.
 
 '/
-SUB Options.chooseEmitter(BYREF F AS STRING)
-  VAR t = UCASE(F), l = LEN(t)
-  FOR e AS INTEGER = UBOUND(Emitters) TO 0 STEP -1
-    IF t = UCASE(LEFT(Emitters(e)->Nam, l)) THEN
-      EmitTyp = e
-      EmitIF = Emitters(e)
-      EXIT SUB
-    END IF
-  NEXT
+FUNCTION Options.chooseEmitter(BYREF F AS STRING, BYREF P AS STRING) AS EmitterIF PTR
+  VAR l = LEN(F)
+  IF l THEN
+    SELECT CASE UCASE(F)
+    CASE LEFT(          "C_SOURCE", l) : EmitTyp = C_SOURCE
+    CASE LEFT(     "FUNCTIONNAMES", l) : EmitTyp = FUNCTION_NAMES
+    CASE LEFT(   "GTKDOCTEMPLATES", l) : EmitTyp = GTK_DOC_TEMPLATES
+    CASE LEFT(  "DOXYGENTEMPLATES", l) : EmitTyp = DOXYGEN_TEMPLATES
+    CASE LEFT("SYNTAXHIGHLIGHTING", l) : EmitTyp = SYNTAX_REPAIR
+    CASE ELSE : EmitTyp = EXTERNAL
+    END SELECT
+  END IF
 
+  VAR r = NEW EmitterIF
 #IFDEF __FB_DOS__
   Errr &= ", no plugin support on DOS platform!"
 #ELSE
-  DllEmitter = DYLIBLOAD(f)
-  IF DllEmitter THEN
-    DIM ini AS FUNCTION CDECL() AS EmitterIF PTR = DYLIBSYMBOL(DllEmitter, "EMITTERINIT")
-    IF ini THEN EmitIF = ini() : EmitTyp = EXTERNAL : EXIT SUB
-    Errr &= ", no EMITTERINIT function in emitter " & F
-  END IF
-  Errr &= ", couldn't find plugin " & F
+  SELECT CASE AS CONST EmitTyp
+    CASE          C_SOURCE : csource_init(r)
+    CASE    FUNCTION_NAMES : callees_init(r)
+    CASE GTK_DOC_TEMPLATES : gtk_init(r)
+    CASE DOXYGEN_TEMPLATES : doxy_init(r)
+    CASE     SYNTAX_REPAIR : syntax_init(r)
+  CASE ELSE
+    DllEmitter = DYLIBLOAD(F)
+    IF 0 = DllEmitter THEN Errr &= ", couldn't load plugin " & F : EXIT SELECT
+    DIM ini AS FUNCTION CDECL(BYVAL AS EmitterIF PTR, BYREF AS STRING) AS EmitterIF PTR _
+          = DYLIBSYMBOL(DllEmitter, "EMITTERINIT")
+    IF 0 = ini THEN Errr &= ", no EMITTERINIT function in emitter " & F : EXIT SELECT
+    EmitIF = ini(r, P) : EmitTyp = EXTERNAL
+  END SELECT
 #ENDIF
-END SUB
+  RETURN r
+END FUNCTION
 
 
 /'* \brief Scan file names of given pattern

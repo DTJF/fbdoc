@@ -840,9 +840,16 @@ SUB c_CTOR CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-' place the handlers in the emitter interface
-WITH_NEW_EMITTER(EmitterTypes.C_SOURCE)
-     .Nam = "C_Source"
+
+/'* \brief FIXME
+\param P FIXME
+
+FIXME
+
+\since 0.4.0
+'/
+SUB csource_init(byval P as EmitterIF PTR)
+  WITH *p
   .Error_ = @c_error
 
    .Defi_ = @c_defi_
@@ -856,7 +863,8 @@ WITH_NEW_EMITTER(EmitterTypes.C_SOURCE)
    .Init_ = @c_Init
    .Exit_ = @c_exit
    .CTOR_ = @c_CTOR
-END WITH
+  END WITH
+END SUB
 
 
 /'* \brief Handler to exporting FreeBASIC source code
