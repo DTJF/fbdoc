@@ -598,8 +598,6 @@ SUB c_func_ CDECL(BYVAL P AS Parser PTR) ' ToDo: internal function calls for dia
                      if 0 = cfl                            then exit while
                      var p = i : i = INSTRREV(LOFN, !"\n", p)
                      if cna <> mid(LOFN, i + 1, p - i)     then exit while
-                     'var nam = mid(LOFN, i + 1, p - i)
-  'MSG_END("HEIR: " & nam & " -> " & classna & " -> " & .SubStr(.NamTok))
                      g = 0 : x += 2
                   end if
                 CASE ELSE : EXIT WHILE
@@ -607,21 +605,6 @@ SUB c_func_ CDECL(BYVAL P AS Parser PTR) ' ToDo: internal function calls for dia
                 cEmitComments(P, a)
                 IF g THEN Code(" " & wtype & MID(.Buf, x, l) & "();") _
                      ELSE Code(" " &         MID(.Buf, x, l) & "();")
-
-'SUB Parser.Include(BYVAL N AS STRING)
-  'WITH *OPT ' &Options* OPT;
-    'IF .RunMode = .GEANY_MODE THEN EXIT SUB
-
-    'VAR i = INSTRREV(N, SLASH)
-    'VAR fnam = .addPath(InPath, LEFT(N, i)) & MID(N, i + 1)
-''&OPT* dummy; Options.addPath();
-
-               'IF fl THEN Code(" " & wtype) ELSE Code(" ")
-                'Code(.SubStr(tt))
-                'FOR i AS LONG PTR = tt + 6 TO t step 6
-                  'Code("." & .SubStr(i))
-                'NEXT
-                'Code("();")
                 EXIT FOR
               END IF
             WEND
@@ -841,28 +824,28 @@ END SUB
 
 
 
-/'* \brief FIXME
-\param P FIXME
+/'* \brief Initialize the `C_Source` EmitterIF
+\param Emi The EmitterIF to initialize
 
 FIXME
 
 \since 0.4.0
 '/
-SUB csource_init(byval P as EmitterIF PTR)
-  WITH *p
-  .Error_ = @c_error
+SUB csource_init(byval Emi as EmitterIF PTR)
+  WITH *Emi
+  .Error_ = @c_error()
 
-   .Defi_ = @c_defi_
-   .Incl_ = @c_include
-   .Func_ = @c_func_
-   .Decl_ = @c_decl_
-   .Enum_ = @c_Block
-   .Unio_ = @c_Block
-   .Clas_ = @c_Block
+   .Defi_ = @c_defi_()
+   .Incl_ = @c_include()
+   .Func_ = @c_func_()
+   .Decl_ = @c_decl_()
+   .Enum_ = @c_Block()
+   .Unio_ = @c_Block()
+   .Clas_ = @c_Block()
 
-   .Init_ = @c_Init
-   .Exit_ = @c_exit
-   .CTOR_ = @c_CTOR
+   .Init_ = @c_Init()
+   .Exit_ = @c_exit()
+   .CTOR_ = @c_CTOR()
   END WITH
 END SUB
 

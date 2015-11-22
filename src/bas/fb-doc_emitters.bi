@@ -62,19 +62,19 @@ TYPE EmitterIF
 ' This is tricky code to make Doxygen document an interface:
 '&/* Doxygen shouldn't parse this ...
   AS EmitFunc _
-     Decl_ = @null_emitter _ '*< handler for `DECLARE`
-   , Func_ = @null_emitter _ '*< handler for `FUNCTION  SUB  PROPERTY  CONSTRUCTOR  DESTRUCTOR`
-   , Enum_ = @null_emitter _ '*< handler for `ENUM` blocks
-   , Unio_ = @null_emitter _ '*< handler for `UNION` blocks
-   , Clas_ = @null_emitter _ '*< handler for `TYPE  CLASS` blocks
-   , Defi_ = @null_emitter _ '*< handler for #`DEFINE`, #`MACRO`
-   , Incl_ = @null_emitter _ '*< handler for #`INCLUDE`
-   , Init_ = @null_emitter _ '*< handler for start-up
-  , Error_ = @null_emitter _ '*< handler for errors
-  , Empty_ = @null_emitter _ '*< handler for empty Geany block
-   , Exit_ = @null_emitter _ '*< handler for end-up
-   , CTOR_ = @null_emitter _ '*< CONSTRUCTOR for emitter
-   , DTOR_ = @null_emitter _ '*< DESTRUCTOR for emitter
+     Decl_ = @null_emitter() _ '*< handler for `DECLARE`
+   , Func_ = @null_emitter() _ '*< handler for `FUNCTION  SUB  PROPERTY  CONSTRUCTOR  DESTRUCTOR`
+   , Enum_ = @null_emitter() _ '*< handler for `ENUM` blocks
+   , Unio_ = @null_emitter() _ '*< handler for `UNION` blocks
+   , Clas_ = @null_emitter() _ '*< handler for `TYPE  CLASS` blocks
+   , Defi_ = @null_emitter() _ '*< handler for #`DEFINE`, #`MACRO`
+   , Incl_ = @null_emitter() _ '*< handler for #`INCLUDE`
+   , Init_ = @null_emitter() _ '*< handler for start-up
+  , Error_ = @null_emitter() _ '*< handler for errors
+  , Empty_ = @null_emitter() _ '*< handler for empty Geany block
+   , Exit_ = @null_emitter() _ '*< handler for end-up
+   , CTOR_ = @null_emitter() _ '*< CONSTRUCTOR for emitter
+   , DTOR_ = @null_emitter() _ '*< DESTRUCTOR for emitter
 '&... but the following pseudo inline members instead */
 
 '*function called before parsing a source code

@@ -113,20 +113,20 @@ END SUB
 
 
 
-/'* \brief FIXME
-\param P FIXME
+/'* \brief Initialize the `FunctionNames` EmitterIF
+\param Emi The EmitterIF to initialize
 
 FIXME
 
 \since 0.4.0
 '/
-SUB callees_init(BYVAL P AS EmitterIF PTR)
-  WITH *P
-    .Clas_ = @callees_class_
-    .Unio_ = @callees_class_
-    .Func_ = @callees_func_
-    .Decl_ = @callees_decl_
-    .Incl_ = @callees_include
+SUB callees_init(BYVAL Emi AS EmitterIF PTR)
+  WITH *Emi
+    .Clas_ = @callees_class_()
+    .Unio_ = @callees_class_()
+    .Func_ = @callees_func_()
+    .Decl_ = @callees_decl_()
+    .Incl_ = @callees_include()
   END WITH
 END SUB
 

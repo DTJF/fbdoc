@@ -12,86 +12,153 @@ parser for this input.
 Before you can use this emitter, you have to compile it first, using
 the command
 
-\code fbc -dylib Plugin.bas \endcode
+~~~{.sh}
+fbc -dylib empty.bas
+~~~
 
 The result is a binary called
 
-  - libdll_emitter.so  (LINUX)
-  - libdll_emitter.dll (windows)
+  - libempty.so  (LINUX)
+  - libempty.dll (windows)
 
 There's no way to compile or use an external emitter on DOS since
 DOS doesn't support dynamic linked libraries.
 
-To use this emitter in \Proj set its name (without the suffix .bas)
-just as an internal name (,so don't name your customized emitter
-similar to an internal emitter name).
+To use this emitter in \Proj set its name (without the suffix .bas) as
+parameter to option `-e`. Ie. the emitter output for the context of
+this file can get written to a text file by
 
-Ie. the emitter output for the context of this file can be viewed in
-the terminal by
 ~~~{.sh}
-./fb-doc --emitter "Plugin" Plugin.bas
+./fb-doc --emitter "empty" empty.bas > test.txt
 ~~~
-(LINUX example) and will generate the following output:
+
+(LINUX example) and this will generate the following output in file
+`test.txt`:
 
 \verbatim
-DLL_INIT
-DLL_INCLUDE
-DLL_INCLUDE
-DLL_FUNCTION
-DLL_FUNCTION
-DLL_FUNCTION
-DLL_FUNCTION
-DLL_FUNCTION
-DLL_FUNCTION
-DLL_FUNCTION
-DLL_FUNCTION
-DLL_FUNCTION
-DLL_FUNCTION
-DLL_FUNCTION
-DLL_FUNCTION
-DLL_EXIT
+
+EMPTY_CTOR
+EMPTY_INIT
+EMPTY_INCLUDE: 77 "../bas/fb-doc_parser.bi"
+EMPTY_FUNCTION: 89 empty_declare
+EMPTY_FUNCTION: 104 empty_function
+EMPTY_FUNCTION: 116 empty_enum
+EMPTY_FUNCTION: 128 empty_union
+EMPTY_FUNCTION: 140 empty_class
+EMPTY_FUNCTION: 152 empty_define
+EMPTY_FUNCTION: 168 empty_include
+EMPTY_FUNCTION: 180 empty_init
+EMPTY_FUNCTION: 192 empty_error
+EMPTY_FUNCTION: 204 empty_empty
+EMPTY_FUNCTION: 216 empty_exit
+EMPTY_FUNCTION: 228 empty_CTOR
+EMPTY_FUNCTION: 240 empty_DTOR
+EMPTY_FUNCTION: 287 EmitterInit
+EMPTY_EXIT
+EMPTY_DTOR
 \endverbatim
 
+- The constructor (`EMPTY_CTOR`) is called once at the start after loading the plugin.
+- The `EMPTY_INIT` function is called at the start of each file (`#INCLUDE`).
+- The middle part contains `EMPTY_FUNCTION` calls here (, since the source contains only `SUB`s and `FUNCTION`s).
+- The `EMPTY_EXIT` function is called at the end of each file (`#INCLUDE`).
+- The destructor (`EMPTY_DTOR`) is called once after finishing all input.
+
+Test the plugin with other input files, check also option `-t` to
+follow a source tree.
+
+\note  \Proj checks for internal names first, so don't name your
+       customized emitter similar to an internal emitter name.
+
+\since 0.2.0
 '/
 
-#INCLUDE ONCE "../bas/fb-doc_parser.bi"   ' declaration of the Parser members (not used here)
+#INCLUDE ONCE "../bas/fb-doc_parser.bi"
 
 
-'* \brief Emitter called when the Parser is at a variable declaration
-SUB dll_declare CDECL(BYVAL P AS Parser PTR)
+/'* \brief Emitter called when the Parser is at a variable declaration
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_declare CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__ & ": " & P->LineNo & " " & P->SubStr(P->NamTok))
 END SUB
 
-'* \brief Emitter called when the Parser is on top of a function body
-SUB dll_function CDECL(BYVAL P AS Parser PTR)
+
+/'* \brief Emitter called when the Parser is on top of a function body
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_function CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     VAR nam = .SubStr(IIF(.NamTok[3] = .TOK_DOT, .NamTok + 6, .NamTok))
     Code(NL & __FUNCTION__ & ": " & .LineNo & " " & nam)
   END WITH
 END SUB
 
-'* \brief Emitter called when the Parser is at the start of a ENUM block
-SUB dll_enum CDECL(BYVAL P AS Parser PTR)
+
+/'* \brief Emitter called when the Parser is at the start of a ENUM block
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_enum CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__)
 END SUB
 
-'* \brief Emitter called when the Parser is at the start of a UNION block
-SUB dll_union CDECL(BYVAL P AS Parser PTR)
+
+/'* \brief Emitter called when the Parser is at the start of a UNION block
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_union CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__)
 END SUB
 
-'* \brief Emitter called when the Parser is at the start of a TYPE block
-SUB dll_class CDECL(BYVAL P AS Parser PTR)
+
+/'* \brief Emitter called when the Parser is at the start of a TYPE block
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_class CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__)
 END SUB
 
-'* \brief Emitter called when the Parser is at an #`DEFINE` line or at the start of a #`MACRO`
-SUB dll_define CDECL(BYVAL P AS Parser PTR)
+
+/'* \brief Emitter called when the Parser is at an #`DEFINE` line or at the start of a #`MACRO`
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_define CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__)
 END SUB
 
-'* \brief Emitter called when the Parser is at an #`INCLUDE` line
-SUB dll_include CDECL(BYVAL P AS Parser PTR)
+
+/'* \brief Emitter called when the Parser is at an #`INCLUDE` line
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_include CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     VAR nam = .SubStr(.NamTok)
     Code(NL & __FUNCTION__ & ": " & .LineNo & " " & nam)
@@ -99,71 +166,113 @@ SUB dll_include CDECL(BYVAL P AS Parser PTR)
   END WITH
 END SUB
 
-'* \brief Emitter called before the input gets parsed
-SUB dll_init CDECL(BYVAL P AS Parser PTR)
+
+/'* \brief Emitter called before the input gets parsed
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_init CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__)
 END SUB
 
-'* \brief Emitter called for an error
-SUB dll_error CDECL(BYVAL P AS Parser PTR)
+
+/'* \brief Emitter called for an error
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_error CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__)
 END SUB
 
-'* \brief Emitter called for an empty block in mode `--geany-mode`
-SUB dll_empty CDECL(BYVAL P AS Parser PTR)
+
+/'* \brief Emitter called for an empty block in mode `--geany-mode`
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_empty CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__)
 END SUB
 
-'* \brief Emitter called after the input got parsed
-SUB dll_exit CDECL(BYVAL P AS Parser PTR)
+
+/'* \brief Emitter called after the input got parsed
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_exit CDECL(BYVAL P AS Parser PTR)
+  Code(NL & __FUNCTION__)
+END SUB
+
+
+/'* \brief Emitter called before the parser gets created and the input gets parsed
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_CTOR CDECL(BYVAL P AS Parser PTR)
+  Code(NL & __FUNCTION__)
+END SUB
+
+
+/'* \brief Emitter called after the input got parsed and the parser got deleted
+\param P The parser calling this emitter
+
+FIXME
+
+\since 0.2.0
+'/
+SUB empty_DTOR CDECL(BYVAL P AS Parser PTR)
   Code(NL & __FUNCTION__ & NL)
 END SUB
 
-'* \brief Emitter called before the parser gets created and the input gets parsed
-SUB dll_CTOR CDECL(BYVAL P AS Parser PTR)
-  Code(NL & __FUNCTION__)
-END SUB
 
-'* \brief Emitter called after the input got parsed and the parser got deleted
-SUB dll_DTOR CDECL(BYVAL P AS Parser PTR)
-  Code(NL & __FUNCTION__)
-END SUB
-
-
-/'* \brief Initialize the emitter interface
+/'* \brief Initialize the EmitterIF and evaluate parameters
 \param Emi The newly created EmitterIF to fill with our callbacks
 \param Par Additional command line parameters, not parsed by \Proj
 
-When the user required to load this plugin by option `-e "empty"`, this
+When the user requires to load this plugin by option `-e "empty"`, this
 SUB gets called to initialize the EmitterIF. Here, all default
-callbacks (= null_emitter() ) get replaced by custom functions. Here
-those functions just report all the \Proj function calls, in order to
-make the parsing process transparent.
+callbacks (= null_emitter() ) get replaced by custom functions. Those
+functions just report all the \Proj function calls, in order to make
+the parsing process transparent.
 
 The second parameter `Par` is a list of all command line parameters
 which are unknown to \Proj. Those options get collected in a string,
 separated by tabulators (`!"\n"), and starting by a tabulator. This SUB
-extracts and avaluates the known parameters. When this string isn't
-empty at the end of this SUB, the calling \Proj program stops execution
-by an `unknown options` error.
+extracts and evaluates its parameters from the string. When the string
+isn't empty at the end of this SUB, the calling \Proj program stops
+execution by an `unknown options` error.
 
 \since 0.4.0
 '/
 SUB EmitterInit CDECL(BYVAL Emi AS EmitterIF PTR, BYREF Par AS STRING) EXPORT
   WITH *Emi
-    .Decl_ = @dll_declare
-    .Func_ = @dll_function
-    .Enum_ = @dll_enum
-    .Unio_ = @dll_union
-    .Clas_ = @dll_class
-    .Defi_ = @dll_define
-    .Incl_ = @dll_include
-    .Init_ = @dll_init
-   .Error_ = @dll_error
-   .Empty_ = @dll_empty
-    .Exit_ = @dll_exit
-    .CTOR_ = @dll_CTOR
-    .DTOR_ = @dll_DTOR
+    .Decl_ = @empty_declare()
+    .Func_ = @empty_function()
+    .Enum_ = @empty_enum()
+    .Unio_ = @empty_union()
+    .Clas_ = @empty_class()
+    .Defi_ = @empty_define()
+    .Incl_ = @empty_include()
+    .Init_ = @empty_init()
+   .Error_ = @empty_error()
+   .Empty_ = @empty_empty()
+    .Exit_ = @empty_exit()
+    .CTOR_ = @empty_CTOR()
+    .DTOR_ = @empty_DTOR()
   END WITH
 
   VAR a = INSTR(Par, !"\t-empty=")           ' get out parameter, if any

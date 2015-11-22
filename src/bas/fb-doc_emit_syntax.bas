@@ -305,7 +305,7 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
 
         IF LEN(DoxyFiles) > 1 THEN MSG_CONT("scanned") : do_files() _
                               ELSE MSG_CONT("scanned (no files)")
-      END IF
+      END IF '&html_eol();html_specials();Highlighter::prepare_html();
     END IF
     OPT->InRecursiv = 0
     IF GenTex THEN
@@ -419,7 +419,7 @@ SUB Highlighter.do_files()
           CLOSE #OPT->Ocha
           KILL(in_fnam)
           NAME(in_fnam & "_", in_fnam)
-          MSG_CONT(Pars->ErrMsg)
+          if len(Pars->ErrMsg) then MSG_CONT(Pars->ErrMsg)
         ELSE
           CLOSE #Ifnr
           CLOSE #OPT->Ocha
@@ -1515,19 +1515,18 @@ SUB synt_func_ CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-
-/'* \brief FIXME
-\param P FIXME
+/'* \brief Initialize the `SyntaxHighlighting` EmitterIF
+\param Emi The EmitterIF to initialize
 
 FIXME
 
 \since 0.4.0
 '/
-SUB syntax_init(BYVAL P AS EmitterIF PTR)
-  WITH *P
-    .Init_ = @synt_init
-    .Exit_ = @synt_exit
-    .Incl_ = @synt_incl
-    .Func_ = @synt_func_
+SUB syntax_init(BYVAL Emi AS EmitterIF PTR)
+  WITH *Emi
+    .Init_ = @synt_init()
+    .Exit_ = @synt_exit()
+    .Incl_ = @synt_incl()
+    .Func_ = @synt_func_()
   END WITH
 END SUB

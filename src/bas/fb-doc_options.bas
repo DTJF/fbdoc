@@ -41,8 +41,8 @@ CONSTRUCTOR Options()
   Efnr = FREEFILE
   IF OPEN ERR (AS #Efnr) THEN ?PROJ_NAME & ": " & "couldn't open STDERR" : EXIT CONSTRUCTOR
            Types = FB_STYLE
-  CreateFunction = @cppCreateFunction
-  CreateVariable = @cppCreateTypNam
+  CreateFunction = @cppCreateFunction()
+  CreateVariable = @cppCreateTypNam()
 END CONSTRUCTOR
 
 
@@ -127,8 +127,8 @@ FUNCTION Options.parseCLI() AS RunModes
       CASE "-a", "--asterix" : Asterix = 1
       CASE "-c", "--cstyle"
                  Types = C_STYLE
-        CreateFunction = @cCreateFunction
-        CreateVariable = @cCreateTypNam
+        CreateFunction = @cCreateFunction()
+        CreateVariable = @cCreateTypNam()
       CASE "-d", "--doc-comments" : Docom = 1
       CASE "-t", "--tree" : InTree = 1
 
@@ -419,7 +419,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
   CASE DEF_MODE
     MSG_LINE(Fnam)
     Pars->File_(Fnam, InTree)
-    MSG_CONT(Pars->ErrMsg)
+    if len(Pars->ErrMsg) then MSG_CONT(Pars->ErrMsg)
   CASE SYNT_MODE
     VAR nix = NEW Highlighter(Pars)
     nix->doDoxy(Fnam)
@@ -433,7 +433,10 @@ SUB Options.doFile(BYREF Fnam AS STRING)
         IF 0 = Ocha THEN MSG_CONT("error (couldn't write)") : EXIT SUB
         MSG_CONT("opened")
       END IF
-      Pars->File_(Fnam, InTree) : MSG_LINE(Fnam) : MSG_CONT(Pars->ErrMsg) : EXIT SUB
+      MSG_LINE(Fnam)
+      Pars->File_(Fnam, InTree)
+      if len(Pars->ErrMsg) then MSG_CONT(Pars->ErrMsg)
+      EXIT SUB
     END IF
 
     VAR doxy = NEW Doxyfile(Fnam) _
@@ -511,7 +514,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       ELSE
         Pars->File_(Fnam, InTree)
         CLOSE #Ocha
-        MSG_LINE(Fnam) : MSG_CONT(Pars->ErrMsg)
+        MSG_LINE(Fnam) : if len(Pars->ErrMsg) then MSG_CONT(Pars->ErrMsg)
       END IF
     END IF
   END SELECT

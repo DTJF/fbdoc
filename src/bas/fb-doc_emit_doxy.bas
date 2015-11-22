@@ -235,26 +235,26 @@ END SUB
 
 
 
-/'* \brief FIXME
-\param P FIXME
+/'* \brief Initialize the `DoxygenTemplates` EmitterIF
+\param Emi The EmitterIF to initialize
 
 FIXME
 
 \since 0.4.0
 '/
-SUB doxy_init(BYVAL P AS EmitterIF PTR)
-  WITH *P
-    .Error_ = @c_error '           we use the standard error emitter here
+SUB doxy_init(BYVAL Emi AS EmitterIF PTR)
+  WITH *Emi
+    .Error_ = @c_error() '           we use the standard error emitter here
 
-     .Func_ = @doxy_func_
-     .Decl_ = @doxy_decl_
-     .Defi_ = @doxy_defi_
-     .Enum_ = @doxy_Block
-     .Unio_ = @doxy_Block
-     .Clas_ = @doxy_Block
-     .Init_ = @geany_init '       ... and the Geany init / exit functions
-     .Exit_ = @geany_exit
-    .Empty_ = @doxy_empty
+     .Func_ = @doxy_func_()
+     .Decl_ = @doxy_decl_()
+     .Defi_ = @doxy_defi_()
+     .Enum_ = @doxy_Block()
+     .Unio_ = @doxy_Block()
+     .Clas_ = @doxy_Block()
+     .Init_ = @geany_init() '       ... and the Geany init / exit functions
+     .Exit_ = @geany_exit()
+    .Empty_ = @doxy_empty()
   END WITH
 END SUB
 

@@ -1109,7 +1109,6 @@ SUB Parser.File_(BYREF File AS STRING, BYVAL Tree AS INTEGER)
   IF OPT->InTree THEN InPath = LEFT(File, INSTRREV(File, SLASH))
   Fnam = File
   pre_parse()
-  'ErrMsg = "done"
 END SUB
 
 
