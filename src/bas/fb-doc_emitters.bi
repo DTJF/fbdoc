@@ -27,7 +27,6 @@ TYPE AS Parser Parser_
 /'* \brief Function to emit a piece of code
 \param P the parser calling this handler '/
 TYPE EmitFunc AS SUB CDECL(BYVAL AS Parser_ PTR)
-'TYPE EmitFunc AS SUB CDECL(BYVAL AS Parser PTR)
 
 DECLARE SUB null_emitter CDECL(BYVAL AS Parser_ PTR)
 
@@ -58,9 +57,8 @@ source for the Doxygen back-end and produce the desired output for
 the documentation.
 
 '/
+'&typedef EmitterIF* EmitterIF_PTR;
 TYPE EmitterIF
-  'AS STRING _
-       'Nam = ""  '*< the emitters name
 ' This is tricky code to make Doxygen document an interface:
 '&/* Doxygen shouldn't parse this ...
   AS EmitFunc _

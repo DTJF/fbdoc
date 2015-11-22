@@ -86,7 +86,7 @@ END FUNCTION
 \returns the RunMode
 
 This function parses the command line. Options and its parameter (if
-required) get read and the file specifier(s) are listred in the
+required) get read and the file specifier(s) are listed in the
 variable \ref InFiles, separated by new line characters.
 
 The function returns the value of \ref RunMode. In case of an error
@@ -94,7 +94,10 @@ the RunMode is \ref ERROR_MESSAGE and the variable \ref Errr
 contains an message text. \Proj stops execution in that case.
 
 Loading an external emitter plugin must be done after scanning the
-COMMAND strings because DYLIBLOAD destroys the COMMAND array.
+COMMAND strings because DYLIBLOAD destroys the COMMAND array. All
+unknown parameters get collected in the variable `par`, separated by
+tabulators (`!"\t"`), in order to get passed to the plugin
+initialisation function.
 
 '/
 FUNCTION Options.parseCLI() AS RunModes
@@ -143,7 +146,6 @@ FUNCTION Options.parseCLI() AS RunModes
       CASE "-v", "--version" : RETURN VERSION_MESSAGE
 
       CASE ELSE : par &= !"\t" & COMMAND(i)
-        'ERROUT("unknown option: " & COMMAND(i))
       END SELECT
     CASE ELSE
       SELECT CASE AS CONST ASC(COMMAND(i))
@@ -165,16 +167,24 @@ END FUNCTION
 
 /'* \brief Choose a named emitter, if possible
 \param F the name of the emitter to search for
+\param P parameters to pass to an external emitter (plugin)
 
 This function checks for an emitter specified by the parameter F. The
-check is not case-sensitve and is done for a complete emitter name
-as well as for a fragment. So it's enough to specify some of the
-start characters of the emitter name (ie. *dox* instead of \em
-DoxygenTemplates).
+check is not case-sensitve and is done for a complete emitter name as
+well as for a fragment. So it's enough to specify some of the start
+characters of the emitter name (ie. `dox` instead of
+`DoxygenTemplates`).
 
-In case of no match in any internal \ref EmitterIF::Nam this SUB tries
-to load an external emitter. If this fails an error message gets
-created and \Proj stops execution.
+In case of no match for any internal emitter name this SUB tries to
+load an external emitter (plugin), located in the current folder. See
+\ref PagExtend for details. If this fails an error message gets created
+and \Proj stops execution.
+
+Parameter `P` contains all command line options that are unknown to
+\Proj. Those options get passed to the plugins function EmitterInit().
+There, all known options should get extracted and evaluated. When this
+string is not empty after the plugin initialization, \Proj stops
+execution by an `unknown options` error.
 
 '/
 FUNCTION Options.chooseEmitter(BYREF F AS STRING, BYREF P AS STRING) AS EmitterIF PTR
@@ -204,7 +214,7 @@ FUNCTION Options.chooseEmitter(BYREF F AS STRING, BYREF P AS STRING) AS EmitterI
     DllEmitter = DYLIBLOAD(F)
     IF 0 = DllEmitter THEN Errr &= ", couldn't load plugin " & F : EXIT SELECT
     DIM ini AS FUNCTION CDECL(BYVAL AS EmitterIF PTR, BYREF AS STRING) AS EmitterIF PTR _
-          = DYLIBSYMBOL(DllEmitter, "EMITTERINIT")
+          = DYLIBSYMBOL(DllEmitter, "EMITTERINIT") '&EmitterInit();
     IF 0 = ini THEN Errr &= ", no EMITTERINIT function in emitter " & F : EXIT SELECT
     EmitIF = ini(r, P) : EmitTyp = EXTERNAL
   END SELECT
@@ -388,11 +398,12 @@ SUB Options.FileModi()
     END SELECT : i += 1
   LOOP
 
+  EmitIF->DTOR_(Pars)
   SELECT CASE AS CONST RunMode
-  CASE LIST_MODE : IF Ocha THEN CLOSE #Ocha : MSG_LINE(CALLEES_FILE) : MSG_END("written")
+  CASE LIST_MODE : IF Ocha THEN CLOSE #Ocha : MSG_LINE(CALLEES_FILE) : MSG_CONT("written")
   CASE ELSE      : IF Ocha THEN CLOSE #Ocha
   END SELECT
-  EmitIF->DTOR_(Pars)
+  MSG_END("")
 END SUB
 
 
@@ -408,7 +419,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
   CASE DEF_MODE
     MSG_LINE(Fnam)
     Pars->File_(Fnam, InTree)
-    MSG_END(Pars->ErrMsg)
+    MSG_CONT(Pars->ErrMsg)
   CASE SYNT_MODE
     VAR nix = NEW Highlighter(Pars)
     nix->doDoxy(Fnam)
@@ -419,10 +430,10 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       IF 0 = Ocha THEN
         MSG_LINE(OutPath & CALLEES_FILE)
         Ocha = startLFN(OutPath)
-        IF 0 = Ocha THEN MSG_END("error (couldn't write)") : EXIT SUB
-        MSG_END("opened")
+        IF 0 = Ocha THEN MSG_CONT("error (couldn't write)") : EXIT SUB
+        MSG_CONT("opened")
       END IF
-      Pars->File_(Fnam, InTree) : MSG_LINE(Fnam) : MSG_END(Pars->ErrMsg) : EXIT SUB
+      Pars->File_(Fnam, InTree) : MSG_LINE(Fnam) : MSG_CONT(Pars->ErrMsg) : EXIT SUB
     END IF
 
     VAR doxy = NEW Doxyfile(Fnam) _
@@ -432,39 +443,39 @@ SUB Options.doFile(BYREF Fnam AS STRING)
 
     MSG_LINE(Fnam)
     IF 0 = doxy->Length THEN
-      MSG_END(doxy->Errr) : DELETE doxy
+      MSG_CONT(doxy->Errr) : DELETE doxy
       MSG_LINE("Doxyfile")
-      IF CHDIR(Fnam) THEN MSG_END("error (couldn't change directory)") : EXIT SUB
+      IF CHDIR(Fnam) THEN MSG_CONT("error (couldn't change directory)") : EXIT SUB
       doxy = NEW Doxyfile("Doxyfile")
-      IF 0 = doxy->Length THEN MSG_END(doxy->Errr) : DELETE doxy : EXIT SUB
+      IF 0 = doxy->Length THEN MSG_CONT(doxy->Errr) : DELETE doxy : EXIT SUB
     END IF
 
     InRecursiv = IIF(doxy->Tag(RECURSIVE) = "YES", 1, 0)
     VAR in_path = addPath(StartPath, doxy->Tag(INPUT_TAG))
     DELETE doxy
     IF CHDIR(in_path) THEN
-      MSG_END("error (couldn't change to " & in_path & ")")
+      MSG_CONT("error (couldn't change to " & in_path & ")")
     ELSE
       patt = scanFiles("*.bas", "") & scanFiles("*.bi", "")
       IF 0 = LEN(patt) THEN
-        MSG_END("error (no input files in " & in_path & ")")
+        MSG_CONT("error (no input files in " & in_path & ")")
       ELSE
-        MSG_END("scanned") _
+        MSG_CONT("scanned") _
 
         MSG_LINE(StartPath & CALLEES_FILE)
         Ocha = startLFN(StartPath)
         IF 0 = Ocha THEN
-          MSG_END("error (couldn't write)")
+          MSG_CONT("error (couldn't write)")
         ELSE
-          MSG_END("opened")
+          MSG_CONT("opened")
           VAR a = 1, e = a, l = LEN(patt)
           WHILE a < l
             e = INSTR(a + 1, patt, !"\n")
             Pars->File_(MID(patt, a, e - a), InTree)
-            MSG_LINE(MID(patt, a, e - a)) : MSG_END("scanned")
+            MSG_LINE(MID(patt, a, e - a)) : MSG_CONT("scanned")
             a = e + 1
           WEND
-          CLOSE #Ocha : MSG_LINE(StartPath & CALLEES_FILE) : MSG_END("written")
+          CLOSE #Ocha : MSG_LINE(StartPath & CALLEES_FILE) : MSG_CONT("written")
         END IF
       END IF
     END IF
@@ -500,7 +511,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       ELSE
         Pars->File_(Fnam, InTree)
         CLOSE #Ocha
-        MSG_LINE(Fnam) : MSG_END(Pars->ErrMsg)
+        MSG_LINE(Fnam) : MSG_CONT(Pars->ErrMsg)
       END IF
     END IF
   END SELECT

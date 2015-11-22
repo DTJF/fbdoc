@@ -20,11 +20,14 @@ synt_init
 synt_exit
 synt_incl
 synt_func_
+syntax_init
 startLFN
+callees_DTOR
 callees_decl_
 callees_class_
 callees_func_
 callees_include
+callees_init
 cEmitComments
 cppNam
 cNam
@@ -47,6 +50,7 @@ c_error
 c_Init
 c_exit
 c_CTOR
+csource_init
 cEmitSource
 geany_init
 geany_exit
@@ -58,6 +62,7 @@ gtk_func_
 gtk_emitBlockNames
 gtk_Block
 gtk_empty
+gtk_init
 doxy_entryListPara
 doxy_func_
 doxy_decl_
@@ -65,6 +70,7 @@ doxy_defi_
 doxy_emitBlockNames
 doxy_Block
 doxy_empty
+doxy_init
 Doxyfile.Tag
 Doxyfile.Search
 Parser.skipOverComma
@@ -121,6 +127,7 @@ dll_empty
 dll_exit
 dll_CTOR
 dll_DTOR
+EmitterInit
 doNLiterals
 doCType
 py_entryListPara
@@ -139,3 +146,4 @@ py_empty
 py_exit
 py_CTOR
 py_DTOR
+EmitterInit

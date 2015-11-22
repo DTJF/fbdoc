@@ -1109,7 +1109,7 @@ SUB Parser.File_(BYREF File AS STRING, BYVAL Tree AS INTEGER)
   IF OPT->InTree THEN InPath = LEFT(File, INSTRREV(File, SLASH))
   Fnam = File
   pre_parse()
-  ErrMsg = "done"
+  'ErrMsg = "done"
 END SUB
 
 
@@ -1250,23 +1250,25 @@ SUB Parser.Include(BYVAL N AS STRING)
     VAR i = INSTRREV(N, SLASH)
     VAR fnam = .addPath(InPath, LEFT(N, i)) & MID(N, i + 1)
 
-    MSG_LINE(fnam)
     IF DivTok ANDALSO INSTR(.FileIncl, !"\n" & fnam & !"\r") THEN _
-      MSG_END("skipped (already done)") : EXIT SUB
+      MSG_LINE(fnam) : _
+      MSG_CONT("skipped (already done)") : EXIT SUB
 
     VAR fnr = FREEFILE
     IF OPEN(fnam FOR INPUT AS #fnr) THEN _
-      MSG_END("skipped (couldn't open)") : EXIT SUB
+      MSG_LINE(fnam) : _
+      MSG_CONT("skipped (couldn't open)") : EXIT SUB
     CLOSE #fnr
     .FileIncl &= !"\n" & fnam & !"\r"
 
     VAR pars_old = .Pars : .Pars = NEW Parser(.EmitIF)
     .Pars->UserTok = pars_old->UserTok
 
-    MSG_END("working ...")
+    MSG_CONT("include ...")
     .Level += 1
     .doFile(fnam)
     .Level -= 1
+    MSG_CONT("done")
 
     DELETE .Pars : .Pars = pars_old
   END WITH

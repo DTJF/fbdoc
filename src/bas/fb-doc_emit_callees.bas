@@ -25,6 +25,21 @@ FUNCTION startLFN(BYREF Path AS STRING) AS INTEGER
   RETURN fnr
 END FUNCTION
 
+
+'SUB callees_CTOR CDECL(BYVAL P AS Parser PTR)
+      'IF 0 = Ocha THEN
+        'MSG_LINE(OutPath & CALLEES_FILE)
+        'Ocha = startLFN(OutPath)
+        'IF 0 = Ocha THEN MSG_END("error (couldn't write)") : EXIT SUB
+        'MSG_END("opened")
+      'END IF
+'END SUB
+
+
+SUB callees_DTOR CDECL(BYVAL P AS Parser PTR)
+END SUB
+
+
 /'* \brief Emitter to generate a declaration line
 \param P the parser calling this emitter
 
@@ -55,7 +70,7 @@ ENUM`). It starts the scanning process in the block.
 '/
 SUB callees_class_ CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
-    IF OPT->AllCallees THEN .parseBlockTyUn(@callees_decl_)
+    IF OPT->AllCallees THEN .parseBlockTyUn(@callees_decl_())
   END WITH
 END SUB
 

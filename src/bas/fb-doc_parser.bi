@@ -53,6 +53,7 @@ When \Proj follows the source tree (option `--tree`), the
 function \ref EmitterIF::Incl_() creates a new Parser for each file.
 
 '/
+'&typedef Parser* Parser_PTR;
 TYPE Parser
 Public:
 

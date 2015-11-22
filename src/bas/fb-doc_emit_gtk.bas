@@ -88,8 +88,7 @@ SUB gtk_decl_ CDECL(BYVAL P AS Parser PTR)
     END IF
 
     IF 0 = .FunTok THEN gtk_emit_Name(P) _
-                   ELSE IF .ParTok THEN .parseListPara(@gtk_emit_Name)
-'&gtk_emit_Name(); // pseudo function call (helps Doxygen documenting the interface)
+                   ELSE IF .ParTok THEN .parseListPara(@gtk_emit_Name())
 
     IF *.CurTok > .TOK_EOS THEN EXIT SUB
     Code(GTK_END)
@@ -114,8 +113,7 @@ SUB gtk_func_ CDECL(BYVAL P AS Parser PTR) ' !!! ToDo member functions
     VAR t = .TypTok
     cEmitSource(P, .StaTok[1])
     Code(GTK_START & .SubStr(.NamTok) & ":")
-    IF .ParTok THEN .parseListPara(@gtk_emit_Name)
-'&gtk_emit_Name(); // pseudo function call (helps Doxygen documenting the interface)
+    IF .ParTok THEN .parseListPara(@gtk_emit_Name())
 
     Code( _
         NL & _
@@ -143,10 +141,9 @@ SUB gtk_emitBlockNames CDECL(BYVAL P AS Parser PTR)
     CASE .TOK_PRIV, .TOK_PROT ': .SrcBgn = 0 ' !!! ToDo: hide private?
     CASE .TOK_PUBL            ': .SrcBgn = 1
     CASE .TOK_CLAS, .TOK_TYPE, .TOK_UNIO
-      .parseBlockTyUn(@gtk_emitBlockNames)
-'&gtk_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
+      .parseBlockTyUn(@gtk_emitBlockNames())
     CASE .TOK_ENUM
-      .parseBlockEnum(@gtk_emit_Name)
+      .parseBlockEnum(@gtk_emit_Name())
     CASE ELSE : IF 0 = .NamTok THEN EXIT SUB
       gtk_emit_Name(P)
     END SELECT
@@ -169,10 +166,9 @@ SUB gtk_Block CDECL(BYVAL P AS Parser PTR)
     IF LEN(.BlockNam) THEN Code(.BlockNam & ":")
 
     SELECT CASE AS CONST *.Tk1
-    CASE .TOK_ENUM : .parseBlockEnum(@gtk_emit_Name)
-    CASE ELSE :      .parseBlockTyUn(@gtk_emitBlockNames)
+    CASE .TOK_ENUM : .parseBlockEnum(@gtk_emit_Name())
+    CASE ELSE :      .parseBlockTyUn(@gtk_emitBlockNames())
     END SELECT
-'&gtk_emit_Name(); gtk_emitBlockNames(); // pseudo function calls (help Doxygen documenting the interface)
 
     Code(GTK_END)
   END WITH

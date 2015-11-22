@@ -41,6 +41,7 @@ Currently only the first entry in a tags gets parsed (just the first
 parameter of a lists).
 
 '/
+'&typedef Doxyfile* Doxyfile_PTR; /**< Doxygen internal (ignore this). */
 TYPE Doxyfile
   AS INTEGER Length   '*< the length of the buffer
   AS UBYTE PTR Buffer '*< the buffer data

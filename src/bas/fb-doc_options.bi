@@ -16,7 +16,10 @@ execution.
 #DEFINE ERROUT(_T_) PRINT #OPT->Efnr, PROJ_NAME & ": " & _T_
 
 /'* \brief Emit a message to STDERR '/
-#DEFINE MSG_LINE(_T_) PRINT #OPT->Efnr, SPC(38 - LEN(_T_)); _T_; " --> ";
+#DEFINE MSG_LINE(_T_) PRINT #OPT->Efnr, NL; SPC(38 - LEN(_T_)); _T_; " -->";
+
+/'* \brief Emit a message to STDERR '/
+#DEFINE MSG_CONT(_T_) PRINT #OPT->Efnr, " " & _T_;
 
 /'* \brief Emit a message to STDERR '/
 #DEFINE MSG_END(_T_) PRINT #OPT->Efnr, _T_
@@ -33,6 +36,7 @@ structure is global, the settings are available in all internal
 modules.
 
 '/
+'&typedef Options* Options_PTR; /**< Doxygen internal (ignore this). */
 TYPE Options
 /'* \brief \Proj operation modes. '/
   ENUM RunModes
@@ -158,10 +162,8 @@ TYPE Options
   DECLARE FUNCTION checkDir(BYREF AS STRING) AS INTEGER
   DECLARE FUNCTION scanFiles(BYREF AS STRING, BYREF AS STRING) AS STRING
   DECLARE FUNCTION addPath(BYREF AS STRING, BYREF AS STRING) AS STRING
-
 END TYPE
 
 
 /'* \brief The global struct for all parameters read from the command line '/
 COMMON SHARED AS Options PTR OPT
-'&typedef struct Options* Options_PTR; /**< Doxygen internal (ignore this). */

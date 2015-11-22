@@ -11,6 +11,8 @@ ENDIF()
 FB_DOCUMENTATION(
 BAS_SRC
   ${BAS_SRC}
+  ../src/plugins/empty.bas
+  ../src/plugins/py_ctypes.bas
 DEPENDS
   ../CMakeLists.txt
   ../ReadMe.md
@@ -28,4 +30,5 @@ DEPENDS
   Doxyfile
   fb-doc.css
   fb-doc.xml
+#NO_SYNTAX
   )

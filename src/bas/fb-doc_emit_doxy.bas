@@ -76,8 +76,7 @@ SUB doxy_func_ CDECL(BYVAL P AS Parser PTR)
     Code(     DOXY_START & "\fn ")
     OPT->CreateFunction(P)
     Code(NL & "\brief " & FIXME)
-    IF b THEN .ParTok = b : .parseListPara(@doxy_entryListPara)
-'&doxy_entryListPara(); // pseudo function call (helps Doxygen documenting the interface)
+    IF b THEN .ParTok = b : .parseListPara(@doxy_entryListPara())
     IF t THEN Code(NL & "\returns " & FIXME)
     Code(DOXY_END)
     .SrcBgn = a
@@ -115,8 +114,7 @@ SUB doxy_decl_ CDECL(BYVAL P AS Parser PTR)
       VAR a = .SrcBgn, b = .ParTok, t = .TypTok
       OPT->CreateFunction(P)
       Code(NL & "\brief " & FIXME)
-      IF b THEN .ParTok = b : .parseListPara(@doxy_entryListPara)
-'&doxy_entryListPara(); // pseudo function call (helps Doxygen documenting the interface)
+      IF b THEN .ParTok = b : .parseListPara(@doxy_entryListPara())
       IF t THEN Code(NL & "\returns: " & FIXME)
       Code(DOXY_END)
       .SrcBgn = a
@@ -166,14 +164,13 @@ SUB doxy_emitBlockNames CDECL(BYVAL P AS Parser PTR)
     CASE .TOK_PRIV, .TOK_PROT ': .SrcBgn = 0 ' !!! ToDo: hide private?
     CASE .TOK_PUBL            ': .SrcBgn = 1
     CASE .TOK_CLAS, .TOK_TYPE, .TOK_UNIO
-      .parseBlockTyUn(@doxy_emitBlockNames)
+      .parseBlockTyUn(@doxy_emitBlockNames())
     CASE .TOK_ENUM
-      .parseBlockEnum(@doxy_emitBlockNames)
+      .parseBlockEnum(@doxy_emitBlockNames())
     CASE ELSE : IF 0 = .NamTok THEN EXIT SUB
       Code(NL & "\var " & .BlockNam & "::" & .SubStr(.NamTok) &  " " & FIXME & _
            NL & "\brief " & FIXME)
     END SELECT
-'&doxy_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
   END WITH
 END SUB
 
@@ -196,14 +193,14 @@ SUB doxy_Block CDECL(BYVAL P AS Parser PTR)
         NL & _
         NL & FIXME & _
         NL)
-      .parseBlockEnum(@doxy_emitBlockNames)
+      .parseBlockEnum(@doxy_emitBlockNames())
     CASE .TOK_UNIO
       Code(  DOXY_START & "\union " & .BlockNam & _
         NL & "\brief " & FIXME & _
         NL & _
         NL & FIXME & _
         NL)
-      .parseBlockTyUn(@doxy_emitBlockNames)
+      .parseBlockTyUn(@doxy_emitBlockNames())
     CASE ELSE
       IF OPT->Types = OPT->FB_STYLE _
         THEN Code(DOXY_START & "\class ") _
@@ -213,9 +210,8 @@ SUB doxy_Block CDECL(BYVAL P AS Parser PTR)
         NL & _
         NL & FIXME & _
         NL)
-      .parseBlockTyUn(@doxy_emitBlockNames)
+      .parseBlockTyUn(@doxy_emitBlockNames())
     END SELECT
-'&doxy_emitBlockNames(); // pseudo function call (helps Doxygen documenting the interface)
     Code(COMM_END)
   END WITH
 END SUB

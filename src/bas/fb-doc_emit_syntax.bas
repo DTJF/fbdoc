@@ -274,18 +274,18 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
     GenXml  = IIF(doxy->Tag(GENERATE_XML) = "YES" ANDALSO _
                   doxy->Tag(XML_PROGRAMLISTING) = "YES", 1, 0)
 
-    IF GenAny THEN MSG_END("parsed") _
-              ELSE MSG_END("nothing to do") : EXIT WHILE
+    IF GenAny THEN MSG_CONT("parsed") _
+              ELSE MSG_CONT("nothing to do") : EXIT WHILE
 
     FbPath = doxy->Tag(INPUT_TAG)
     OPT->InRecursiv = IIF(doxy->Tag(RECURSIVE) = "YES", 1, 0)
     MSG_LINE("FB source " & FbPath)
     CHDIR(OPT->StartPath)
-    IF CHDIR(FbPath) THEN MSG_END("error (couldn't change directory)") : EXIT WHILE
+    IF CHDIR(FbPath) THEN MSG_CONT("error (couldn't change directory)") : EXIT WHILE
     FbFiles = NL & OPT->scanFiles("*.bas", "") _
                  & OPT->scanFiles("*.bi", "")
-    IF LEN(FbFiles) > 1 THEN MSG_END("scanned") _
-                        ELSE MSG_END("error (no FB source files)") : EXIT WHILE
+    IF LEN(FbFiles) > 1 THEN MSG_CONT("scanned") _
+                        ELSE MSG_CONT("error (no FB source files)") : EXIT WHILE
     FbPath = OPT->addPath(OPT->StartPath, FbPath)
 
     OPT->InTree = 0
@@ -298,13 +298,13 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
       CHDIR(OPT->StartPath)
       MSG_LINE("HTML source " & LEFT(HtmlPath, LEN(HtmlPath) - 1))
       IF CHDIR(HtmlPath) THEN
-        MSG_END("error (couldn't change directory)")
+        MSG_CONT("error (couldn't change directory)")
       ELSE
         DoxyFiles = OPT->scanFiles("*_8bas_source" & HtmlSuff, "") _
                   & OPT->scanFiles("*_8bi_source" & HtmlSuff, "")
 
-        IF LEN(DoxyFiles) > 1 THEN MSG_END("scanned") : do_files() _
-                              ELSE MSG_END("scanned (no files)")
+        IF LEN(DoxyFiles) > 1 THEN MSG_CONT("scanned") : do_files() _
+                              ELSE MSG_CONT("scanned (no files)")
       END IF
     END IF
     OPT->InRecursiv = 0
@@ -313,12 +313,12 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
       MSG_LINE("LaTeX source " & LEFT(TexPath, LEN(TexPath) - 1))
       CHDIR(OPT->StartPath)
       IF CHDIR(TexPath) THEN
-        MSG_END("error (couldn't change directory)")
+        MSG_CONT("error (couldn't change directory)")
       ELSE
         DoxyFiles = OPT->scanFiles("*_8bas_source.tex", "") _
                   & OPT->scanFiles("*_8bi_source.tex", "")
         IF LEN(DoxyFiles) > 1 THEN
-          MSG_END("scanned")
+          MSG_CONT("scanned")
           FBDOC_MARK = @"%%% Syntax-highlighting by fb-doc %%%"
           KEYW_A = @"\textcolor{keyword}{"
           KWTP_A = @"\textcolor{keywordtype}{"
@@ -333,7 +333,7 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
           prepare = @prepare_tex()
           do_files()
         ELSE
-          MSG_END("scanned (no files)")
+          MSG_CONT("scanned (no files)")
         END IF
       END IF
     END IF
@@ -342,12 +342,12 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
       MSG_LINE("XML source " & LEFT(XmlPath, LEN(XmlPath) - 1))
       CHDIR(OPT->StartPath)
       IF CHDIR(XmlPath) THEN
-        MSG_END("error (couldn't change directory)")
+        MSG_CONT("error (couldn't change directory)")
       ELSE
         DoxyFiles = OPT->scanFiles("*_8bas.xml", "") _
                   & OPT->scanFiles("*_8bi.xml", "")
         IF LEN(DoxyFiles) > 1 THEN
-          MSG_END("scanned")
+          MSG_CONT("scanned")
           FBDOC_MARK = @"<!-- Syntax-highlighting by fb-doc -->"
           KEYW_A = @"<highlight class=""keyword"">"
           KWTP_A = @"<highlight class=""keywordtype"">"
@@ -362,7 +362,7 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
           prepare = @prepare_xml()
           do_files()
         ELSE
-          MSG_END("scanned (no files)")
+          MSG_CONT("scanned (no files)")
         END IF
       END IF
     END IF
@@ -398,11 +398,11 @@ SUB Highlighter.do_files()
     MSG_LINE(in_fnam)
     OPT->Ocha = FREEFILE
     IF OPEN(in_fnam & "_" FOR OUTPUT AS OPT->Ocha) THEN
-      MSG_END("error (couldn't write)")
+      MSG_CONT("error (couldn't write)")
     ELSE
       Ifnr = FREEFILE
       IF OPEN(in_fnam FOR INPUT AS Ifnr) THEN
-        MSG_END("error (couldn't read)")
+        MSG_CONT("error (couldn't read)")
         CLOSE #OPT->Ocha
         KILL(in_fnam & "_")
       ELSE
@@ -419,15 +419,15 @@ SUB Highlighter.do_files()
           CLOSE #OPT->Ocha
           KILL(in_fnam)
           NAME(in_fnam & "_", in_fnam)
-          MSG_END(Pars->ErrMsg)
+          MSG_CONT(Pars->ErrMsg)
         ELSE
           CLOSE #Ifnr
           CLOSE #OPT->Ocha
           KILL(in_fnam & "_")
           IF LastLine = *FBDOC_MARK THEN
-            MSG_END("error (couldn't operate twice)")
+            MSG_CONT("error (couldn't operate twice)")
           ELSE
-            MSG_END("error (incompatible format)")
+            MSG_CONT("error (incompatible format)")
           END IF
         END IF
       END IF

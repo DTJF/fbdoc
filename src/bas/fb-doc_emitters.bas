@@ -432,7 +432,7 @@ SUB cppCreateFunction CDECL(BYVAL P AS Parser PTR)
 
     cEmitComments(P, .ParTok[1])
     Code(" (")
-    .parseListPara(@cppEntryListParameter)
+    .parseListPara(@cppEntryListParameter())
     IF .ListCount <= 0 THEN Code(")")
   END WITH
 END SUB
@@ -470,7 +470,7 @@ SUB cCreateFunction CDECL(BYVAL P AS Parser PTR)
 
     cEmitComments(P, .ParTok[1])
     Code(" (")
-    .parseListPara(@cEntryListParameter)
+    .parseListPara(@cEntryListParameter())
     IF .ListCount <= 0 THEN Code("void)")
   END WITH
 END SUB
@@ -752,21 +752,21 @@ SUB c_Block CDECL(BYVAL P AS Parser PTR)
         VAR t = .Tk1 + 3
         IF *t = .TOK_EXDS THEN Code(" : public " & .SubStr(t + 3)) ' ToDo: parse list of names
         Code("{ public:")
-        .parseBlockTyUn(@cEntryBlockTypeUnion)
+        .parseBlockTyUn(@cEntryBlockTypeUnion())
         .BlockNam = ""
       ELSE
         IF 0 = .LevelCount ANDALSO LEN(.BlockNam) THEN Code("typedef ")
         Code("struct " & .BlockNam & "{")
-        .parseBlockTyUn(@cEntryBlockTypeUnion)
+        .parseBlockTyUn(@cEntryBlockTypeUnion())
       END IF
     CASE .TOK_UNIO
       IF 0 = .LevelCount ANDALSO LEN(.BlockNam) THEN Code("typedef ")
       Code("union " & .BlockNam & "{")
-      .parseBlockTyUn(@cEntryBlockTypeUnion)
+      .parseBlockTyUn(@cEntryBlockTypeUnion())
     CASE .TOK_ENUM
       IF 0 = .LevelCount ANDALSO LEN(.BlockNam) THEN Code("typedef ")
       Code("enum " & .BlockNam & "{")
-      .parseBlockEnum(@cEntryBlockENUM)
+      .parseBlockEnum(@cEntryBlockENUM())
     CASE ELSE : Code("-???-")
     END SELECT
 
@@ -836,7 +836,7 @@ SUB c_CTOR CDECL(BYVAL P AS Parser PTR)
   LOFN = STRING(LOF(fnr), 0)
   GET #fnr, , LOFN
   CLOSE #fnr
-  MSG_END("loaded")
+  MSG_CONT("loaded")
 END SUB
 
 

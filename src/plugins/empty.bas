@@ -121,25 +121,36 @@ END SUB
 
 '* \brief Emitter called before the parser gets created and the input gets parsed
 SUB dll_CTOR CDECL(BYVAL P AS Parser PTR)
-  PRINT __FUNCTION__
+  Code(NL & __FUNCTION__)
 END SUB
 
 '* \brief Emitter called after the input got parsed and the parser got deleted
 SUB dll_DTOR CDECL(BYVAL P AS Parser PTR)
-  PRINT __FUNCTION__
+  Code(NL & __FUNCTION__)
 END SUB
 
 
-/'* \brief FIXME
-\param P FIXME
-\param Par FIXME
+/'* \brief Initialize the emitter interface
+\param Emi The newly created EmitterIF to fill with our callbacks
+\param Par Additional command line parameters, not parsed by \Proj
 
-FIXME
+When the user required to load this plugin by option `-e "empty"`, this
+SUB gets called to initialize the EmitterIF. Here, all default
+callbacks (= null_emitter() ) get replaced by custom functions. Here
+those functions just report all the \Proj function calls, in order to
+make the parsing process transparent.
+
+The second parameter `Par` is a list of all command line parameters
+which are unknown to \Proj. Those options get collected in a string,
+separated by tabulators (`!"\n"), and starting by a tabulator. This SUB
+extracts and avaluates the known parameters. When this string isn't
+empty at the end of this SUB, the calling \Proj program stops execution
+by an `unknown options` error.
 
 \since 0.4.0
 '/
-SUB EmitterInit CDECL(BYVAL P AS EmitterIF PTR, BYREF Par AS STRING) EXPORT
-  WITH *P
+SUB EmitterInit CDECL(BYVAL Emi AS EmitterIF PTR, BYREF Par AS STRING) EXPORT
+  WITH *Emi
     .Decl_ = @dll_declare
     .Func_ = @dll_function
     .Enum_ = @dll_enum
@@ -154,4 +165,13 @@ SUB EmitterInit CDECL(BYVAL P AS EmitterIF PTR, BYREF Par AS STRING) EXPORT
     .CTOR_ = @dll_CTOR
     .DTOR_ = @dll_DTOR
   END WITH
+
+  VAR a = INSTR(Par, !"\t-empty=")           ' get out parameter, if any
+  IF a THEN
+    a += 8
+    VAR e = INSTR(a, Par, !"\t")
+    IF 0 = e THEN e = LEN(Par) + 1
+    PRINT "parameter is '" & MID(Par, a,  e - a) & "'"
+    Par = LEFT(Par, a - 9) & MID(Par, e)
+  END IF
 END SUB
