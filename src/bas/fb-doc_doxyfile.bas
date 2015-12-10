@@ -1,5 +1,5 @@
 /'* \file fb-doc_doxyfile.bas
-\brief The source code for the \ref Doxyfile class
+\brief The source code for the DoxyUDT class
 
 This file contains the source code for a class used to read parameters
 from a Doxyfile, a file that contain settings to control the operations
@@ -31,7 +31,7 @@ by the member function Search().
       catches only the first entry of a list.
 
 '/
-CONSTRUCTOR Doxyfile(BYREF Fnam AS STRING)
+CONSTRUCTOR DoxyUDT(BYREF Fnam AS STRING)
   VAR fnr = FREEFILE
   IF OPEN(Fnam FOR INPUT AS fnr) THEN Errr = "error (couldn't open)" : EXIT CONSTRUCTOR
 
@@ -53,7 +53,7 @@ CONSTRUCTOR Doxyfile(BYREF Fnam AS STRING)
   WHILE a
     a += 9
     VAR e = INSTR(a, *Doxy, !"\n")
-    VAR d = NEW Doxyfile(TRIM(MID(*Doxy, a, e - a), ANY !"= \v\t\\"))
+    VAR d = NEW DoxyUDT(TRIM(MID(*Doxy, a, e - a), ANY !"= \v\t\\"))
     PULL_TAG(GENERATE_HTML)
     PULL_TAG(SOURCE_BROWSER)
     PULL_TAG(GENERATE_LATEX)
@@ -93,7 +93,7 @@ END CONSTRUCTOR
 The destructor frees the memory (allocated in the constructor, if any).
 
 '/
-DESTRUCTOR Doxyfile()
+DESTRUCTOR DoxyUDT()
   IF Buffer THEN DEALLOCATE(Buffer)
 END DESTRUCTOR
 
@@ -108,7 +108,7 @@ value). Use enumerators DoxyTags for index values (since there's no
 error checking agianst index out of range).
 
 '/
-PROPERTY Doxyfile.Tag(BYVAL I AS INTEGER) AS STRING
+PROPERTY DoxyUDT.Tag(BYVAL I AS INTEGER) AS STRING
   RETURN MID(Tags(I), LEN(INTEGER) + 1)
 END PROPERTY
 
@@ -129,7 +129,7 @@ order to find overrides first.
       entry gets returned.
 
 '/
-FUNCTION Doxyfile.Search(BYREF Su AS STRING, BYREF Po AS INTEGER) AS STRING
+FUNCTION DoxyUDT.Search(BYREF Su AS STRING, BYREF Po AS INTEGER) AS STRING
   VAR i = Length - 1 _
     , l = 0 _
     , p = 0 _

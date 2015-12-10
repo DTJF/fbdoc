@@ -12,12 +12,8 @@ responsible for user interaction
 
 #INCLUDE ONCE "fb-doc_options.bi"
 #INCLUDE ONCE "fb-doc_version.bi"
-#INCLUDE ONCE "fb-doc_emitters.bi"
 #INCLUDE ONCE "fb-doc_emit_syntax.bi"
-#INCLUDE ONCE "fb-doc_emit_callees.bi"
-#INCLUDE ONCE "fb-doc_emit_gtk.bi"
-#INCLUDE ONCE "fb-doc_emit_doxy.bi"
-#INCLUDE ONCE "fb-doc_emit_syntax.bi"
+#INCLUDE ONCE "fb-doc_emit_lfn.bi"
 #INCLUDE ONCE "fb-doc_doxyfile.bi"
 
 
@@ -39,10 +35,11 @@ queue entries in single or double quotes.
 '/
 CONSTRUCTOR Options()
   Efnr = FREEFILE
-  IF OPEN ERR (AS #Efnr) THEN ?PROJ_NAME & ": " & "couldn't open STDERR" : EXIT CONSTRUCTOR
-           Types = FB_STYLE
+  IF OPEN ERR (AS #Efnr) THEN ?PROJ_NAME & ": " & "couldn't open STDERR" : Efnr = 0 : EXIT CONSTRUCTOR
+
   CreateFunction = @cppCreateFunction()
   CreateVariable = @cppCreateTypNam()
+           Types = FB_STYLE
 END CONSTRUCTOR
 
 
@@ -157,7 +154,7 @@ FUNCTION Options.parseCLI() AS RunModes
   WEND
 
   EmitIF = chooseEmitter(emi, par)
-  if len(par) then Errr &= "unknown options '" & par & "'"
+  IF LEN(par) THEN Errr &= "unknown options '" & par & "'"
 
   IF 0 = LEN(InFiles) ANDALSO RunMode = DEF_MODE THEN RunMode = HELP_MESSAGE
   Pars = NEW Parser(EmitIF)
@@ -177,7 +174,7 @@ characters of the emitter name (ie. `dox` instead of
 
 In case of no match for any internal emitter name this SUB tries to
 load an external emitter (plugin), located in the current folder. See
-\ref PagExtend for details. If this fails an error message gets created
+\ref SecEmmEx for details. If this fails an error message gets created
 and \Proj stops execution.
 
 Parameter `P` contains all command line options that are unknown to
@@ -205,11 +202,11 @@ FUNCTION Options.chooseEmitter(BYREF F AS STRING, BYREF P AS STRING) AS EmitterI
   Errr &= ", no plugin support on DOS platform!"
 #ELSE
   SELECT CASE AS CONST EmitTyp
-    CASE          C_SOURCE : csource_init(r)
-    CASE    FUNCTION_NAMES : callees_init(r)
-    CASE GTK_DOC_TEMPLATES : gtk_init(r)
-    CASE DOXYGEN_TEMPLATES : doxy_init(r)
-    CASE     SYNTAX_REPAIR : syntax_init(r)
+    CASE          C_SOURCE : init_csource(r)
+    CASE    FUNCTION_NAMES : init_lfn(r)
+    CASE GTK_DOC_TEMPLATES : init_gtk(r)
+    CASE DOXYGEN_TEMPLATES : init_doxy(r)
+    CASE     SYNTAX_REPAIR : init_syntax(r)
   CASE ELSE
     DllEmitter = DYLIBLOAD(F)
     IF 0 = DllEmitter THEN Errr &= ", couldn't load plugin " & F : EXIT SELECT
@@ -357,7 +354,7 @@ SUB Options.FileModi()
     OPEN CONS FOR OUTPUT AS #Ocha
   END IF
 
-  EmitIF->CTOR_(Pars)
+  if EmitIF->CTOR_ then EmitIF->CTOR_(@THIS)
   VAR a = 0 _              ' Start character of next file name / pattern
     , i = a _              ' Counter for characters
     , inslsh = 0 _         ' Flag, set when filename name contains a path
@@ -398,9 +395,9 @@ SUB Options.FileModi()
     END SELECT : i += 1
   LOOP
 
-  EmitIF->DTOR_(Pars)
+  if EmitIF->DTOR_ then EmitIF->DTOR_(@THIS)
   SELECT CASE AS CONST RunMode
-  CASE LIST_MODE : IF Ocha THEN CLOSE #Ocha : MSG_LINE(CALLEES_FILE) : MSG_CONT("written")
+  CASE LIST_MODE : IF Ocha THEN CLOSE #Ocha : MSG_LINE(LFN_FILE) : MSG_CONT("written")
   CASE ELSE      : IF Ocha THEN CLOSE #Ocha
   END SELECT
   MSG_END("")
@@ -428,7 +425,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
     IF LCASE(RIGHT(Fnam, 4)) = ".bas" ORELSE _
        LCASE(RIGHT(Fnam, 3)) = ".bi" THEN
       IF 0 = Ocha THEN
-        MSG_LINE(OutPath & CALLEES_FILE)
+        MSG_LINE(OutPath & LFN_FILE)
         Ocha = startLFN(OutPath)
         IF 0 = Ocha THEN MSG_CONT("error (couldn't write)") : EXIT SUB
         MSG_CONT("opened")
@@ -439,7 +436,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       EXIT SUB
     END IF
 
-    VAR doxy = NEW Doxyfile(Fnam) _
+    VAR doxy = NEW DoxyUDT(Fnam) _
       , recu = InRecursiv _
       , oldo = Ocha _
       , patt = ""
@@ -449,7 +446,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       MSG_CONT(doxy->Errr) : DELETE doxy
       MSG_LINE("Doxyfile")
       IF CHDIR(Fnam) THEN MSG_CONT("error (couldn't change directory)") : EXIT SUB
-      doxy = NEW Doxyfile("Doxyfile")
+      doxy = NEW DoxyUDT("Doxyfile")
       IF 0 = doxy->Length THEN MSG_CONT(doxy->Errr) : DELETE doxy : EXIT SUB
     END IF
 
@@ -465,7 +462,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       ELSE
         MSG_CONT("scanned") _
 
-        MSG_LINE(StartPath & CALLEES_FILE)
+        MSG_LINE(StartPath & LFN_FILE)
         Ocha = startLFN(StartPath)
         IF 0 = Ocha THEN
           MSG_CONT("error (couldn't write)")
@@ -478,7 +475,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
             MSG_LINE(MID(patt, a, e - a)) : MSG_CONT("scanned")
             a = e + 1
           WEND
-          CLOSE #Ocha : MSG_LINE(StartPath & CALLEES_FILE) : MSG_CONT("written")
+          CLOSE #Ocha : MSG_LINE(StartPath & LFN_FILE) : MSG_CONT("written")
         END IF
       END IF
     END IF
@@ -514,7 +511,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       ELSE
         Pars->File_(Fnam, InTree)
         CLOSE #Ocha
-        MSG_LINE(Fnam) : if len(Pars->ErrMsg) then MSG_CONT(Pars->ErrMsg)
+        MSG_LINE(Fnam) : IF LEN(Pars->ErrMsg) THEN MSG_CONT(Pars->ErrMsg)
       END IF
     END IF
   END SELECT

@@ -9,7 +9,6 @@ emitter, namely the classes RepData and Highlighter.
 #INCLUDE ONCE "fb-doc_parser.bi"
 #INCLUDE ONCE "fb-doc_version.bi"
 
-DECLARE SUB syntax_init(BYVAL AS EmitterIF PTR)
 
 /'* \brief A container for string replacements
 

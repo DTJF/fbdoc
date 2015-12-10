@@ -1,8 +1,8 @@
-/'* \file fb-doc_emit_callees.bas
-\brief Emitter to generate the file \em fb-doc.lfn.
+/'* \file fb-doc_emit_lfn.bas
+\brief Emitter to generate the file `fb-doc.lfn`.
 
 This file contains the emitter called "FunctionNames", used to generate
-the file \em fb-doc.lfn for the Doxygen Back-end filter feature. It's
+the file `fb-doc.lfn` for the Doxygen Back-end filter feature. It's
 the default emitter in mode `--list-mode`.
 
 The emitter writes the names of all functions (`SUB` / `FUNCTION` /
@@ -11,24 +11,22 @@ line character `CHR(10)`.
 
 '/
 
-#INCLUDE ONCE "fb-doc_emit_callees.bi"
+#INCLUDE ONCE "fb-doc_emit_lfn.bi"
 #INCLUDE ONCE "fb-doc_options.bi"
 
-
-CONST CALLEE_TR = !"\n" '*< Separator for entries in file \em fb-doc.lfn.
 
 
 FUNCTION startLFN(BYREF Path AS STRING) AS INTEGER
   VAR fnr = FREEFILE
-  IF OPEN(Path & CALLEES_FILE FOR OUTPUT AS #fnr) THEN RETURN 0
+  IF OPEN(Path & LFN_FILE FOR OUTPUT AS #fnr) THEN RETURN 0
   PRINT #fnr, "+++ List of Function Names +++"
   RETURN fnr
 END FUNCTION
 
 
-'SUB callees_CTOR CDECL(BYVAL P AS Parser PTR)
+'SUB lfn_CTOR CDECL(BYVAL P AS Parser PTR)
       'IF 0 = Ocha THEN
-        'MSG_LINE(OutPath & CALLEES_FILE)
+        'MSG_LINE(OutPath & LFN_FILE)
         'Ocha = startLFN(OutPath)
         'IF 0 = Ocha THEN MSG_END("error (couldn't write)") : EXIT SUB
         'MSG_END("opened")
@@ -36,8 +34,8 @@ END FUNCTION
 'END SUB
 
 
-SUB callees_DTOR CDECL(BYVAL P AS Parser PTR)
-END SUB
+'SUB lfn_DTOR CDECL(BYVAL P AS Parser PTR)
+'END SUB
 
 
 /'* \brief Emitter to generate a declaration line
@@ -48,7 +46,7 @@ DIM / CONST / COMMON / EXTERN / STATIC / DECLARE). It generates a line for
 each variable name and sends it (them) to the output stream.
 
 '/
-SUB callees_decl_ CDECL(BYVAL P AS Parser PTR)
+SUB lfn_decl_ CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     SELECT CASE AS CONST *.StaTok
     CASE .TOK_SUB, .TOK_FUNC, .TOK_PROP
@@ -56,7 +54,7 @@ SUB callees_decl_ CDECL(BYVAL P AS Parser PTR)
     END SELECT : IF 0 = .NamTok ORELSE 0 = .FunTok THEN EXIT SUB
     .PtrCount = 0
     cNam(P)
-    Code(CALLEE_TR)
+    Code(LFN_SEP)
   END WITH
 END SUB
 
@@ -68,9 +66,9 @@ This emitter gets called when the parser finds a block (`TYPE  UNION
 ENUM`). It starts the scanning process in the block.
 
 '/
-SUB callees_class_ CDECL(BYVAL P AS Parser PTR)
+SUB lfn_class_ CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
-    IF OPT->AllCallees THEN .parseBlockTyUn(@callees_decl_())
+    IF OPT->AllCallees THEN .parseBlockTyUn(@lfn_decl_())
   END WITH
 END SUB
 
@@ -83,7 +81,7 @@ FUNCTION  PROPERTY`). It generates a line with the name of the
 function and sends it to the output stream.
 
 '/
-SUB callees_func_ CDECL(BYVAL P AS Parser PTR) ' !!! ToDo member functions
+SUB lfn_func_ CDECL(BYVAL P AS Parser PTR) ' !!! ToDo member functions
   WITH *P '&Parser* P;
     SELECT CASE AS CONST *.StaTok
     CASE .TOK_SUB, .TOK_FUNC, .TOK_PROP
@@ -91,7 +89,7 @@ SUB callees_func_ CDECL(BYVAL P AS Parser PTR) ' !!! ToDo member functions
     END SELECT
     .PtrCount = 0
     cNam(P)
-    Code(CALLEE_TR)
+    Code(LFN_SEP)
   END WITH
 END SUB
 
@@ -105,7 +103,7 @@ has been done already. If not, it creates a new #Parser and starts
 the scanning process.
 
 '/
-SUB callees_include CDECL(BYVAL P AS Parser PTR)
+SUB lfn_include CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     IF OPT->InTree THEN .Include(TRIM(.SubStr(.NamTok), """"))
   END WITH
@@ -120,13 +118,13 @@ FIXME
 
 \since 0.4.0
 '/
-SUB callees_init(BYVAL Emi AS EmitterIF PTR)
+SUB init_lfn(BYVAL Emi AS EmitterIF PTR)
   WITH *Emi
-    .Clas_ = @callees_class_()
-    .Unio_ = @callees_class_()
-    .Func_ = @callees_func_()
-    .Decl_ = @callees_decl_()
-    .Incl_ = @callees_include()
+    .Clas_ = @lfn_class_()
+    .Unio_ = @lfn_class_()
+    .Func_ = @lfn_func_()
+    .Decl_ = @lfn_decl_()
+    .Incl_ = @lfn_include()
   END WITH
 END SUB
 

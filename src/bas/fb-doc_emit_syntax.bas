@@ -21,7 +21,6 @@ for this feature is also contained here.
 
 #INCLUDE ONCE "fb-doc_parser.bi"
 #INCLUDE ONCE "fb-doc_emit_syntax.bi"
-#INCLUDE ONCE "fb-doc.bi"
 #INCLUDE ONCE "fb-doc_options.bi"
 #INCLUDE ONCE "fb-doc_version.bi"
 #INCLUDE ONCE "fb-doc_doxyfile.bi"
@@ -260,7 +259,7 @@ This SUB controls the complete repairing process
 
 '/
 SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
-   Var doxy = NEW Doxyfile(Fnam) _
+   Var doxy = NEW DoxyUDT(Fnam) _
      , recu = OPT->InRecursiv _
      , tree = OPT->InTree
 
@@ -409,6 +408,7 @@ SUB Highlighter.do_files()
         VAR fb_nam = prepare(@THIS)
         IF LEN(fb_nam) THEN
           Pars->File_(FbPath & fb_nam, 0)
+          if len(Pars->ErrMsg) then MSG_CONT(Pars->ErrMsg) else MSG_CONT("done")
 
           PRINT #OPT->Ocha, LastLine
           WHILE NOT EOF(Ifnr)
@@ -436,6 +436,7 @@ SUB Highlighter.do_files()
     a = e + 1
   WEND
 END SUB
+
 
 /'* \brief Emit source code with syntax highlighting
 \param Buf The buffer to read from
@@ -1522,7 +1523,7 @@ FIXME
 
 \since 0.4.0
 '/
-SUB syntax_init(BYVAL Emi AS EmitterIF PTR)
+SUB init_syntax(BYVAL Emi AS EmitterIF PTR)
   WITH *Emi
     .Init_ = @synt_init()
     .Exit_ = @synt_exit()

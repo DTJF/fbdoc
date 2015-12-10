@@ -27,18 +27,17 @@ SubSecExaGtkdoc for an example.
 '/
 
 #INCLUDE ONCE "fb-doc_parser.bi"
-#INCLUDE ONCE "fb-doc.bi"
 #INCLUDE ONCE "fb-doc_options.bi"
 #INCLUDE ONCE "fb-doc_version.bi"
 
 
 CONST _
-      SINCE = NL & NL & "Since: 0.0", _ '*< text added at each block end
+      SINCE = NL & "Since: 0.0", _ '*< text added at each block end
   GTK_START =           "/'* ", _       '*< the start of a comment block
     GTK_END = NL & _
-              NL & FIXME & _
-                   SINCE & _
-                   COMM_END             '*< the end of a comment block
+              NL & TOFIX & _
+              NL & SINCE & _
+              NL & COMM_END             '*< the end of a comment block
 
 
 /'* \brief Emitter to generate a name line
@@ -51,7 +50,7 @@ line to document the variable and sends it to the output stream.
 '/
 SUB gtk_emit_Name CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
-    IF .NamTok THEN Code(NL & "@" & P->SubStr(P->NamTok) & ": " & FIXME)
+    IF .NamTok THEN Code(NL & "@" & P->SubStr(P->NamTok) & ": " & TOFIX)
   END WITH
 END SUB
 
@@ -66,7 +65,7 @@ to the output stream.
 '/
 SUB gtk_defi_ CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
-    cEmitSource(P, .StaTok[1])
+    emit_source(P, .StaTok[1])
     Code(GTK_START & .SubStr(.NamTok) & ":" & GTK_END)
   END WITH
 END SUB
@@ -83,7 +82,7 @@ each variable name and sends it (them) to the output stream.
 SUB gtk_decl_ CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     IF 0 = .ListCount THEN
-      cEmitSource(P, .Tk1[1])
+      emit_source(P, .Tk1[1])
       Code(GTK_START & .SubStr(.NamTok) & ":")
     END IF
 
@@ -111,18 +110,18 @@ sends it to the output stream.
 SUB gtk_func_ CDECL(BYVAL P AS Parser PTR) ' !!! ToDo member functions
   WITH *P '&Parser* P;
     VAR t = .TypTok
-    cEmitSource(P, .StaTok[1])
+    emit_source(P, .StaTok[1])
     Code(GTK_START & .SubStr(.NamTok) & ":")
     IF .ParTok THEN .parseListPara(@gtk_emit_Name())
 
     Code( _
         NL & _
-        NL & FIXME)
+        NL & TOFIX)
     IF t THEN Code( _
         NL & _
-        NL & "Returns: " & FIXME)
+        NL & "Returns: " & TOFIX)
     Code(    SINCE & _
-             COMM_END)
+        NL & COMM_END)
   END WITH
 END SUB
 
@@ -161,7 +160,7 @@ for each member and sends it to the output stream.
 '/
 SUB gtk_Block CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
-    cEmitSource(P, .StaTok[1])
+    emit_source(P, .StaTok[1])
     Code( GTK_START)
     IF LEN(.BlockNam) THEN Code(.BlockNam & ":")
 
@@ -186,14 +185,14 @@ output stream.
 SUB gtk_empty CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     Code(  GTK_START & _
-           "SECTION: " & FIXME & _
-      NL & "@short_description: " & FIXME & _
-      NL & "@title: " & FIXME & _
-      NL & "@section_id: " & FIXME & _
-      NL & "@see_also: " & FIXME & _
-      NL & "@stability: " & FIXME & _
-      NL & "@include: " & FIXME & _
-      NL & "@image: " & FIXME & _
+           "SECTION: " & TOFIX & _
+      NL & "@short_description: " & TOFIX & _
+      NL & "@title: " & TOFIX & _
+      NL & "@section_id: " & TOFIX & _
+      NL & "@see_also: " & TOFIX & _
+      NL & "@stability: " & TOFIX & _
+      NL & "@include: " & TOFIX & _
+      NL & "@image: " & TOFIX & _
            GTK_END & _
       NL)
   END WITH
@@ -208,9 +207,9 @@ FIXME
 
 \since 0.4.0
 '/
-SUB gtk_init(BYVAL Emi AS EmitterIF PTR)
+SUB init_gtk(BYVAL Emi AS EmitterIF PTR)
   WITH *Emi
-    .Error_ = @c_error()  '*< we use the standard error emitter here
+    .Error_ = @emit_error()  '*< we use the standard error emitter here
 
      .Func_ = @gtk_func_()
      .Decl_ = @gtk_decl_()

@@ -49,9 +49,9 @@ In case of \ref SecUseDoxy step 3 can get integrated in step 4.
 # Executable  {#SecIntExe}
 
 \Proj is a multi functional tool, supporting the complete process of
-documenting any FB project. As an FB source code it can get compiled on
-all operting systems supported by the compiler, which is currently
-(effective 2015, Oct.)
+documenting any FB project. It gets shipped in this package as FB
+source code and can get compiled on all operting systems supported by
+the FB compiler, which is currently (effective 2015, Oct.)
 
 - DOS
 - windows
@@ -60,23 +60,47 @@ all operting systems supported by the compiler, which is currently
 The executable is a
 
 - command line tool, that
-- reads input (FB source code) from STDIN or file[s],
+- reads input (FB source code) from `STDIN` or file[s],
 - parses related constructs,
-- transfers the constructs to a specific format (depending on the choosen emitter), and
-- writes the emitter output to STDOUT or file[s].
+- transforms the constructs to a specific format (depending on the choosen emitter), and
+- writes that output to `STDOUT` or file[s].
 
 Several run modi control where to get input from and where to write
-output at. Several emitters (named bracketed) are available do generate
-different kinds of output formats, in order to
+output at. Several emitters (named in brackets) are available do
+generate different kinds of output formats, in order to
 
-- generate a C-like intermediate syntax (C_Source) for the C back-ends,
-- generate templates for gtk-doc (GtkDocTemplates) or Doxygen (DoxyTemplates),
-- generate a list of function names (FunctionNames), and
-- generate correct source code listings for Doxygen output (SyntaxHighLighting).
+- generate a C-like intermediate syntax (`C_Source`) for the C back-ends,
+- generate templates for gtk-doc (`GtkDocTemplates`) or Doxygen (`DoxyTemplates`),
+- generate a list of function names (`FunctionNames`), and
+- generate correct source code listings for Doxygen output (`SyntaxHighLighting`).
 
-Each run mode has its default emitter, but an individual emitter can be
-selected instead. A plugin interface makes it possible to extend \Proj
-by an external emitter, loaded at run-time.
+Each run mode has its default emitter. The following table shows the
+mapping, rows are run modi, columns are emitters.
+
+|                   | \ref SecEmmCSource | \ref SecEmmGtk | \ref SecEmmDoxy | \ref SecEmmLfn | \ref SecEmmSyntax |
+| ----------------: | :----------------: | :------------: | :-------------: | :------------: | :---------------: |
+| \ref SecModDef    |        DEF         |        +       |        +        |        +       |          +        |
+| \ref SecModFile   |        DEF         |        +       |        +        |        +       |          +        |
+| \ref SecModList   |         -          |        -       |        -        |       DEF      |          -        |
+| \ref SecModSyntax |         -          |        -       |        -        |        -       |         DEF       |
+| \ref SecModGeany  |         +          |       DEF      |        +        |        +       |          +        |
+
+This default mapping can get overriden. Option \ref SecOptEmitter alows
+to specify a custom setting. Beside the default setting (`DEF`) some
+combinations are useful (`+`) and others are less useful (`-`).
+Additionaly \Proj contains an interface for external emitters
+(plugins), loaded at run time.
+
+Further options control the behaviour or the run mode or the
+emitter:
+
+|  Run Mode         | \ref SecOptTree | \ref SecOptRecursiv | \ref SecOptPath || \ref SecOptEmitter || \ref SecOptDocom | \ref SecOptCStyle | \ref SecOptAsterix | Emitter            |
+| ----------------: | :-------------- | :------------------ | :-------------- || :----------------: || ---------------: | ----------------: | -----------------: | :----------------- |
+| \ref SecModDef    |        +        |          -          |         -       ||          *         ||        -         |         +         |          +         | \ref SecEmmCSource |
+| \ref SecModFile   |        -        |         ???         |         +       ||          *         ||        -         |         -         |          -         | \ref SecEmmGtk     |
+| \ref SecModList   |        -        |         ???         |         +       ||          *         ||        -         |         +         |          -         | \ref SecEmmDoxy    |
+| \ref SecModSyntax |        +        |         ???         |        ???      ||          *         ||        -         |         -         |          -         | \ref SecEmmLfn     |
+| \ref SecModGeany  |       ???       |          -          |         -       ||          *         ||        +         |         -         |          -         | \ref SecEmmSyntax  |
 
 \Proj gets invoked in diffenrent manners,
 
@@ -85,16 +109,16 @@ by an external emitter, loaded at run-time.
 - by *doxygen* as a filter, or
 - manualy at the command line (special tasks).
 
-In combination with \ref SecUseDoxy several extra functions are
+In combination with emitter \ref SecEmmDoxy several extra functions are
 available, in order to
 
 - generate caller / callee graphs, and
 - generate source code listings with correct syntax highlighting and hyperlinks
 
 for output formats HTML, TEX, PDF and XML. Therefor \Proj also reads
-and parses the Doxygen configuration file, in order to determine some
-related settings, folders and file patterns. Then it operates (like
-Doxygen) on multiple files in one go.
+and parses (partialy) the Doxygen configuration file, in order to
+determine some related settings, folders and file patterns. Then it
+operates (like Doxygen) on multiple files in one go.
 
 Here's a grafical overview on the \Proj data flow
 

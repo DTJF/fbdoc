@@ -32,16 +32,17 @@ SubSecExaDoxy for an example.
 '/
 
 #INCLUDE ONCE "fb-doc_parser.bi"
-#INCLUDE ONCE "fb-doc.bi"
 #INCLUDE ONCE "fb-doc_options.bi"
 #INCLUDE ONCE "fb-doc_version.bi"
 
 
 CONST _
    DOXY_START = NL & "/'* ", _ '*< the start of a comment block
-     DOXY_END = NL & _
-                NL & FIXME & _
-                     COMM_END  '*< the end of a comment block
+     DOXY_END = NL _
+              & NL & TOFIX _
+              & NL _
+              & NL & "\since " & TOFIX _
+                   & COMM_END  '*< the end of a comment block
 
 
 /'* \brief Emitter to generate a line for a parameter list entry
@@ -55,7 +56,7 @@ output stream.
 '/
 SUB doxy_entryListPara CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
-    IF .NamTok THEN Code(NL & "\param " & .SubStr(.NamTok) & " " & FIXME)
+    IF .NamTok THEN Code(NL & "\param " & .SubStr(.NamTok) & " " & TOFIX)
   END WITH
 END SUB
 
@@ -72,12 +73,12 @@ sends it to the output stream.
 SUB doxy_func_ CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     VAR a = .StaTok[1], b = .ParTok, t = .TypTok
-    cEmitSource(P, .StaTok[1])
+    emit_source(P, .StaTok[1])
     Code(     DOXY_START & "\fn ")
     OPT->CreateFunction(P)
-    Code(NL & "\brief " & FIXME)
+    Code(NL & "\brief " & TOFIX)
     IF b THEN .ParTok = b : .parseListPara(@doxy_entryListPara())
-    IF t THEN Code(NL & "\returns " & FIXME)
+    IF t THEN Code(NL & "\returns " & TOFIX)
     Code(DOXY_END)
     .SrcBgn = a
   END WITH
@@ -95,7 +96,7 @@ each variable name and sends it (them) to the output stream.
 SUB doxy_decl_ CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     IF 0 = .ListCount THEN
-      cEmitSource(P, .StaTok[1])
+      emit_source(P, .StaTok[1])
       Code(DOXY_START)
 
       IF .FunTok THEN  Code("\fn ") _
@@ -113,20 +114,21 @@ SUB doxy_decl_ CDECL(BYVAL P AS Parser PTR)
     IF     .FunTok THEN
       VAR a = .SrcBgn, b = .ParTok, t = .TypTok
       OPT->CreateFunction(P)
-      Code(NL & "\brief " & FIXME)
+      Code(NL & "\brief " & TOFIX)
       IF b THEN .ParTok = b : .parseListPara(@doxy_entryListPara())
-      IF t THEN Code(NL & "\returns: " & FIXME)
+      IF t THEN Code(NL & "\returns: " & TOFIX)
       Code(DOXY_END)
       .SrcBgn = a
       Code("'' " & PROJ_NAME & "-hint: consider to document the functions body instead." & NL)
     ELSEIF .TypTok THEN
       OPT->CreateVariable(P)
-      Code(NL & "\brief " & FIXME & DOXY_END)
+      Code(NL & "\brief " & TOFIX & DOXY_END)
     ELSE
       IF 0 = .ListCount THEN Code("VAR ")
                              Code(.SubStr(.NamTok))
       IF .IniTok THEN        cIni(P)
-      Code(NL & "\brief " & FIXME & DOXY_END)
+      Code(NL & "\brief " & TOFIX _
+              & DOXY_END)
     END IF
   END WITH
 END SUB
@@ -142,9 +144,9 @@ to the output stream.
 '/
 SUB doxy_defi_ CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
-    cEmitSource(P, .StaTok[1])
+    emit_source(P, .StaTok[1])
     Code(  DOXY_START & "\def " & .SubStr(.NamTok) & _
-      NL & "\brief " & FIXME & _
+      NL & "\brief " & TOFIX & _
            DOXY_END)
   END WITH
 END SUB
@@ -168,8 +170,8 @@ SUB doxy_emitBlockNames CDECL(BYVAL P AS Parser PTR)
     CASE .TOK_ENUM
       .parseBlockEnum(@doxy_emitBlockNames())
     CASE ELSE : IF 0 = .NamTok THEN EXIT SUB
-      Code(NL & "\var " & .BlockNam & "::" & .SubStr(.NamTok) &  " " & FIXME & _
-           NL & "\brief " & FIXME)
+      Code(NL & "\var " & .BlockNam & "::" & .SubStr(.NamTok) &  " " & TOFIX & _
+           NL & "\brief " & TOFIX)
     END SELECT
   END WITH
 END SUB
@@ -185,34 +187,28 @@ for each member and sends it to the output stream.
 '/
 SUB doxy_Block CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
-    cEmitSource(P, .StaTok[1])
+    emit_source(P, .StaTok[1])
     SELECT CASE AS CONST *.Tk1
     CASE .TOK_ENUM
       Code(  DOXY_START & "\enum " & .BlockNam & _
-        NL & "\brief " & FIXME & _
-        NL & _
-        NL & FIXME & _
-        NL)
+        NL & "\brief " & TOFIX _
+           & DOXY_END)
       .parseBlockEnum(@doxy_emitBlockNames())
     CASE .TOK_UNIO
       Code(  DOXY_START & "\union " & .BlockNam & _
-        NL & "\brief " & FIXME & _
-        NL & _
-        NL & FIXME & _
-        NL)
+        NL & "\brief " & TOFIX _
+           & DOXY_END)
       .parseBlockTyUn(@doxy_emitBlockNames())
     CASE ELSE
       IF OPT->Types = OPT->FB_STYLE _
         THEN Code(DOXY_START & "\class ") _
         ELSE Code(DOXY_START & "\struct ")
       Code(  .BlockNam & _
-        NL & "\brief " & FIXME & _
-        NL & _
-        NL & FIXME & _
-        NL)
+        NL & "\brief " & TOFIX _
+           & DOXY_END)
       .parseBlockTyUn(@doxy_emitBlockNames())
     END SELECT
-    Code(COMM_END)
+    Code(NL & COMM_END)
   END WITH
 END SUB
 
@@ -227,8 +223,8 @@ output stream.
 '/
 SUB doxy_empty CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
-    Code(  DOXY_START & "\file " & FIXME & _
-      NL & "\brief " & FIXME & _
+    Code(  DOXY_START & "\file " & TOFIX & _
+      NL & "\brief " & TOFIX & _
            DOXY_END)
   END WITH
 END SUB
@@ -242,9 +238,9 @@ FIXME
 
 \since 0.4.0
 '/
-SUB doxy_init(BYVAL Emi AS EmitterIF PTR)
+SUB init_doxy(BYVAL Emi AS EmitterIF PTR)
   WITH *Emi
-    .Error_ = @c_error() '           we use the standard error emitter here
+    .Error_ = @emit_error() '           we use the standard error emitter here
 
      .Func_ = @doxy_func_()
      .Decl_ = @doxy_decl_()

@@ -10,27 +10,17 @@ the \ref EmitterIF.
 #INCLUDE ONCE "fb-doc_emitters.bi"
 
 #IF __FB_OUT_DLL__ OR DEFINED(__FB_DOC_PLUGIN__)
- '* Convenience macro for output (plugins)
+ '* Convenience macro for output (plugins) (\Proj intern)
   #DEFINE Code(_T_) P->writeOut(_T_)
-#print __FB_OUT_DLL__ OR DEFINED(__FB_DOC_PLUGIN__)
+  #PRINT compiling __FB_DOC_PLUGIN__
 '&/*
 #ELSE
- #DEFINE Code(_T_) PRINT #OPT->Ocha, _T_; ' Convenience macro for output (\Proj intern)
+ #DEFINE Code(_T_) PRINT #OPT->Ocha, _T_;
 '&*/
 #ENDIF
 
-#IFDEF __FB_UNIX__
- CONST _
-   SLASH = "/" _ '*< separator for folders (unix version)
-    , NL = !"\n" '*< separator for lines (unix version)
-'&/*
-#ELSE
- CONST _
-   SLASH = "\" _
-    , NL = !"\r\n"
-'&*/
-#ENDIF
 
+'&typedef Parser* Parser_PTR; //!< Doxygen internal (ignore this).
 /'* \brief The parser
 
 Class to handle FreeBASIC source code. A Parser allways work on
@@ -53,7 +43,6 @@ When \Proj follows the source tree (option `--tree`), the
 function \ref EmitterIF::Incl_() creates a new Parser for each file.
 
 '/
-'&typedef Parser* Parser_PTR;
 TYPE Parser
 Public:
 
@@ -374,10 +363,10 @@ the buffer is reached).
 
 /'* \brief Find the end of a line end comment
 
-This snippet is used to find the end of a line end comment. It
-checks for a ASC(!"\n") and evaluates line concatenations ( _ ) on
-the way. It stops at the line end (if Buf[Po] isn't ASC(!"\n") then
-the end of the buffer is reached).
+This snippet is used to find the end of a line end comment. It checks
+for a `ASC(!"\n")` and evaluates line concatenations ( _ ) on the way.
+It stops at the line end (if `Buf[Po]` isn't `ASC(!"\n")` then the end
+of the buffer is reached).
 
 '/
 #MACRO SCAN_SL_COMM(Buf,Po)

@@ -7,14 +7,18 @@
     <tab type="usergroup" title="Description">
       <tab type="user" url="@ref PagIntro" title="Introduction"/>
       <tab type="user" url="@ref PagInstall" title="Preparation"/>
+<!--
       <tab type="user" url="@ref PagUsage" title="How To Use"/>
       <tab type="user" url="@ref PagExamples" title="Examples"/>
       <tab type="user" url="@ref PagTables" title="Tables"/>
       <tab type="user" url="@ref PagRunModi" title="Run Modi"/>
-      <tab type="user" url="@ref PagOptionDetails" title="Options in Detail"/>
-      <tab type="user" url="@ref PagEmitter" title="Emitters in Detail"/>
+-->
+      <tab type="user" url="@ref PagOptions" title="Options in Detail"/>
+      <tab type="user" url="@ref PagEmitters" title="Emitters in Detail"/>
       <tab type="user" url="@ref PagFiles" title="Files and Folders"/>
+<!--
       <tab type="user" url="@ref PagExtend" title="Extending fb-doc"/>
+-->
       <tab type="user" url="@ref PagChangeLog" title="Changelog &amp; Credits"/>
     </tab>
 

@@ -11,19 +11,21 @@ compiled in FB.
 '/
 
 #INCLUDE ONCE "../bas/fb-doc_parser.bi"
+#INCLUDE ONCE "../bas/fb-doc_options.bi"
 
 
 '* Macro to place a comment in to the output (file name and line number)
-#DEFINE NEW_ENTRY Code(!"\n\n# " & MID(.Fnam, INSTRREV(.Fnam, SLASH) + 1) & ": " & .LineNo)
+#DEFINE NEW_ENTRY Code(NL & NL & "# " & MID(.Fnam, INSTRREV(.Fnam, SLASH) + 1) & ": " & .LineNo)
 DIM SHARED AS LONG _
-  ENUM_COUNT  '*< counter for ENUM blocks
+  ENUM_COUNT  '*< A counter for ENUM blocks
 DIM SHARED AS STRING _
-    T0 _      '*< first type block
-  , T1 _      '*< second type block
-  , T2 _      '*< the list of type names (`,` separated)
-  , CLASSES _ '*< the list of class names (NL separated)
-  , LIBRARY   '*< the name of the binary to include
-CLASSES = !"\n"
+    T0 _      '*< The first type block
+  , T1 _      '*< The second type block
+  , T2 _      '*< The list of type names (`,` separated)
+  , CLASSES _ '*< The list of class names (`!"\n"` separated)
+  , LIBRARY _ '*< The name of the binary to build
+  , HEADER    '*< The header for the output
+CLASSES = !"\n" ' initialize the list
 
 
 /'* \brief Transform number literals
@@ -131,10 +133,10 @@ SUB py_emitEnumNames CDECL(BYVAL P AS Parser PTR)
       v = STR(ENUM_COUNT)
     END IF
     ENUM_COUNT = IIF(.IniTok, VALINT(MID(.Buf, .IniTok[1] + 2)), ENUM_COUNT + 1)
-    Code(!"\n\ntry:" _
-      & !"\n    " & .SubStr(.NamTok) & " =" & v _
-      & !"\nexcept:" _
-      & !"\n    pass")
+    Code(NL & NL & "try:" _
+            & NL & "    " & .SubStr(.NamTok) & " =" & v _
+            & NL & "except:" _
+            & NL & "    pass")
   END WITH
 END SUB
 
@@ -181,8 +183,8 @@ SUB py_emitBlockNames CDECL(BYVAL P AS Parser PTR)
         LOOP
         size &= ")"
       END IF
-      T0 &=  !"\n    '" & .SubStr(.NamTok) & "',"
-      T1 &= !"\n    ('" & .SubStr(.NamTok) & "', " & ctype & size & "),"
+      T0 &= NL & "    '" & .SubStr(.NamTok) & "',"
+      T1 &= NL & "    ('" & .SubStr(.NamTok) & "', " & ctype & size & "),"
     END SELECT
   END WITH
 END SUB
@@ -203,10 +205,10 @@ SUB py_function CDECL(BYVAL P AS Parser PTR)
       typ = genCType(P)
       IF typ = "c_char_p" THEN
         typ =    "if sizeof(c_int) == sizeof(c_void_p):" _
-        & !"\n        " & sym & ".restype = ReturnString" _
-        & !"\n    else:" _
-        & !"\n        " & sym & ".restype = String" _
-        & !"\n        " & sym & ".errcheck = ReturnString"
+        & NL & "        " & sym & ".restype = ReturnString" _
+        & NL & "    else:" _
+        & NL & "        " & sym & ".restype = String" _
+        & NL & "        " & sym & ".errcheck = ReturnString"
       END IF
     ELSE
       typ = sym & ".restype = None"
@@ -215,10 +217,10 @@ SUB py_function CDECL(BYVAL P AS Parser PTR)
     IF .ParTok THEN .parseListPara(@py_entryListPara())
 
     NEW_ENTRY
-    Code(!"\n\nif hasattr(_libs['" & LIBRARY & "'], '" & sym & "'):" _
-         & !"\n    " & sym & " = _libs['" & LIBRARY & "']." & sym _
-         & !"\n    " & sym & ".argtypes = [" & MID(T2, 3) & "]" _
-         & !"\n    " & typ)
+    Code(NL & NL & "if hasattr(_libs['" & LIBRARY & "'], '" & sym & "'):" _
+            & NL & "    " & sym & " = _libs['" & LIBRARY & "']." & sym _
+            & NL & "    " & sym & ".argtypes = [" & MID(T2, 3) & "]" _
+            & NL & "    " & typ)
   END WITH
 END SUB
 
@@ -236,10 +238,10 @@ SUB py_declare CDECL(BYVAL P AS Parser PTR)
 
     NEW_ENTRY
     VAR n = genCType(P)
-    IF n <> .SubStr(.TypTok) THEN Code(!"\n\n" & .SubStr(.NamTok) & " = " & n) : EXIT SUB
+    IF n <> .SubStr(.TypTok) THEN Code(NL & NL & .SubStr(.NamTok) & " = " & n) : EXIT SUB
     CLASSES &= n & !"\n"
-    Code(!"\n\nclass = struct_" & n & "(Structure):" _
-         & !"\n    pass")
+    Code(NL & NL & "class = struct_" & n & "(Structure):" _
+            & NL & "    pass")
   END WITH
 END SUB
 
@@ -290,14 +292,14 @@ SUB py_class CDECL(BYVAL P AS Parser PTR)
     NEW_ENTRY
 
     IF 0 = INSTR(CLASSES, !"\n" & .BlockNam & !"\n") THEN
-      Code(!"\n\nclass struct_" & .BlockNam & "(Structure):" _
-           & !"\n    pass ")
+      Code(NL & NL & "class struct_" & .BlockNam & "(Structure):" _
+              & NL & "    pass ")
     END IF
 
-    Code(!"\n\n" _
-       & T0 & !"\n]" _
-       & !"\n\n" _
-       & T1 & !"\n]")
+    Code(NL & NL _
+       & T0 & NL & "]" _
+       & NL & NL _
+       & T1 & NL & "]")
   END WITH
 END SUB
 
@@ -320,10 +322,10 @@ SUB py_define CDECL(BYVAL P AS Parser PTR)
     VAR v = TRIM(MID(.Buf, a, l))
     genNLiteral(v)
     NEW_ENTRY
-    Code(!"\n\ntry:" _
-         & !"\n    " & .SubStr(.NamTok) & " = " & v _
-         & !"\nexcept:" _
-         & !"\n    pass")
+    Code(NL & NL & "try:" _
+            & NL & "    " & .SubStr(.NamTok) & " = " & v _
+            & NL & "except:" _
+            & NL & "    pass")
   END WITH
 END SUB
 
@@ -342,29 +344,53 @@ SUB py_include CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-/'* \brief Emitter called after the input got parsed
+/'* \brief Emitter called when the Parser is at an #`INCLUDE` line
 \param P The parser calling this emitter
 
 FIXME
 
 \since 0.4.0
 '/
-SUB py_CTOR CDECL(BYVAL P AS Parser PTR)
-  Code("# header file auto generated by fb-doc and plugin py_ctypes.bas" & NL & NL)
-  Code("_libs[""" & LIBRARY & """] = load_library(""" & LIBRARY & """)")
+SUB py_init CDECL(BYVAL P AS Parser PTR)
+  IF LEN(HEADER) THEN Code(HEADER) : HEADER = ""
 END SUB
 
 
-/'* \brief Emitter called after the input got parsed
+/'* \brief Emitter called when the Parser is at an #`INCLUDE` line
 \param P The parser calling this emitter
 
 FIXME
 
 \since 0.4.0
 '/
-SUB py_DTOR CDECL(BYVAL P AS Parser PTR)
+SUB py_exit CDECL(BYVAL P AS Parser PTR)
   Code(NL)
 END SUB
+
+
+/'* \brief Constructor called before the first input gets parsed
+\param O The Options UDT calling this constructor
+
+FIXME
+
+\since 0.4.0
+'/
+SUB py_CTOR CDECL(BYVAL O AS Options PTR)
+  HEADER = "# header file auto generated by fb-doc and plugin py_ctypes.bas" & NL & NL _
+         & "_libs[""" & LIBRARY & """] = load_library(""" & LIBRARY & """)"
+END SUB
+
+
+'/'* \brief Emitter called after the input got parsed
+'\param O The parser calling this emitter
+
+'FIXME
+
+'\since 0.4.0
+''/
+'SUB py_DTOR CDECL(BYVAL O AS Options PTR)
+  'Code(NL)
+'END SUB
 
 
 
@@ -378,6 +404,11 @@ FIXME
 '/
 SUB EmitterInit CDECL(BYVAL Emi AS EmitterIF PTR, BYREF Par AS STRING) EXPORT
   WITH *Emi
+    .CTOR_ = @py_CTOR()
+    '.DTOR_ = @py_DTOR()
+    .Init_ = @py_init()
+    .Exit_ = @py_exit()
+
     .Decl_ = @py_declare()
     .Func_ = @py_function()
     .Enum_ = @py_enum()
@@ -385,9 +416,8 @@ SUB EmitterInit CDECL(BYVAL Emi AS EmitterIF PTR, BYREF Par AS STRING) EXPORT
     .Clas_ = @py_class()
     .Defi_ = @py_define()
     .Incl_ = @py_include()
-    .CTOR_ = @py_CTOR()
-    .DTOR_ = @py_DTOR()
   END WITH
+
   VAR a = INSTR(Par, !"\t-pylib=")
   IF a THEN
     a += 8

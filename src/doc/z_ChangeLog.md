@@ -39,21 +39,20 @@ New:
 - CMake build scripts, modular compiling (in-source / out-of-source)
 - separate doc building: doc_htm, doc_pdf
 - Doxyfile parsing supports `@INCLUDE` tag now
-- source listings: documentational comments get removed now (as in Doxygen listings)
+- source listings: documentational comments get removed now by default (as in Doxygen listings)
 - source listings: new option --doc-comments (-d) to force inclusion of documentational comments
-- example plugin py_ctypes to create language bindings for python
+- plugin example py_ctypes to create language bindings for python
 - support for inherritance (`EXTENDS`)
 - support for `DIM` and `REDIM` in `TYPE` and `UNION` blocks
-- EmitterIF reviewed, new init process
-- command line options for plugins
+- init process (EmitterIF reviewed)
+- command line options transfer to plugins
 
 Bugfixes:
 
 - syntax highlighter: finds FB source files in subfolders now (TEX, XML)
-- syntax highlighter: suppressed #`INCLUDE` statements work now (HTM, TEX, XML)
-- syntax highlighter: suppressed code before multi line comment work now
-- fixed interface for external emitter plugins
-- plugin example fixed
+- syntax highlighter: suppressed #`INCLUDE` statements fixed (HTM, TEX, XML)
+- syntax highlighter: suppressed code before multi line comment fixed
+- plugin example empty.bas fixed and improved
 - parsing problem `REDIM PRESERVE "..."` fixed
 - parsing problem `EXTERN "..."` fixed
 - parsing problem `DECLARE ...` after bitfields fixed
@@ -94,6 +93,11 @@ Initial release on 2012 April, 29.
 Thanks go to:
 
 - The FreeBASIC developer team for creating a great compiler.
+
+- Bill Hoffman, Ken Martin, Brad King, Dave Cole, Alexander Neundorf,
+  Clinton Stimpson for developing the CMake tool and publishing it
+  under an open licence (the documentation has optimization
+  potential).
 
 - Dimitri van Heesch for creating the Doxygen tool, which is used to
   generate this documentation.

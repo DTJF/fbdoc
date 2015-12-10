@@ -25,20 +25,16 @@ execution.
 #DEFINE MSG_END(_T_) PRINT #OPT->Efnr, _T_
 
 
-/'* \brief File name for list of function names (caller / callees graphs) '/
-CONST CALLEES_FILE = "fb-doc.lfn"
+/'* \brief Evaluate parameters from command line
 
-/'* \brief Parameters read from the command line
-
-The class to scan options and parameters from command line. the
-command line gets parsed once at the program start. Since this
-structure is global, the settings are available in all internal
+This class is designed to scan options and parameters from command
+line. The command line gets parsed once at the program start. Since
+this structure is global, the settings are available in all internal
 modules.
 
 '/
-'&typedef Options* Options_PTR; /**< Doxygen internal (ignore this). */
 TYPE Options
-/'* \brief \Proj operation modes. '/
+  /'* \brief \Proj operation modes. '/
   ENUM RunModes
 
     /'* \brief Report an error found in the command line
@@ -61,8 +57,8 @@ TYPE Options
     /'* \brief Operate in Geany mode
 
     Input from STDIN and output on STDOUT. Usually this is to generate
-    templates in Geany, but it also can be used with pipes. (Option \em
-    --geany-mode). '/
+    templates in Geany, but it also can be used with pipes. (Option
+    ''--geany-mode''). '/
     GEANY_MODE
 
     /'* \brief Operate as Doxygen filter
@@ -81,21 +77,22 @@ TYPE Options
 
     /'* \brief Operate in list mode
 
-    Read input from one or more files, write output to a single file \em
-    fb-doc.lfn. Generate a list of callee names in this file. When no file
-    name or pattern is specified, all <em>*.bas</em> and <em>*.bi</em>
-    files in the current folder gets parsed. (Option `--list-mode`). '/
+    Read input from one or more files, write output to a single file
+    `fb-doc.lfn`. Generate a list of callee names in this file. When no
+    file name or pattern is specified, all <em>*.bas</em> and
+    <em>*.bi</em> files in the current folder gets parsed. (Option
+    `--list-mode`). '/
     LIST_MODE
 
     /'* \brief Operate in syntax-highlighting mode
 
-    Read input from one or more files, write output to a several files. As
-    input \Proj reads files created by Doxygen, containing the source
-    listings in the intermediate format. The file types depend on the
-    settings in the Doxyfile. It may be <em>*.html, *.tex</em> and
-    <em>*.xml</em>, depending on GENERATE_HTML & SOURCE_BROWSER,
-    GENERATE_LATEX & LATEX_SOURCE_CODE and GENERATE_XML &
-    XML_PROGRAMLISTING. '/
+    Read input from one or more files, write output to a several files.
+    As input \Proj reads files created by Doxygen, containing the
+    source listings in the intermediate format. The file types depend
+    on the settings in the Doxyfile. It may be `*.html`, `*.tex` and
+    `*.xml`, depending on tags `SOURCE_BROWSER =` and `GENERATE_HTML
+    =`, `GENERATE_LATEX =` / `LATEX_SOURCE_CODE =` and `GENERATE_XML =`
+    / `XML_PROGRAMLISTING`. '/
     SYNT_MODE
 
   END ENUM
@@ -121,15 +118,18 @@ TYPE Options
   AS RunModes      RunMode = DEF_MODE '*< the mode to operate (defaults to DOXYFILTER)
   AS TypesStyle      Types = FB_STYLE '*< the style for the type generation (defaults to FB_STYLE)
   AS Parser PTR       Pars = 0        '*< the parser we use
-  AS EmitterTypes  EmitTyp = C_SOURCE '*< the emitter type (defaults to \em C_Source)
-  AS CaseModes    CaseMode = CASE_ORIGN '*< the emitter type (defaults to \em C_Source)
+  AS EmitterTypes  EmitTyp = C_SOURCE '*< the emitter type (defaults to `C_Source`)
+  AS CaseModes    CaseMode = CASE_ORIGN '*< the emitter type (defaults to `C_Source`)
   AS EmitterIF PTR  EmitIF = 0        '*< the emitter we use (set in \ref Options::parseCLI())
   AS ANY PTR    DllEmitter = 0        '*< the pointer for an external emitter
-#IFDEF __FB_UNIX__ '&ZSTRING_PTR DirUp = "../";  /* tricky declaration for Doxygen (miss-interpretes the @ character)
-  AS ZSTRING PTR     DirUp = @"../"   '*< sequence to get one directory up
+#IFDEF __FB_UNIX__
+'&ZSTRING_PTR DirUp = "../";  //!< sequence to get one directory up
+'&/* tricky declaration for Doxygen (it miss-interpretes the @ character)
+  AS ZSTRING PTR     DirUp = @"../"
 #ELSE
-  AS ZSTRING PTR     DirUp = @"..\"   '*< sequence to get one directory up
-#ENDIF '&*/
+  AS ZSTRING PTR     DirUp = @"..\"
+'&*/
+#ENDIF
   AS STRING _
        InFiles = "" _ '*< name or pattern of all input file[s]
    , StartPath = "" _ '*< path at program start
@@ -165,5 +165,13 @@ TYPE Options
 END TYPE
 
 
+'&typedef Options* Options_PTR; //!< Doxygen internal (ignore this).
 /'* \brief The global struct for all parameters read from the command line '/
 COMMON SHARED AS Options PTR OPT
+
+' Forward declaration of internal emitter init functions
+DECLARE SUB init_csource(BYVAL AS EmitterIF PTR)
+DECLARE SUB init_doxy(BYVAL AS EmitterIF PTR)
+DECLARE SUB init_gtk(BYVAL AS EmitterIF PTR)
+DECLARE SUB init_lfn(BYVAL AS EmitterIF PTR)
+DECLARE SUB init_syntax(BYVAL AS EmitterIF PTR)

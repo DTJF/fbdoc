@@ -1,15 +1,15 @@
 /'* \file fb-doc_doxyfile.bi
-\brief Declarations for the \ref Doxyfile class
+\brief Declarations for the DoxyUDT class
 
-This file contains the declaration code for the Doxyfile class, used to
-read parameters from a Doxyfile.
+This file contains the declaration code for the DoxyUDT class, used to
+read parameters from a Doxygen configuration file.
 
 '/
 
 
-/'* \brief enumerators for the tags in the Doxyfile
+/'* \brief Enumerators for the tags in the Doxyfile
 
-Enumerators used for the STRING array Tags() in UDT Doxyfile. They're
+Enumerators used for the STRING array Tags() in DoxyUDT. They're
 named after the tag names in the Doxyfile. Exeption: INPUT gets
 INPUT_TAG (due to FB keyword collision).
 
@@ -31,18 +31,19 @@ ENUM DoxyTags
   XML_OUTPUT          '*< the tag XML_OUTPUT
 END ENUM
 
-/'* \brief handle a Doxyfile
 
-Load a Doxyfile and parse its coontext. In case of failure finding or
-loading the file the Errr variable gets set in the constructor. Its
-empty on success.
+'&typedef DoxyUDT* DoxyUDT_PTR; //!< Doxygen internal (ignore this).
+/'* \brief Class to handle a Doxyfile
 
-Currently only the first entry in a tags gets parsed (just the first
-parameter of a lists).
+Load a Doxygen configuration file and parse its contents. In case of a
+failure in finding or loading the file, the variable DoxyUDT.Errr gets
+set in the constructor. It points to `NULL` (is empty) on success.
+
+Currently only the first entry in a multi line tag gets parsed (just
+the first parameter of a lists).
 
 '/
-'&typedef Doxyfile* Doxyfile_PTR; /**< Doxygen internal (ignore this). */
-TYPE Doxyfile
+TYPE DoxyUDT
   AS INTEGER Length   '*< the length of the buffer
   AS UBYTE PTR Buffer '*< the buffer data
   AS ZSTRING PTR _

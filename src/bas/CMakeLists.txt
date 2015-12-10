@@ -6,9 +6,10 @@ CONFIGURE_FILE(${fnam}.in ${fnam} @ONLY)
 
 SET(BAS_SRC
   "${CMAKE_CURRENT_SOURCE_DIR}/fb-doc_doxyfile.bas"
-  "${CMAKE_CURRENT_SOURCE_DIR}/fb-doc_emit_callees.bas"
+  "${CMAKE_CURRENT_SOURCE_DIR}/fb-doc_emit_csource.bas"
   "${CMAKE_CURRENT_SOURCE_DIR}/fb-doc_emit_doxy.bas"
   "${CMAKE_CURRENT_SOURCE_DIR}/fb-doc_emit_gtk.bas"
+  "${CMAKE_CURRENT_SOURCE_DIR}/fb-doc_emit_lfn.bas"
   "${CMAKE_CURRENT_SOURCE_DIR}/fb-doc_emit_syntax.bas"
   "${CMAKE_CURRENT_SOURCE_DIR}/fb-doc_emitters.bas"
   "${CMAKE_CURRENT_SOURCE_DIR}/fb-doc_options.bas"
@@ -18,7 +19,7 @@ SET(BAS_SRC
   )
 #SET(BAS_SRC
   #fb-doc_doxyfile.bas
-  #fb-doc_emit_callees.bas
+  #fb-doc_emit_lfn.bas
   #fb-doc_emit_doxy.bas
   #fb-doc_emit_gtk.bas
   #fb-doc_emit_syntax.bas

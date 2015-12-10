@@ -2,7 +2,7 @@
 \brief Example code for an empty external emitter
 
 This file contains example source code for an external emitter. It
-isn't used in the \Proj source tree. See \ref PagExtend for details.
+isn't used in the \Proj source tree. See \ref SecEmmEx for details.
 
 This emitter generates a list of the function names called via the
 emitter interface. So when you input some FB source to \Proj and use
@@ -59,9 +59,9 @@ EMPTY_DTOR
 \endverbatim
 
 - The constructor (`EMPTY_CTOR`) is called once at the start after loading the plugin.
-- The `EMPTY_INIT` function is called at the start of each file (`#INCLUDE`).
+- The `EMPTY_INIT` function is called at the start of each file (#`INCLUDE`).
 - The middle part contains `EMPTY_FUNCTION` calls here (, since the source contains only `SUB`s and `FUNCTION`s).
-- The `EMPTY_EXIT` function is called at the end of each file (`#INCLUDE`).
+- The `EMPTY_EXIT` function is called at the end of each file (#`INCLUDE`).
 - The destructor (`EMPTY_DTOR`) is called once after finishing all input.
 
 Test the plugin with other input files, check also option `-t` to
@@ -74,6 +74,7 @@ follow a source tree.
 '/
 
 #INCLUDE ONCE "../bas/fb-doc_parser.bi"
+#INCLUDE ONCE "../bas/fb-doc_options.bi"
 
 
 /'* \brief Emitter called when the Parser is at a variable declaration
@@ -216,26 +217,26 @@ END SUB
 
 
 /'* \brief Emitter called before the parser gets created and the input gets parsed
-\param P The parser calling this emitter
+\param O The Options UDT calling this constructor
 
 FIXME
 
 \since 0.2.0
 '/
-SUB empty_CTOR CDECL(BYVAL P AS Parser PTR)
-  Code(NL & __FUNCTION__)
+SUB empty_CTOR CDECL(BYVAL O AS Options PTR)
+  PRINT NL & __FUNCTION__
 END SUB
 
 
 /'* \brief Emitter called after the input got parsed and the parser got deleted
-\param P The parser calling this emitter
+\param O The Options UDT calling this destructor
 
 FIXME
 
 \since 0.2.0
 '/
-SUB empty_DTOR CDECL(BYVAL P AS Parser PTR)
-  Code(NL & __FUNCTION__ & NL)
+SUB empty_DTOR CDECL(BYVAL O AS Options PTR)
+  PRINT NL & __FUNCTION__ & NL
 END SUB
 
 
@@ -243,9 +244,9 @@ END SUB
 \param Emi The newly created EmitterIF to fill with our callbacks
 \param Par Additional command line parameters, not parsed by \Proj
 
-When the user requires to load this plugin by option `-e "empty"`, this
-SUB gets called to initialize the EmitterIF. Here, all default
-callbacks (= null_emitter() ) get replaced by custom functions. Those
+When the user requires to load this plugin by option \ref
+SecOptEmitter, this SUB gets called to initialize the EmitterIF. Here,
+all default pointers (= NULL) get replaced by custom functions. Those
 functions just report all the \Proj function calls, in order to make
 the parsing process transparent.
 
@@ -260,6 +261,9 @@ execution by an `unknown options` error.
 '/
 SUB EmitterInit CDECL(BYVAL Emi AS EmitterIF PTR, BYREF Par AS STRING) EXPORT
   WITH *Emi
+    .CTOR_ = @empty_CTOR()
+    .DTOR_ = @empty_DTOR()
+
     .Decl_ = @empty_declare()
     .Func_ = @empty_function()
     .Enum_ = @empty_enum()
@@ -271,8 +275,6 @@ SUB EmitterInit CDECL(BYVAL Emi AS EmitterIF PTR, BYREF Par AS STRING) EXPORT
    .Error_ = @empty_error()
    .Empty_ = @empty_empty()
     .Exit_ = @empty_exit()
-    .CTOR_ = @empty_CTOR()
-    .DTOR_ = @empty_DTOR()
   END WITH
 
   VAR a = INSTR(Par, !"\t-empty=")           ' get out parameter, if any
