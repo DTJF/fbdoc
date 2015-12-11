@@ -1,4 +1,4 @@
-/'* \file fb-doc_emit_doxy.bas
+/'* \file fbdoc_emit_doxy.bas
 \brief Emitter for Doxygen templates
 
 This file contains the emitter called "DoxygenTemplates", used to
@@ -31,9 +31,8 @@ SubSecExaDoxy for an example.
 
 '/
 
-#INCLUDE ONCE "fb-doc_parser.bi"
-#INCLUDE ONCE "fb-doc_options.bi"
-#INCLUDE ONCE "fb-doc_version.bi"
+#INCLUDE ONCE "fbdoc_options.bi"
+#INCLUDE ONCE "fbdoc_version.bi"
 
 
 CONST _
@@ -126,7 +125,7 @@ SUB doxy_decl_ CDECL(BYVAL P AS Parser PTR)
     ELSE
       IF 0 = .ListCount THEN Code("VAR ")
                              Code(.SubStr(.NamTok))
-      IF .IniTok THEN        cIni(P)
+      IF .IniTok THEN        CreateIni(P)
       Code(NL & "\brief " & TOFIX _
               & DOXY_END)
     END IF

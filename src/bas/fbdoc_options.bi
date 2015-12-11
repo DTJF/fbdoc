@@ -1,4 +1,4 @@
-/'* \file fb-doc_options.bi
+/'* \file fbdoc_options.bi
 \brief Header file for options
 
 This file contains the declaration of the \ref Options class. It's used
@@ -8,8 +8,7 @@ execution.
 '/
 
 #INCLUDE ONCE "dir.bi"
-#INCLUDE ONCE "fb-doc_emitters.bi"
-#INCLUDE ONCE "fb-doc_parser.bi"
+#INCLUDE ONCE "fbdoc_parser.bi"
 
 
 /'* \brief Emit an error message to STDERR '/

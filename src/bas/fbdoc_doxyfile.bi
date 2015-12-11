@@ -1,4 +1,4 @@
-/'* \file fb-doc_doxyfile.bi
+/'* \file fbdoc_doxyfile.bi
 \brief Declarations for the DoxyUDT class
 
 This file contains the declaration code for the DoxyUDT class, used to

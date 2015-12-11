@@ -14,3 +14,5 @@ tag `INPUT`: path to FB source at first entry
 
 
 #  {#SecTip2}
+
+`warning: return type of member XYZ is not documented` -> SUB

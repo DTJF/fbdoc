@@ -1,4 +1,4 @@
-/'* \file fb-doc_emit_syntax.bi
+/'* \file fbdoc_emit_syntax.bi
 \brief Declarations for syntax highlighting emitter.
 
 This file contains the declaration code for the "SyntaxHighLighting"
@@ -6,8 +6,8 @@ emitter, namely the classes RepData and Highlighter.
 
 '/
 
-#INCLUDE ONCE "fb-doc_parser.bi"
-#INCLUDE ONCE "fb-doc_version.bi"
+#INCLUDE ONCE "fbdoc_parser.bi"
+#INCLUDE ONCE "fbdoc_version.bi"
 
 
 /'* \brief A container for string replacements

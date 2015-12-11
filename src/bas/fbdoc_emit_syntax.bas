@@ -1,4 +1,4 @@
-/'* \file fb-doc_emit_syntax.bas
+/'* \file fbdoc_emit_syntax.bas
 \brief Emitter for repairing the Doxygen syntax highlighting.
 
 This file contains the emitter called "SyntaxHighLighting", used as
@@ -19,11 +19,10 @@ for this feature is also contained here.
 
 '/
 
-#INCLUDE ONCE "fb-doc_parser.bi"
-#INCLUDE ONCE "fb-doc_emit_syntax.bi"
-#INCLUDE ONCE "fb-doc_options.bi"
-#INCLUDE ONCE "fb-doc_version.bi"
-#INCLUDE ONCE "fb-doc_doxyfile.bi"
+#INCLUDE ONCE "fbdoc_emit_syntax.bi"
+#INCLUDE ONCE "fbdoc_options.bi"
+#INCLUDE ONCE "fbdoc_version.bi"
+#INCLUDE ONCE "fbdoc_doxyfile.bi"
 
 
 /'* \brief Add a new element pair
@@ -406,9 +405,9 @@ SUB Highlighter.do_files()
         KILL(in_fnam & "_")
       ELSE
         VAR fb_nam = prepare(@THIS)
-        IF LEN(fb_nam) THEN
+        IF ASC(fb_nam) > 3 THEN
           Pars->File_(FbPath & fb_nam, 0)
-          if len(Pars->ErrMsg) then MSG_CONT(Pars->ErrMsg) else MSG_CONT("done")
+          IF LEN(Pars->ErrMsg) THEN MSG_CONT(Pars->ErrMsg) ELSE MSG_CONT("done")
 
           PRINT #OPT->Ocha, LastLine
           WHILE NOT EOF(Ifnr)
@@ -419,16 +418,16 @@ SUB Highlighter.do_files()
           CLOSE #OPT->Ocha
           KILL(in_fnam)
           NAME(in_fnam & "_", in_fnam)
-          if len(Pars->ErrMsg) then MSG_CONT(Pars->ErrMsg)
+          IF LEN(Pars->ErrMsg) THEN MSG_CONT(Pars->ErrMsg)
         ELSE
           CLOSE #Ifnr
           CLOSE #OPT->Ocha
           KILL(in_fnam & "_")
-          IF LastLine = *FBDOC_MARK THEN
-            MSG_CONT("error (couldn't operate twice)")
-          ELSE
-            MSG_CONT("error (incompatible format)")
-          END IF
+          SELECT CASE AS CONST ASC(fb_nam)
+          CASE 1 : MSG_CONT("error (no source file)")
+          CASE 2 : MSG_CONT("error (cannot operate twice)")
+          CASE 3 : MSG_CONT("error (end of file)")
+          END SELECT
         END IF
       END IF
     END IF
@@ -1237,24 +1236,22 @@ part are extracted in to the \ref Highlighter::Symbols table.
 FUNCTION Highlighter.prepare_html(BYVAL Hgh AS Highlighter PTR) AS STRING
   WITH PEEK(Highlighter, Hgh)
     VAR pa = 0, fb_nam = ""
-    WHILE NOT EOF(.Ifnr) '                  search start of code section
-      LINE INPUT #.Ifnr, .LastLine
-      pa = INSTR(.LastLine, "<div class=""line""><a name=""l00001""") : IF pa THEN EXIT WHILE
+    DO
+      IF EOF(.Ifnr) THEN RETURN CHR(3) ELSE LINE INPUT #.Ifnr, .LastLine
+      pa = INSTR(.LastLine, "<div class=""line""><a name=""l00001""") : IF pa THEN EXIT DO
       Code(.LastLine & NL)
       pa = INSTR(.LastLine, "<div class=""title"">") ' extract file name
       IF pa THEN
         pa += 19
         VAR pe = INSTR(pa, .LastLine, "</div>")
         fb_nam = .searchPathNam(MID(.LastLine, pa, pe - pa))
-        IF 0 = len(fb_nam) THEN RETURN ""
+        IF 0 = LEN(fb_nam)                            THEN RETURN CHR(1)
       END IF
-    WEND
-
-    IF pa <= 1 THEN .LastLine = *.FBDOC_MARK : RETURN "" '  already done
+    LOOP
     Code(LEFT(.LastLine, pa - 1) & NL)
     Code(*.FBDOC_MARK & NL)
 
-    WHILE NOT EOF(.Ifnr) '                              search for links
+    DO
       pa = INSTR(pa + 1, .LastLine, "<a class=""code""")
       WHILE pa '                        extract all links from this line
         VAR pe = INSTR(pa + 14, .LastLine, "</a>"), pp = INSTRREV(.LastLine, ">", pe - 1) + 1
@@ -1262,10 +1259,9 @@ FUNCTION Highlighter.prepare_html(BYVAL Hgh AS Highlighter PTR) AS STRING
         VAR res = .Symbols->add(word, MID(.LastLine, pa, pe - pa + 4))
         pa = INSTR(pa + 1, .LastLine, "<a class=""code""")
       WEND
-      LINE INPUT #.Ifnr, .LastLine
-      IF LEFT(.LastLine, 6) = "</div>" THEN EXIT WHILE
-    WEND
-    IF EOF(.Ifnr) THEN RETURN "" ELSE RETURN fb_nam
+      IF EOF(.Ifnr) THEN RETURN CHR(3) ELSE LINE INPUT #.Ifnr, .LastLine
+    LOOP UNTIL LEFT(.LastLine, 6) = "</div>"
+    IF EOF(.Ifnr)                  THEN RETURN CHR(3) ELSE RETURN fb_nam
   END WITH
 END FUNCTION
 
@@ -1282,8 +1278,8 @@ part are extracted in to the \ref Highlighter::Symbols table.
 '/
 FUNCTION Highlighter.prepare_tex(BYVAL Hgh AS Highlighter PTR) AS STRING
   WITH PEEK(Highlighter, Hgh)
-    LINE INPUT #.Ifnr, .LastLine '    read first line, extract file name
-    Code(.LastLine & NL)
+    IF EOF(.Ifnr) THEN RETURN CHR(3) ELSE LINE INPUT #.Ifnr, .LastLine
+    Code(.LastLine & NL) '        write first line and extract file name
     VAR p1 = INSTR(.LastLine, "\section{") _
       , p2 = INSTR(p1 + 10, .LastLine, "}") _
       , fb_nam = ""
@@ -1297,18 +1293,15 @@ FUNCTION Highlighter.prepare_tex(BYVAL Hgh AS Highlighter PTR) AS STRING
       END IF
       fb_nam &= CHR(.LastLine[i])
     NEXT
-    fb_nam = .searchPathNam(fb_nam) : IF 0 = len(fb_nam) THEN RETURN ""
+    fb_nam = .searchPathNam(fb_nam) : IF 0 = LEN(fb_nam) THEN RETURN CHR(1)
 
-    WHILE NOT EOF(.Ifnr) '                  search start of code section
-      LINE INPUT #.Ifnr, .LastLine
+    DO
+      IF EOF(.Ifnr) THEN RETURN CHR(3) ELSE LINE INPUT #.Ifnr, .LastLine
       Code(.LastLine & NL)
-      IF .LastLine = "\begin{DoxyCode}" THEN EXIT WHILE
-      'IF .LastLine = *.FBDOC_MARK THEN EXIT WHILE
-    WEND
+    LOOP UNTIL .LastLine = "\begin{DoxyCode}" '      search code section
 
-    IF EOF(.Ifnr) THEN RETURN ""
-    LINE INPUT #.Ifnr, .LastLine : IF .LastLine = *.FBDOC_MARK THEN RETURN ""
-    'LINE INPUT #.Ifnr, .LastLine : IF .LastLine = "\begin{DoxyCode}" THEN RETURN ""
+    IF EOF(.Ifnr) THEN RETURN CHR(3) ELSE LINE INPUT #.Ifnr, .LastLine
+    IF .LastLine = *.FBDOC_MARK                          THEN RETURN CHR(2)
     Code(*.FBDOC_MARK & NL)
 
     DO '                                                search for links
@@ -1318,7 +1311,6 @@ FUNCTION Highlighter.prepare_tex(BYVAL Hgh AS Highlighter PTR) AS STRING
         var pm = INSTR(pa + 10, .LastLine, "}{") + 2 _
           , pe = INSTR(pm, .LastLine, "}") _
            , t = LEFT(.LastLine, pa - 2) & MID(.LastLine, pm, pe - pm + 1)
-        '.Symbols->add(MID(.LastLine, pm, pe - pm), LEFT(.LastLine, pe))
         .Symbols->add(MID(.LastLine, pm, pe - pm), t)
         pa = INSTR(pe + 1, .LastLine, "\hyperlink{")
       END IF
@@ -1332,9 +1324,8 @@ FUNCTION Highlighter.prepare_tex(BYVAL Hgh AS Highlighter PTR) AS STRING
         .Symbols->add(word, MID(.LastLine, pa, pe - pa))
         pa = INSTR(pe, .LastLine, "\hyperlink{")
       WEND
-      IF EOF(.Ifnr) THEN RETURN "" ELSE LINE INPUT #.Ifnr, .LastLine
-    LOOP UNTIL .LastLine = "\end{DoxyCode}"
-    RETURN fb_nam
+      IF EOF(.Ifnr) THEN RETURN CHR(3) ELSE LINE INPUT #.Ifnr, .LastLine
+    LOOP UNTIL .LastLine = "\end{DoxyCode}"              : RETURN fb_nam
   END WITH
 END FUNCTION
 
@@ -1352,20 +1343,21 @@ part are extracted in to the \ref Highlighter::Symbols table.
 FUNCTION Highlighter.prepare_xml(BYVAL Hgh AS Highlighter PTR) AS STRING
   WITH PEEK(Highlighter, Hgh)
     VAR fb_nam = ""
-    WHILE NOT EOF(.Ifnr) '                  search start of code section
-      LINE INPUT #.Ifnr, .LastLine
+    DO
+      IF EOF(.Ifnr) THEN RETURN CHR(3) ELSE LINE INPUT #.Ifnr, .LastLine
       Code(.LastLine & NL)
-      IF INSTR(.LastLine, "<programlisting>") THEN EXIT WHILE
+      IF INSTR(.LastLine, "<programlisting>") THEN EXIT DO
       VAR pa = INSTR(.LastLine, "<compoundname>")
       IF pa THEN
         pa += 14
         VAR pe = INSTR(pa, .LastLine, "</compoundname>")
-        'fb_nam = MID(.LastLine, pa, pe - pa)
-        fb_nam = .searchPathNam(MID(.LastLine, pa, pe - pa)) : IF 0 = len(fb_nam) THEN RETURN ""
+        fb_nam = .searchPathNam(MID(.LastLine, pa, pe - pa))
+        IF 0 = LEN(fb_nam)                            THEN RETURN CHR(1)
       END IF
-    WEND
+    LOOP
 
-    LINE INPUT #.Ifnr, .LastLine : IF .LastLine = *.FBDOC_MARK THEN RETURN ""
+    IF EOF(.Ifnr) THEN RETURN CHR(3) ELSE LINE INPUT #.Ifnr, .LastLine
+    IF .LastLine = *.FBDOC_MARK THEN                       RETURN CHR(2)
     Code(*.FBDOC_MARK & NL)
     DO
       VAR word = "", pm = INSTR(.LastLine, "refid=""")
@@ -1383,9 +1375,9 @@ FUNCTION Highlighter.prepare_xml(BYVAL Hgh AS Highlighter PTR) AS STRING
                         MID(.LastLine, pa, pe - pa))
         END IF
       END IF
-      IF EOF(.Ifnr) THEN RETURN "" ELSE LINE INPUT #.Ifnr, .LastLine
+      IF EOF(.Ifnr) THEN RETURN CHR(3) ELSE LINE INPUT #.Ifnr, .LastLine
     LOOP UNTIL INSTR(.LastLine, "</programlisting>")
-    IF EOF(.Ifnr) THEN RETURN "" ELSE RETURN fb_nam
+    IF EOF(.Ifnr)                  THEN RETURN CHR(3) ELSE RETURN fb_nam
   END WITH
 END FUNCTION
 

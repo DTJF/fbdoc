@@ -1,4 +1,4 @@
-/'* \file fb-doc_emitters.bi
+/'* \file fbdoc_emitters.bi
 \brief Header file for \ref EmitterIF
 
 This file contains the declaration code for the EmitterIF.
@@ -44,18 +44,16 @@ END ENUM
 /'* \brief Forward declaration '/
 TYPE AS Parser Parser_
 
-/'* \brief Function to emit a piece of code
-\param P the parser calling this handler '/
+/'* \brief Function type for EmitterIF to emit a piece of code
+\param P The parser calling this handler '/
 TYPE EmitFunc AS SUB CDECL(BYVAL P AS Parser_ PTR)
 
 /'* \brief Forward declaration '/
 TYPE AS Options Options_
 
-/'* \brief Function for EmitterIF `CTOR` or `DTOR`
-\param O the parser calling this handler '/
+/'* \brief Function type for EmitterIF `CTOR` and `DTOR`
+\param O The Options calling the  `CTOR` or `DTOR` '/
 TYPE TorFunc AS SUB CDECL(BYVAL O AS Options_ PTR)
-
-'DECLARE SUB null_emitter CDECL(BYVAL AS Parser_ PTR)
 
 
 '&typedef EmitterIF* EmitterIF_PTR; //!< Doxygen internal (ignore this).
@@ -89,20 +87,20 @@ TYPE EmitterIF
 ' This is tricky code to make Doxygen document an interface:
 '&/* Doxygen shouldn't parse this ...
   AS TorFunc _
-     CTOR_ = 0 _ ' @null_emitter() _
-   , DTOR_ = 0   ' @null_emitter() _
+     CTOR_ = 0 _
+   , DTOR_ = 0
   AS EmitFunc _
-     Init_ = 0 _ ' @null_emitter() _
-   , Decl_ = 0 _ ' @null_emitter() _
-   , Func_ = 0 _ ' @null_emitter() _
-   , Enum_ = 0 _ ' @null_emitter() _
-   , Unio_ = 0 _ ' @null_emitter() _
-   , Clas_ = 0 _ ' @null_emitter() _
-   , Defi_ = 0 _ ' @null_emitter() _
-   , Incl_ = 0 _ ' @null_emitter() _
-  , Error_ = 0 _ ' @null_emitter() _
-  , Empty_ = 0 _ ' @null_emitter() _
-   , Exit_ = 0   ' @null_emitter() _
+     Init_ = 0 _
+   , Decl_ = 0 _
+   , Func_ = 0 _
+   , Enum_ = 0 _
+   , Unio_ = 0 _
+   , Clas_ = 0 _
+   , Defi_ = 0 _
+   , Incl_ = 0 _
+  , Error_ = 0 _
+  , Empty_ = 0 _
+   , Exit_ = 0
 '&... but the following pseudo inline members instead */
 
 '*Function called at program start-up (once)
@@ -129,7 +127,7 @@ TYPE EmitterIF
 '*Emitter for an `UNION` block
 '&inline void Unio_ (void){c_Block(); gtk_Block(); doxy_Block(); lfn_class_();};
 
-'*Emitter for a struct (`TYPE  CLASS` blocks)
+'*Emitter for a user defined structure (`TYPE  CLASS` blocks)
 '&inline void Clas_ (void){c_Block(); gtk_Block(); doxy_Block(); lfn_class_();};
 
 '*Emitter for a macro (#`DEFINE`, #`MACRO`)
@@ -145,15 +143,17 @@ TYPE EmitterIF
 '&inline void Empty_ (void){gtk_empty(); doxy_empty(); synt_empty();};
 END TYPE
 
-DECLARE SUB emit_comments CDECL(BYVAL AS Parser_ PTR, BYVAL AS INTEGER)
-DECLARE SUB cNam CDECL(BYVAL AS Parser_ PTR)
-DECLARE SUB emit_source CDECL(BYVAL AS Parser_ PTR, BYVAL AS INTEGER)
-DECLARE SUB cIni CDECL(BYVAL AS Parser_ PTR)
-DECLARE SUB emit_error CDECL(BYVAL AS Parser_ PTR)
+'&/*
 DECLARE SUB geany_init CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB geany_exit CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB emit_comments CDECL(BYVAL AS Parser_ PTR, BYVAL AS INTEGER)
+DECLARE SUB emit_source CDECL(BYVAL AS Parser_ PTR, BYVAL AS INTEGER)
+DECLARE SUB emit_error CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB cNam CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB CreateIni CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB cppCreateFunction CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB cCreateFunction CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB cppCreateTypNam CDECL(BYVAL AS Parser_ PTR)
 DECLARE SUB cCreateTypNam CDECL(BYVAL AS Parser_ PTR)
+'&*/
 

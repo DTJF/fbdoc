@@ -73,8 +73,7 @@ follow a source tree.
 \since 0.2.0
 '/
 
-#INCLUDE ONCE "../bas/fb-doc_parser.bi"
-#INCLUDE ONCE "../bas/fb-doc_options.bi"
+#INCLUDE ONCE "../bas/fbdoc_options.bi"
 
 
 /'* \brief Emitter called when the Parser is at a variable declaration

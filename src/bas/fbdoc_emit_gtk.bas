@@ -1,4 +1,4 @@
-/'* \file fb-doc_emit_gtk.bas
+/'* \file fbdoc_emit_gtk.bas
 \brief Emitter for gtk-doc templates
 
 This file contains the emitter called "GtkDocTemplates", used as
@@ -26,9 +26,8 @@ SubSecExaGtkdoc for an example.
 
 '/
 
-#INCLUDE ONCE "fb-doc_parser.bi"
-#INCLUDE ONCE "fb-doc_options.bi"
-#INCLUDE ONCE "fb-doc_version.bi"
+#INCLUDE ONCE "fbdoc_options.bi"
+#INCLUDE ONCE "fbdoc_version.bi"
 
 
 CONST _

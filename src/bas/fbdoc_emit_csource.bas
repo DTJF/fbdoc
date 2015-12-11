@@ -1,4 +1,4 @@
-/'* \file fb-doc_emit_csource.bas
+/'* \file fbdoc_emit_csource.bas
 \brief Emitter to generate the pseudo C intermediate format.
 
 This file contains the emitter called "C_Source", designed to generate
@@ -14,9 +14,8 @@ Doxygen.
 \since 0.4.0
 '/
 
-#INCLUDE ONCE "fb-doc_emitters.bi"
-#INCLUDE ONCE "fb-doc_options.bi"
-#INCLUDE ONCE "fb-doc_emit_lfn.bi"
+#INCLUDE ONCE "fbdoc_options.bi"
+#INCLUDE ONCE "fbdoc_emit_lfn.bi"
 
 
 '* The list of function names (for caller / callee graphs)
@@ -24,7 +23,7 @@ DIM SHARED AS STRING LOFN
 
 
 /'* \brief CTOR to be called when starting in \ref Options::FileModi
-\param P the parser to be used with this emitter
+\param O the parser to be used with this emitter
 
 This CTOR gets called when starting in a mode for file input (so not
 for `--geany-mode`). It loads the file `fb-doc.lfn`, if any.
@@ -115,7 +114,7 @@ SUB c_defi_ CDECL(BYVAL P AS Parser PTR)
       Code(MID(.Buf, a + 1, l))
       a += l
       l = e - a
-      IF l > 0 then Code(" /* " & MID(.Buf, a + 1, e - a) & " */")
+      IF l > 0 THEN Code(" /* " & MID(.Buf, a + 1, e - a) & " */")
     END IF
     .SrcBgn = e
   END WITH
@@ -243,7 +242,7 @@ SUB c_decl_ CDECL(BYVAL P AS Parser PTR)
       IF 0 = .ListCount THEN Code("VAR ")
                              Code(.SubStr(.NamTok))
       IF .BitTok THEN        Code(.BitIni)
-      IF .IniTok THEN        cIni(P)
+      IF .IniTok THEN        CreateIni(P)
     END IF
     IF *.CurTok <= .TOK_EOS THEN Code(";") : EXIT SUB
     IF .NamTok > .TypTok _
@@ -253,7 +252,7 @@ SUB c_decl_ CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-DECLARE SUB c_Block CDECL(BYVAL AS Parser_ PTR)
+DECLARE SUB c_Block CDECL(BYVAL AS Parser PTR)
 
 /'* \brief Handler for an enumerator entry (inside ENUM block)
 \param P the parser calling this handler
@@ -269,7 +268,7 @@ SUB cEntryBlockENUM CDECL(BYVAL P AS Parser PTR)
 
     IF 0 = .ListCount THEN Code(STRING(.LevelCount * 2, " "))
     Code(.SubStr(.NamTok))
-    IF .IniTok THEN cIni(P)
+    IF .IniTok THEN CreateIni(P)
     IF *.CurTok <> .TOK_END THEN Code(", ")
   END WITH
 END SUB

@@ -1,4 +1,4 @@
-/'* \file fb-doc_doxyfile.bas
+/'* \file fbdoc_doxyfile.bas
 \brief The source code for the DoxyUDT class
 
 This file contains the source code for a class used to read parameters
@@ -10,7 +10,7 @@ The Doxyfile is used in modes `--list-mode` and `--syntax-mode`.
 
 '/
 
-#INCLUDE ONCE "fb-doc_doxyfile.bi"
+#INCLUDE ONCE "fbdoc_doxyfile.bi"
 
 '* transfer a tag from a subfile to the current level
 #DEFINE PULL_TAG(_N_) IF LEN(d->Tags(_N_)) THEN Tags(_N_) = MKI(aa) & d->Tag(_N_)

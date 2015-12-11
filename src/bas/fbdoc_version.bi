@@ -1,4 +1,4 @@
-/'* \file fb-doc_version.bi
+/'* \file fbdoc_version.bi
 \brief Some global constants for the fb-doc source
 
 In order to place the project data at a single source (in the root

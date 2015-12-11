@@ -1,4 +1,4 @@
-/'* \file fb-doc_emit_lfn.bi
+/'* \file fbdoc_emit_lfn.bi
 \brief Declarations for emitter for the file generator `fb-doc.lfn`.
 
 This file declares the emitter functions for the \ref EmitterIF to
@@ -7,7 +7,7 @@ default emitter in mode `--list-mode`.
 
 '/
 
-#INCLUDE ONCE "fb-doc_emitters.bi"
+#INCLUDE ONCE "fbdoc_emitters.bi"
 
 CONST _
   LFN_FILE = "fb-doc.lfn" _ '*< File name for list of function names (caller / callees graphs)

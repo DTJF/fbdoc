@@ -191,7 +191,7 @@ tree, in order to compile all-in-one by executing
 
 ~~~{.sh}
 cd src/bas
-fbc -w all fb-doc.bas
+fbc -w all fbdoc.bas -x fb-doc
 ~~~
 
 This creates an executable binary named

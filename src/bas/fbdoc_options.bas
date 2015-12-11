@@ -1,4 +1,4 @@
-/'* \file fb-doc_options.bas
+/'* \file fbdoc_options.bas
 \brief The source code for the \ref Options class
 
 This file contains the source code for the Options class. It's
@@ -10,11 +10,11 @@ responsible for user interaction
 
 '/
 
-#INCLUDE ONCE "fb-doc_options.bi"
-#INCLUDE ONCE "fb-doc_version.bi"
-#INCLUDE ONCE "fb-doc_emit_syntax.bi"
-#INCLUDE ONCE "fb-doc_emit_lfn.bi"
-#INCLUDE ONCE "fb-doc_doxyfile.bi"
+#INCLUDE ONCE "fbdoc_options.bi"
+#INCLUDE ONCE "fbdoc_version.bi"
+#INCLUDE ONCE "fbdoc_emit_syntax.bi"
+#INCLUDE ONCE "fbdoc_emit_lfn.bi"
+#INCLUDE ONCE "fbdoc_doxyfile.bi"
 
 
 /'* \brief Read options and parameters from the command line
@@ -258,7 +258,7 @@ FUNCTION Options.scanFiles(BYREF Patt AS STRING, BYREF Path AS STRING) AS STRING
     n = DIR()
   WEND
 
-  IF RunMode = FILE_MODE ANDALSO f_l > LEN(f) ANDALSO checkDir(OutPath & p) then f = ""
+  IF RunMode = FILE_MODE ANDALSO f_l > LEN(f) ANDALSO checkDir(OutPath & p) THEN f = ""
   p = LEFT(p, path_l)
   RETURN f
 END FUNCTION
@@ -354,7 +354,7 @@ SUB Options.FileModi()
     OPEN CONS FOR OUTPUT AS #Ocha
   END IF
 
-  if EmitIF->CTOR_ then EmitIF->CTOR_(@THIS)
+  IF EmitIF->CTOR_ THEN EmitIF->CTOR_(@THIS)
   VAR a = 0 _              ' Start character of next file name / pattern
     , i = a _              ' Counter for characters
     , inslsh = 0 _         ' Flag, set when filename name contains a path
@@ -395,7 +395,7 @@ SUB Options.FileModi()
     END SELECT : i += 1
   LOOP
 
-  if EmitIF->DTOR_ then EmitIF->DTOR_(@THIS)
+  IF EmitIF->DTOR_ THEN EmitIF->DTOR_(@THIS)
   SELECT CASE AS CONST RunMode
   CASE LIST_MODE : IF Ocha THEN CLOSE #Ocha : MSG_LINE(LFN_FILE) : MSG_CONT("written")
   CASE ELSE      : IF Ocha THEN CLOSE #Ocha
@@ -416,7 +416,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
   CASE DEF_MODE
     MSG_LINE(Fnam)
     Pars->File_(Fnam, InTree)
-    if len(Pars->ErrMsg) then MSG_CONT(Pars->ErrMsg)
+    IF LEN(Pars->ErrMsg) THEN MSG_CONT(Pars->ErrMsg)
   CASE SYNT_MODE
     VAR nix = NEW Highlighter(Pars)
     nix->doDoxy(Fnam)
@@ -432,7 +432,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       END IF
       MSG_LINE(Fnam)
       Pars->File_(Fnam, InTree)
-      if len(Pars->ErrMsg) then MSG_CONT(Pars->ErrMsg)
+      IF LEN(Pars->ErrMsg) THEN MSG_CONT(Pars->ErrMsg)
       EXIT SUB
     END IF
 

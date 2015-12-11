@@ -49,6 +49,7 @@ New:
 
 Bugfixes:
 
+- files renamed: fb-doc -> fbdoc for better PDF (pdflatex mishandles '-' characters in hyperlinks)
 - syntax highlighter: finds FB source files in subfolders now (TEX, XML)
 - syntax highlighter: suppressed #`INCLUDE` statements fixed (HTM, TEX, XML)
 - syntax highlighter: suppressed code before multi line comment fixed

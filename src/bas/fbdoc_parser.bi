@@ -1,4 +1,4 @@
-/'* \file fb-doc_parser.bi
+/'* \file fbdoc_parser.bi
 \brief Header file for the #Parser class
 
 This file contains the declaration of the \ref Parser, a class for
@@ -7,7 +7,7 @@ the \ref EmitterIF.
 
 '/
 
-#INCLUDE ONCE "fb-doc_emitters.bi"
+#INCLUDE ONCE "fbdoc_emitters.bi"
 
 #IF __FB_OUT_DLL__ OR DEFINED(__FB_DOC_PLUGIN__)
  '* Convenience macro for output (plugins) (\Proj intern)
@@ -183,8 +183,8 @@ Other tokens are only valid if the main token is not zero.
     StaTok, _  '*< the pre-parsed token
     NamTok, _  '*< the name token of the construct
     DimTok, _  '*< the token of the left parenthesis of a dimension
-    IniTok, _  '*< the start token of an initializer ('=')
-    BitTok, _  '*< the start token of an bitfiled declaration (':')
+    IniTok, _  '*< the start character of an initializer ('=')
+    BitTok, _  '*< the start character of a bitfiled declaration (':')
     TypTok, _  '*< the token of the type keyword
     ShaTok, _  '*< the token of the SHARED keyword
     PtrTok, _  '*< the token of the first PTR keyword

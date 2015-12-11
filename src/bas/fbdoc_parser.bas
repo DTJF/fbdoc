@@ -1,4 +1,4 @@
-/'* \file fb-doc_parser.bas
+/'* \file fbdoc_parser.bas
 \brief Source code for the \ref Parser class.
 
 This file contains the source code for the Parser class. It's used
@@ -7,9 +7,8 @@ function in the \ref EmitterIF.
 
 '/
 
-#INCLUDE ONCE "fb-doc_parser.bi"
-#INCLUDE ONCE "fb-doc_options.bi"
-#INCLUDE ONCE "fb-doc_version.bi"
+#INCLUDE ONCE "fbdoc_options.bi"
+#INCLUDE ONCE "fbdoc_version.bi"
 
 
 /'* \brief The constructor
@@ -217,6 +216,7 @@ FUNCTION Parser.demuxTyp(BYVAL DeclMod AS INTEGER = 0) AS INTEGER
   AliTok = 0
   TypTok = 0
   As_Tok = 0
+  ShaTok = 0
   Co1Tok = 0
   Co2Tok = 0
   PtrTok = 0
@@ -511,14 +511,14 @@ FUNCTION Parser.TYPE_() AS INTEGER
       IF MSG_ERROR >= demuxTyp()          THEN RETURN Errr("type expected")
       IF *Tk = TOK_WORD THEN NamTok = Tk  ELSE RETURN Errr("name expected")
       skipOverComma()
-      if Emit->Decl_ then Emit->Decl_(@THIS)                     :
+      IF Emit->Decl_ THEN Emit->Decl_(@THIS)                     :
                                                RETURN MSG_ERROR
     ELSE
       IF *Tk = TOK_WORD THEN NamTok = Tk : SKIP ELSE RETURN Errr("name expected")
       IF *Tk = TOK_AS THEN
         IF MSG_ERROR >= demuxTyp()        THEN RETURN Errr("type expected")
         skipOverComma()
-        if Emit->Decl_ then Emit->Decl_(@THIS)                     :
+        IF Emit->Decl_ THEN Emit->Decl_(@THIS)                     :
                                                RETURN MSG_ERROR
       END IF
     END IF
@@ -732,8 +732,7 @@ FUNCTION Parser.Errr(BYREF E AS STRING) AS INTEGER
     NEXT
   END IF
   ErrMsg = "-error(" & z & "): " & E & ", found '" & SubStr(Tk) & "' "
-  'ErrMsg = "-error(" & z & "): " & E ' & _
-           '"! (... " & MID(Buf, IIF(Po > 20, Po - 40, 1), 20)
+
   SELECT CASE AS CONST *StaTok
   CASE TOK_DIM  : ErrMsg &= "(DIM)"
   CASE TOK_RDIM : ErrMsg &= "(REDIM)"
@@ -758,7 +757,7 @@ FUNCTION Parser.Errr(BYREF E AS STRING) AS INTEGER
   CASE TOK_MACR : ErrMsg &= "(#MACRO)"
   CASE ELSE     : ErrMsg &= "(???)"
   END SELECT
-  if Emit->Error_ then Emit->Error_(@THIS)
+  IF Emit->Error_ THEN Emit->Error_(@THIS)
   ErrMsg = ""
 
   RETURN IIF(Buf[Po] = 0, MSG_STOP, MSG_ERROR)
@@ -1040,7 +1039,7 @@ SUB Parser.pre_parse()
   ToLast = MSG_ERROR
   LineNo = 1
   Tok = ""
-  if Emit->Init_ then Emit->Init_(@THIS)
+  IF Emit->Init_ THEN Emit->Init_(@THIS)
   DO
     SELECT CASE AS CONST Buf[Po] '                           search word
     CASE 0 : EXIT DO
@@ -1084,7 +1083,7 @@ SUB Parser.pre_parse()
       CASE ELSE :  ToLast = *StaTok : CONTINUE DO
       END SELECT : ToLast = *StaTok : Tok = "" : *L = 0 : CONTINUE DO
     END SELECT : Po += 1
-  LOOP : if Emit->Exit_ then Emit->Exit_(@THIS)
+  LOOP : IF Emit->Exit_ THEN Emit->Exit_(@THIS)
 END SUB
 
 
@@ -1135,9 +1134,9 @@ SUB Parser.StdIn()
   CLOSE #fnr
 
   IF LEN(Buf) < 3 THEN
-    if Emit->Empty_ then Emit->Empty_(@THIS)
+    IF Emit->Empty_ THEN Emit->Empty_(@THIS)
     EXIT SUB
-  end if
+  END IF
 
   Fin = LEN(Buf) - 1
   pre_parse() : IF Tk1 THEN EXIT SUB

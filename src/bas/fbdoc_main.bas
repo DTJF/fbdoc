@@ -1,15 +1,13 @@
-/'* \file fb-doc_main.bas
+/'* \file fbdoc_main.bas
 \brief The source file with the main function
 
 This file includes the main function to execute.
 
 '/
 
-#INCLUDE ONCE "fb-doc_version.bi"
-#INCLUDE ONCE "fb-doc_options.bi"
-#INCLUDE ONCE "fb-doc_parser.bi"
-#INCLUDE ONCE "fb-doc_emitters.bi"
-#INCLUDE ONCE "fb-doc_emit_lfn.bi"
+#INCLUDE ONCE "fbdoc_options.bi"
+#INCLUDE ONCE "fbdoc_version.bi"
+#INCLUDE ONCE "fbdoc_emit_lfn.bi"
 
 
 /'* \brief The help message for the command line interface (option `--help`) '/
@@ -86,9 +84,9 @@ WITH *.OPT
       .InTree = 0 '                                  ignore user setting
       .Ocha = FREEFILE
       OPEN CONS FOR OUTPUT AS #.Ocha
-      if .EmitIF->CTOR_ then .EmitIF->CTOR_(OPT)
+      IF .EmitIF->CTOR_ THEN .EmitIF->CTOR_(OPT)
       .Pars->StdIn()
-      if .EmitIF->DTOR_ then .EmitIF->DTOR_(OPT)
+      IF .EmitIF->DTOR_ THEN .EmitIF->DTOR_(OPT)
       CLOSE #.Ocha
     CASE ELSE
       .FileModi()

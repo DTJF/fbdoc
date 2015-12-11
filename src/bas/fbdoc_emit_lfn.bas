@@ -1,4 +1,4 @@
-/'* \file fb-doc_emit_lfn.bas
+/'* \file fbdoc_emit_lfn.bas
 \brief Emitter to generate the file `fb-doc.lfn`.
 
 This file contains the emitter called "FunctionNames", used to generate
@@ -11,8 +11,8 @@ line character `CHR(10)`.
 
 '/
 
-#INCLUDE ONCE "fb-doc_emit_lfn.bi"
-#INCLUDE ONCE "fb-doc_options.bi"
+#INCLUDE ONCE "fbdoc_options.bi"
+#INCLUDE ONCE "fbdoc_emit_lfn.bi"
 
 
 

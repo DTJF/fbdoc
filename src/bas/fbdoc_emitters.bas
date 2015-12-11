@@ -1,4 +1,4 @@
-/'* \file fb-doc_emitters.bas
+/'* \file fbdoc_emitters.bas
 \brief Default emitter to create pseudo C source, #`INCLUDE`s the other emitters
 
 This file contains the main source for EmitterIF, used by emitters.
@@ -23,10 +23,8 @@ statement).
 
 '/
 
-#INCLUDE ONCE "fb-doc_emitters.bi"
-#INCLUDE ONCE "fb-doc_parser.bi"
-#INCLUDE ONCE "fb-doc_options.bi"
-#INCLUDE ONCE "fb-doc_version.bi"
+#INCLUDE ONCE "fbdoc_options.bi"
+#INCLUDE ONCE "fbdoc_version.bi"
 
 
 /'* \brief Handler to export comments
@@ -134,7 +132,7 @@ This sub reads the initializer from the input buffer and emits it
 unchanged. This may be a bunch of text in case of an array initializer.
 
 '/
-SUB cIni CDECL(BYVAL P AS Parser PTR)
+SUB CreateIni CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     VAR kl = 0, i = .IniTok[1], a = i, e = 0, atc = 0
     Code(" ")
@@ -239,6 +237,7 @@ Exeptions handled in this SUB:
 SUB cppCreateTypNam CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     IF .TypTok THEN
+      IF .ShaTok THEN Code(.SubStr(.ShaTok) & "_")
       IF .Co1Tok THEN Code(.SubStr(.Co1Tok) & "_")
                       Code(.SubStr(.TypTok))
       IF .Co2Tok THEN Code("_" & .SubStr(.Co2Tok))
@@ -255,7 +254,7 @@ SUB cppCreateTypNam CDECL(BYVAL P AS Parser PTR)
     IF .NamTok THEN   cppNam(P)
     IF .DimTok THEN   cArrDim(P)
     IF .BitTok THEN   Code(.BitIni)
-    IF .IniTok THEN   cIni(P)
+    IF .IniTok THEN   CreateIni(P)
   END WITH
 END SUB
 
@@ -322,7 +321,7 @@ SUB cCreateTypNam CDECL(BYVAL P AS Parser PTR)
     IF .NamTok THEN cNam(P)
     IF .BitTok THEN Code(.BitIni)
     IF .DimTok THEN cArrDim(P) ': Code()
-    IF .IniTok THEN cIni(P)
+    IF .IniTok THEN CreateIni(P)
   END WITH
 END SUB
 
