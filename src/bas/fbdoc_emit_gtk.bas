@@ -3,7 +3,7 @@
 
 This file contains the emitter called "GtkDocTemplates", used as
 default emitter to generate templates for the gtk-doc back-end in
-`--geany-mode`.
+mode \ref SecModGeany.
 
 The emitters returns all original source code unchanged. Additionally,
 relevant constructs (statements or code blocks) get prepended by a multi line block

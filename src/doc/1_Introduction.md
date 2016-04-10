@@ -50,7 +50,7 @@ In case of \ref SecUseDoxy step 3 can get integrated in step 4.
 
 \Proj is a multi functional tool, supporting the complete process of
 documenting any FB project. It gets shipped in this package as FB
-source code and can get compiled on all operting systems supported by
+source code and can get compiled on all operating systems supported by
 the FB compiler, which is currently (effective 2015, Oct.)
 
 - DOS
@@ -66,13 +66,16 @@ The executable is a
 - writes that output to `STDOUT` or file[s].
 
 Several run modi control where to get input from and where to write
-output at. Several emitters (named in brackets) are available do
+output to. Several emitters (named in brackets) are available do
 generate different kinds of output formats, in order to
 
 - generate a C-like intermediate syntax (`C_Source`) for the C back-ends,
 - generate templates for gtk-doc (`GtkDocTemplates`) or Doxygen (`DoxyTemplates`),
 - generate a list of function names (`FunctionNames`), and
 - generate correct source code listings for Doxygen output (`SyntaxHighLighting`).
+
+
+## Run Modi vs. Emitters  {#SubIntRmEm}
 
 Each run mode has its default emitter. The following table shows the
 mapping, rows are run modi, columns are emitters.
@@ -91,16 +94,20 @@ combinations are useful (`+`) and others are less useful (`-`).
 Additionaly \Proj contains an interface for external emitters
 (plugins), loaded at run time.
 
-Further options control the behaviour or the run mode or the
-emitter:
+
+## Options vs. Run Modi and Emitters  {#SubIntOptions}
+
+Further options control the behaviour of the run mode (left justified)
+or the emitter (right justified), or override the default emitter
+setting (centered):
 
 |  Run Mode         | \ref SecOptTree | \ref SecOptRecursiv | \ref SecOptPath || \ref SecOptEmitter || \ref SecOptDocom | \ref SecOptCStyle | \ref SecOptAsterix | Emitter            |
 | ----------------: | :-------------- | :------------------ | :-------------- || :----------------: || ---------------: | ----------------: | -----------------: | :----------------- |
-| \ref SecModDef    |        +        |          -          |         -       ||          *         ||        -         |         +         |          +         | \ref SecEmmCSource |
-| \ref SecModFile   |        -        |         ???         |         +       ||          *         ||        -         |         -         |          -         | \ref SecEmmGtk     |
-| \ref SecModList   |        -        |         ???         |         +       ||          *         ||        -         |         +         |          -         | \ref SecEmmDoxy    |
-| \ref SecModSyntax |        +        |         ???         |        ???      ||          *         ||        -         |         -         |          -         | \ref SecEmmLfn     |
-| \ref SecModGeany  |       ???       |          -          |         -       ||          *         ||        +         |         -         |          -         | \ref SecEmmSyntax  |
+| \ref SecModDef    |        +        |          +          |         -       ||          *         ||        -         |         +         |          +         | \ref SecEmmCSource |
+| \ref SecModFile   |        +        |          +          |         +       ||          *         ||        -         |         -         |          -         | \ref SecEmmGtk     |
+| \ref SecModList   |        +        |          +          |         +       ||          *         ||        -         |         +         |          -         | \ref SecEmmDoxy    |
+| \ref SecModSyntax |        +        |          +          |        ???      ||          *         ||        -         |         -         |          -         | \ref SecEmmLfn     |
+| \ref SecModGeany  |        -        |          -          |         -       ||          *         ||        +         |         -         |          -         | \ref SecEmmSyntax  |
 
 \Proj gets invoked in diffenrent manners,
 
@@ -119,6 +126,8 @@ for output formats HTML, TEX, PDF and XML. Therefor \Proj also reads
 and parses (partialy) the Doxygen configuration file, in order to
 determine some related settings, folders and file patterns. Then it
 operates (like Doxygen) on multiple files in one go.
+
+## Data Flow chart  {#SubIntData}
 
 Here's a grafical overview on the \Proj data flow
 

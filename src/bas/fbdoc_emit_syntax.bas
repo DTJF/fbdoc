@@ -1,21 +1,21 @@
 /'* \file fbdoc_emit_syntax.bas
-\brief Emitter for repairing the Doxygen syntax highlighting.
+\brief Emitter for repairing the Doxygen listing files.
 
-This file contains the emitter called "SyntaxHighLighting", used as
-default emitter to generate accurate source code listings for Doxygen
-back-end in `--syntax-mode`.
+This file contains the emitter \ref SecEmmSyntax, used as default
+emitter in mode \ref SecModSyntax to generate accurate source code
+listings for Doxygen back-end.
 
 This emitter replaces the code section in the original Doxygen output
-files, containing the C-like intermediate formate (used as Doxygen
-input). The code section gets replaced by real FB source code in
-accurate syntax highlighting. Also links get transfered from the old
+files, originally containing the C-like intermediate formate (used as
+Doxygen input). The code section gets replaced by real FB source code
+in accurate syntax highlighting. Also links get transfered from the old
 Doxygen output to the new context. This works for Html, LaTeX and XML
 output.
 
-In `--syntax-mode` \Proj doesn't operate on single FB source input
-files. Instead it parses some tags in the Doxygen configuration file
-Doxyfile and operates in a similar way on the Doxygen input. The code
-for this feature is also contained here.
+In mode \ref SecModSyntax \Proj doesn't operate on single FB source
+input files. Instead it parses some tags in the Doxygen configuration
+file `Doxyfile` and operates on the specified paths / files (in a
+similar way as Doxygen did).
 
 '/
 
@@ -233,7 +233,7 @@ FUNCTION xml_eol(BYVAL Symb AS RepData PTR, BYREF Nr AS INTEGER) AS STRING
 END FUNCTION
 
 
-/'* \brief Constructor executing the complete process
+/'* \brief Constructor, executing the complete process
 \param P The parser for input
 
 This constructor just connects to the parser in use and establishes
@@ -265,12 +265,12 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
   MSG_END(PROJ_NAME & " syntax highlighting")
   MSG_LINE("Doxyfile " & Fnam)
   WHILE doxy->Length
-    GenHtml = IIF(doxy->Tag(GENERATE_HTML) = "YES" ANDALSO _
-                  doxy->Tag(SOURCE_BROWSER) = "YES", 1, 0)
-    GenTex  = IIF(doxy->Tag(GENERATE_LATEX) = "YES" ANDALSO _
-                  doxy->Tag(LATEX_SOURCE_CODE) = "YES", 1, 0)
-    GenXml  = IIF(doxy->Tag(GENERATE_XML) = "YES" ANDALSO _
-                  doxy->Tag(XML_PROGRAMLISTING) = "YES", 1, 0)
+    GenHtm = IIF(doxy->Tag(GENERATE_HTML) = "YES" ANDALSO _
+                doxy->Tag(SOURCE_BROWSER) = "YES", 1, 0)
+    GenTex = IIF(doxy->Tag(GENERATE_LATEX) = "YES" ANDALSO _
+                doxy->Tag(LATEX_SOURCE_CODE) = "YES", 1, 0)
+    GenXml = IIF(doxy->Tag(GENERATE_XML) = "YES" ANDALSO _
+                doxy->Tag(XML_PROGRAMLISTING) = "YES", 1, 0)
 
     IF GenAny THEN MSG_CONT("parsed") _
               ELSE MSG_CONT("nothing to do") : EXIT WHILE
@@ -288,7 +288,7 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
 
     OPT->InTree = 0
     InPath = OPT->addPath(OPT->StartPath, doxy->Tag(OUTPUT_DIRECTORY))
-    IF GenHtml THEN
+    IF GenHtm THEN
       HtmlPath = OPT->addPath(InPath, doxy->Tag(HTML_OUTPUT))
       HtmlSuff = doxy->Tag(HTML_FILE_EXTENSION)
       IF 0 = LEN(HtmlSuff) THEN HtmlSuff = ".html"
@@ -334,7 +334,7 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
           MSG_CONT("scanned (no files)")
         END IF
       END IF
-    END IF
+    END IF '&tex_eol(); tex_specials(); Highlighter::prepare_tex();
     IF GenXml THEN
       XmlPath = OPT->addPath(InPath, doxy->Tag(XML_OUTPUT))
       MSG_LINE("XML source " & LEFT(XmlPath, LEN(XmlPath) - 1))
@@ -363,7 +363,7 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
           MSG_CONT("scanned (no files)")
         END IF
       END IF
-    END IF
+    END IF '&xml_eol(); xml_specials(); Highlighter::prepare_xml();
     EXIT WHILE
   WEND
   DELETE doxy
@@ -1474,7 +1474,7 @@ Funktion names need special handling because they vary between
 intermediate format and FB source (`::` vs. `.`).
 
 '/
-SUB synt_func_ CDECL(BYVAL P AS Parser PTR)
+SUB synt_func CDECL(BYVAL P AS Parser PTR)
   WITH *CAST(Highlighter PTR, P->UserTok) '&Highlighter* P->UserTok
     VAR t = P->NamTok, nam = P->SubStr(t)
 
@@ -1496,6 +1496,7 @@ SUB synt_func_ CDECL(BYVAL P AS Parser PTR)
     IF res = SADD(nam) THEN EXIT SUB
 
     .generate_all(SADD(P->Buf), P->Tk1[1])
+
     VAR i = INSTR(*res, nam) _
       , j = i + LEN(nam) _
       , a = IIF(P->DivTok, P->DivTok[1], P->StaTok[1]) _ ' ABSTRACT, VIRTUAL, ...
@@ -1520,6 +1521,6 @@ SUB init_syntax(BYVAL Emi AS EmitterIF PTR)
     .Init_ = @synt_init()
     .Exit_ = @synt_exit()
     .Incl_ = @synt_incl()
-    .Func_ = @synt_func_()
+    .Func_ = @synt_func()
   END WITH
 END SUB

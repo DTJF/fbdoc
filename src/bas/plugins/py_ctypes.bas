@@ -10,7 +10,7 @@ compiled in FB.
 \since 0.4.0
 '/
 
-#INCLUDE ONCE "../bas/fbdoc_options.bi"
+#INCLUDE ONCE "../fbdoc_options.bi"
 
 
 '* Macro to place a comment in to the output (file name and line number)

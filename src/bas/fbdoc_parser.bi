@@ -24,7 +24,7 @@ the \ref EmitterIF.
 /'* \brief The parser
 
 Class to handle FreeBASIC source code. A Parser allways work on
-exactly one input stream, comming from a file or from STDIN. The
+exactly one input stream, comming from a file or from `STDIN`. The
 Parser does
 
  - read the source from an input channel (see \ref StdIn(), \ref File_())
@@ -39,7 +39,7 @@ Parser does
  - call matching emitter functions to generaate the output stream
  - call function \ref EmitterIF::Exit_() after parsing
 
-When \Proj follows the source tree (option `--tree`), the
+When \Proj follows the source tree (option \ref SecOptTree), the
 function \ref EmitterIF::Incl_() creates a new Parser for each file.
 
 '/
@@ -152,7 +152,7 @@ STRING variables to exchange data with th emitters.
 \{
 '/
   AS STRING _
-    InPath = "" _ '*< path of current of input file (option `--tree`)
+    InPath = "" _ '*< path of current of input file (option \ref SecOptTree)
   , Fnam _        '*< the name of the input file
   , Buf _         '*< the input buffer
   , ErrMsg _      '*< an error message
@@ -228,7 +228,7 @@ about the state of the parser.
 
 Filehandlers are used to load some FreeBASIC source code input in to
 the buffer \ref Parser::Buf from different input channels (may be the
-STDIN pipe, a single file or all files in a folder). Afterwards the
+`STDIN` pipe, a single file or all files in a folder). Afterwards the
 source code gets parsed and translated output created by the emitter
 gets returned.
 

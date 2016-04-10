@@ -47,8 +47,19 @@ New:
 - init process (EmitterIF reviewed)
 - command line options transfer to plugins
 
+Changes:
+
+- folder src/plugins moved to src/bas/plugins for easily compiling / testing
+- new CMake macros (EXTENSION_MAPPING)
+- Doxyfile adapted for Doxygen > 1.8.6
+- better references in the docu
+
 Bugfixes:
 
+- parser.bas: rest of line issue fixed in case of no Emit->Decl_() function
+- --file-mode: correct suffix for `.c` files now
+- --geany-mode: works now with default emitter (without specifying an emitter name)
+- --syntax-mode: `*.bas`/`*.bi` files/patterns working now
 - files renamed: fb-doc -> fbdoc for better PDF (pdflatex mishandles '-' characters in hyperlinks)
 - syntax highlighter: finds FB source files in subfolders now (TEX, XML)
 - syntax highlighter: suppressed #`INCLUDE` statements fixed (HTM, TEX, XML)

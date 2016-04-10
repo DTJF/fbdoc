@@ -1,7 +1,7 @@
 /'* \file fbdoc_emitters.bas
-\brief Default emitter to create pseudo C source, #`INCLUDE`s the other emitters
+\brief Code for EmitterIF and auxiliary functions.
 
-This file contains the main source for EmitterIF, used by emitters.
+This file contains the main source for EmitterIF, used by all emitters.
 The Parser calls the matching function in the active EmitterIF, after
 scanning a relevant construct. The emitter function extracts the
 necessary information from the parser data, formats it as desired and
@@ -32,8 +32,8 @@ statement).
 \param Stop_ the end position in the input buffer
 
 Export the comments between the last position `SrcBgn` (= source begin)
-and the Stop_ position. Afterwards, the Stop_ position gets the new
-`SrcBgn`.
+and the `Stop_` position. After processing, the `Stop_` position gets
+the new `SrcBgn`.
 
 '/
 SUB emit_comments CDECL(BYVAL P AS Parser PTR, BYVAL Stop_ AS INTEGER)
@@ -54,7 +54,7 @@ SUB emit_comments CDECL(BYVAL P AS Parser PTR, BYVAL Stop_ AS INTEGER)
       CASE ASC("/") : IF .Buf[i + 1] <> ASC("'") THEN EXIT SELECT
         i += 2
         VAR c = IIF(.Buf[i] = OPT->JoComm, i + 1, 0)
-        IF c THEN Code("/**")
+        IF c THEN Code("/*!")
         DO
           SELECT CASE AS CONST .Buf[i]
           CASE 0 : EXIT DO
@@ -477,8 +477,8 @@ END SUB
 
 Generate an error output. When the parser detects an error it calls
 this function. Depending on the run-mode we do or do not emit an
-information. In mode `--geany-mode` the error message gets shown in the
-status line (or in the debug window).
+information. In mode \ref SecModGeany the error message gets shown in
+the status line (or in the debug window).
 
 '/
 SUB emit_error CDECL(BYVAL P AS Parser PTR)

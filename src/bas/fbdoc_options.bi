@@ -45,24 +45,23 @@ TYPE Options
     /'* \brief Print the helptext
 
     Stop after printing out some help information on how to start \Proj
-    and how to use options at the command line. (Option `--help`). '/
+    and how to use options at the command line (mode \ref SecModHelp). '/
     HELP_MESSAGE
 
     /'* \brief Print version information
 
-    Print out the version information and stop (Option `--version`). '/
+    Print out the version information and stop (mode \ref SecModVersion). '/
     VERSION_MESSAGE
 
     /'* \brief Operate in Geany mode
 
-    Input from STDIN and output on STDOUT. Usually this is to generate
-    templates in Geany, but it also can be used with pipes. (Option
-    ''--geany-mode''). '/
+    Input from `STDIN` and output on `STDOUT`. Usually this is to generate
+    templates in Geany, but it also can be used with pipes (mode \ref SecModGeany). '/
     GEANY_MODE
 
     /'* \brief Operate as Doxygen filter
 
-    Read a file and generate C-source to STDOUT. (Default mode). '/
+    Read a file and generate C-source to `STDOUT` (mode \ref SecModDef). '/
     DEF_MODE
 
     /'* \brief Operate in scan mode
@@ -70,8 +69,8 @@ TYPE Options
     Read input from one or more files, write output to files. Usually
     this is to generate pseudo C source output, but an alternative
     emitter can be specified. When no file name or pattern is specified,
-    all *.bas and *.bi files in the current folder gets parsed. (Option
-    `--file-mode`). '/
+    all *.bas and *.bi files in the current folder gets parsed (mode
+    \ref SecModFile). '/
     FILE_MODE
 
     /'* \brief Operate in list mode
@@ -79,19 +78,19 @@ TYPE Options
     Read input from one or more files, write output to a single file
     `fb-doc.lfn`. Generate a list of callee names in this file. When no
     file name or pattern is specified, all <em>*.bas</em> and
-    <em>*.bi</em> files in the current folder gets parsed. (Option
-    `--list-mode`). '/
+    <em>*.bi</em> files in the current folder gets parsed (mode
+    \ref SecModList). '/
     LIST_MODE
 
     /'* \brief Operate in syntax-highlighting mode
 
-    Read input from one or more files, write output to a several files.
-    As input \Proj reads files created by Doxygen, containing the
-    source listings in the intermediate format. The file types depend
-    on the settings in the Doxyfile. It may be `*.html`, `*.tex` and
-    `*.xml`, depending on tags `SOURCE_BROWSER =` and `GENERATE_HTML
-    =`, `GENERATE_LATEX =` / `LATEX_SOURCE_CODE =` and `GENERATE_XML =`
-    / `XML_PROGRAMLISTING`. '/
+    Read input from one or more files, write output to a several files
+    (mode \ref SecModSyntax). As input \Proj reads files created by
+    Doxygen, containing the source listings in the intermediate format.
+    The file types depend on the settings in the Doxyfile. It may be
+    `*.html`, `*.tex` and `*.xml`, depending on tags `SOURCE_BROWSER =`
+    and `GENERATE_HTML =`, `GENERATE_LATEX =` / `LATEX_SOURCE_CODE =`
+    and `GENERATE_XML =` / `XML_PROGRAMLISTING`. '/
     SYNT_MODE
 
   END ENUM
@@ -133,19 +132,19 @@ TYPE Options
        InFiles = "" _ '*< name or pattern of all input file[s]
    , StartPath = "" _ '*< path at program start
     , FileIncl = "" _ '*< names of #`INCLUDE` files
-     , OutPath = "" _ '*< path for file output (option `--outpath`)
-        , Errr = ""   '*< path for file output (option `--outpath`)
+     , OutPath = "" _ '*< path for file output (option \ref SecOptOutpath)
+        , Errr = ""   '*< the error message (if any)
   AS INTEGER _
-       Asterix = 0 _ '*< style for C_Source emitter to export comment blocks
-       , Docom = 0 _ '*< include documentational comments in source code (syntax highlighter)
-  , AllCallees = 0 _ '*< export external callee names as well (option `--list-mode`)
-  , InRecursiv = 0 _ '*< flag set when InFiles should get scaned recursiv in subfolders
-      , InTree = 0 _ '*< flag set when source tree should get scanned
+       Asterix = 0 _ '*< comment block style for emitter \ref SecEmmCSource
+       , Docom = 0 _ '*< include documentational comments in source code (\ref SecEmmSyntax)
+  , AllCallees = 0 _ '*< export external callee names as well (mode \ref SecModList)
+  , InRecursiv = 0 _ '*< flag set when InFiles should get scaned recursiv in subfolders (option \ref SecOptRecursiv)
+      , InTree = 0 _ '*< flag set when source tree should get scanned (option \ref SecOptTree)
        , Level = 0 _ '*< counter for #`INCLUDE`s
         , Efnr = 0 _ '*< file number for error messages (file modes)
         , Ocha = 0   '*< file number for output
   AS UBYTE _
-    JoComm = ASC("*") _ '*< magic character to start a documentation comment
+    JoComm = ASC("*") _ '*< magic character to start a documentational comment
   , AdLine = ASC("&")   '*< magic character to start a comment for direct export
   AS EmitFunc _
     CreateFunction _  '*< emitter for a function declaration with parameter list

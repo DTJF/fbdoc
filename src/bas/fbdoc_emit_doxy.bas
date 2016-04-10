@@ -1,9 +1,9 @@
 /'* \file fbdoc_emit_doxy.bas
 \brief Emitter for Doxygen templates
 
-This file contains the emitter called "DoxygenTemplates", used to
-generate templates for the Doxygen back-end in `--geany-mode`. No mode
-uses this emitter as default.
+This file contains the emitter \ref SecEmmDoxy, which isn't use by any
+run mode as default. It's used to generate templates for the Doxygen
+back-end in mode \ref SecModGeany.
 
 The emitters returns all original source code unchanged. Additionally,
 relevant constructs (statements or code blocks) get prepended by a multi line block

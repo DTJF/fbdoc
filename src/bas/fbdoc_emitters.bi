@@ -33,11 +33,11 @@ SecOptEmitter.
 
 '/
 ENUM EmitterTypes
-  C_SOURCE          '*< emit pseudo C source (default and option `--file-mode`)
-  FUNCTION_NAMES    '*< emit a list of function names (option `--list-mode`)
-  GTK_DOC_TEMPLATES '*< emit templates for gtk-doc (option `--geany-mode gtk`)
-  DOXYGEN_TEMPLATES '*< emit templates for Doxygen (option `--geany-mode doxy`)
-  SYNTAX_REPAIR     '*< fix syntax highlighting of Doxygen listings (option `--syntax-mode`)
+  C_SOURCE          '*< emit pseudo C source (modes \ref SecModDef and \ref SecModFile)
+  FUNCTION_NAMES    '*< emit a list of function names (mode \ref SecModList)
+  GTK_DOC_TEMPLATES '*< emit templates for gtk-doc (mode \ref SecModGeany)
+  DOXYGEN_TEMPLATES '*< emit templates for Doxygen (mode \ref SecModGeany)
+  SYNTAX_REPAIR     '*< fix syntax highlighting of Doxygen listings (mode \ref SecModSyntax)
   EXTERNAL          '*< external emitter loaded as plugin
 END ENUM
 

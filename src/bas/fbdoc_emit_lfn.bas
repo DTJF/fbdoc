@@ -1,9 +1,9 @@
 /'* \file fbdoc_emit_lfn.bas
 \brief Emitter to generate the file `fb-doc.lfn`.
 
-This file contains the emitter called "FunctionNames", used to generate
-the file `fb-doc.lfn` for the Doxygen Back-end filter feature. It's
-the default emitter in mode `--list-mode`.
+This file contains the emitter \ref SecEmmList, which is the default
+emitter in mode \ref SecModList. It's used to generate the file \ref
+SubInLfn for the Doxygen back-end filter feature.
 
 The emitter writes the names of all functions (`SUB` / `FUNCTION` /
 `PROPERTY`) to the output stream, one in a line, separated by a new
@@ -85,6 +85,7 @@ SUB lfn_func_ CDECL(BYVAL P AS Parser PTR) ' !!! ToDo member functions
   WITH *P '&Parser* P;
     SELECT CASE AS CONST *.StaTok
     CASE .TOK_SUB, .TOK_FUNC, .TOK_PROP
+    CASE .TOK_CTOR : Code(.SubStr(.NamTok) & ".")
     CASE ELSE : EXIT SUB
     END SELECT
     .PtrCount = 0
@@ -97,10 +98,10 @@ END SUB
 /'* \brief Emitter to import a source file
 \param P the parser calling this emitter
 
-This emitter gets called when the parser finds an #`INCLUDE`
-statement and option `--recursiv` is given. It checks if the file
-has been done already. If not, it creates a new #Parser and starts
-the scanning process.
+This emitter gets called when the parser finds an #`INCLUDE` statement
+and option \ref SecOptRecursiv is given. It checks if the file has been
+done already. If not, it creates a new #Parser and starts the scanning
+process.
 
 '/
 SUB lfn_include CDECL(BYVAL P AS Parser PTR)

@@ -1,10 +1,10 @@
 /'* \file fbdoc_emit_csource.bas
 \brief Emitter to generate the pseudo C intermediate format.
 
-This file contains the emitter called "C_Source", designed to generate
-the pseudo C intermediate format for the documentation back-ends (ie.
-Doxygen filter feature). It's the default emitter in mode `--file-mode`
-and in default mode.
+This file contains the emitter \ref SecEmmCSource, which is the default
+emitter in modes \ref SecModFile and \ref SecModDef. It's designed to
+generate the pseudo C intermediate format for the documentation
+back-ends (ie. for the Doxygen filter feature).
 
 The emitter transforms FB source to C like constructs and copies the
 documentational comments unchaned. Everything get placed in the same
@@ -26,7 +26,7 @@ DIM SHARED AS STRING LOFN
 \param O the parser to be used with this emitter
 
 This CTOR gets called when starting in a mode for file input (so not
-for `--geany-mode`). It loads the file `fb-doc.lfn`, if any.
+for mode \ref SecModGeany). It loads the file \ref SubInLfn, if any.
 
 '/
 SUB c_CTOR CDECL(BYVAL O AS Options PTR)
@@ -69,7 +69,7 @@ END SUB
 
 This emitter gets called when the parser finds an #`INCLUDE`
 statement. It creates a C translation and sends it to the output
-stream. When option `--tree` is given it checks if the file has
+stream. When option \ref SecOptTree is given it checks if the file has
 been done already. If not, it creates a new #Parser and starts its
 scanning process.
 
@@ -140,10 +140,10 @@ SUB c_func_ CDECL(BYVAL P AS Parser PTR) ' ToDo: internal function calls for dia
     Code(" {")
 
     IF LEN(LOFN) THEN
-      VAR cfl = .TOK_CTOR = *futo orelse _
-                .TOK_DTOR = *futo orelse _
-                .TOK_DOT  = nato[3] _
-        , cna = .SubStr(nato) _
+      'VAR cfl = .TOK_CTOR = *futo ORELSE _
+                '.TOK_DTOR = *futo ORELSE _
+                '.TOK_DOT  = nato[3]
+      VAR cna = UCASE(.SubStr(nato)) _
       , wtype = "" _
           , t = .CurTok _
           , e = .EndTok - 6
@@ -169,26 +169,31 @@ SUB c_func_ CDECL(BYVAL P AS Parser PTR) ' ToDo: internal function calls for dia
             WHILE (.Buf[x] AND &b11011111) = (LOFN[i] AND &b11011111)
               i -= 1
               x -= 1
-              VAR tt = t - 6
-              IF x < a THEN
+              IF x < a THEN ' end of source word
+                VAR tt = t - 6
                 SELECT CASE AS CONST LOFN[i]
-                CASE ASC(LFN_SEP) : g = 0 : x += 2
-                CASE ASC(".")
-                  IF .Buf[x] = ASC(".") ORELSE .Buf[x] = ASC(">") THEN
+                CASE ASC(LFN_SEP) : g = 0 : x += 2 ' global function `symbol()`
+                CASE ASC(".") '                      member function `udtname.symbol()`
+                  IF .Buf[x] = ASC(".") ORELSE .Buf[x] = ASC(">") THEN ' chain of one or more member functions
                     WHILE tt > .Tk1
                       IF *tt = .TOK_MEOP ORELSE *tt = .TOK_DOT _
-                                         THEN tt -= 3 ELSE tt += 3 : x = tt[1] + 1 : g = 0 : EXIT WHILE ' symbol()
+                                         THEN tt -= 3 ELSE tt += 3 : x = tt[1] + 1 : g = 0 : EXIT WHILE ' `symbol.symbol()`, `symbol->symbol()`
                       IF .Buf[tt[4] - 1] < ASC("A")   THEN tt += 3 : x = tt[1] + 2 : g = 1 : EXIT WHILE ' .symbol()
                       IF *tt = .TOK_WORD THEN tt -= 3 ELSE tt += 6 : x = tt[1] + 1 : g = 1 : EXIT WHILE ' .symbol()
                     WEND
                     l += a - x + 1
-                  ELSE
-                     IF 0 = cfl                            THEN EXIT WHILE
-                     VAR p = i : i = INSTRREV(LOFN, LFN_SEP, p)
-                     IF cna <> MID(LOFN, i + 1, p - i)     THEN EXIT WHILE
-                     g = 0 : x += 2
+                  ELSE ' no chain, just a single name
+                     'IF 0 = cfl                            THEN EXIT WHILE
+                     VAR z = i : i = INSTRREV(LOFN, LFN_SEP, z)
+                     IF cna <> UCASE(MID(LOFN, i + 1, z - i)) THEN
+'MSG_LINE(cna & " / " & MID(LOFN, i + 1, z - i) & " / " & MID(LOFN, z + 2, l))
+                       if MID(LOFN, i + 1, z - i) <> MID(LOFN, z + 2, l) then EXIT WHILE
+                       g = 1 : x += 2 : wtype = MID(.Buf, z, l) & "." ' CTOR
+                     else
+                       g = 0 : x += 2
+                     END IF
                   END IF
-                CASE ELSE : EXIT WHILE
+                CASE ELSE : EXIT WHILE '             no match
                 END SELECT
                 emit_comments(P, a)
                 IF g THEN Code(" " & wtype & MID(.Buf, x, l) & "();") _

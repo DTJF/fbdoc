@@ -60,9 +60,9 @@ END DESTRUCTOR
 \param Idx the current index in `COMMAND()`
 \returns the parameter, without quotes if any
 
-This function evaluates a parameter for an option. Some options need
-an additional parameter (ie. like `--outpath`). It gets read by this
-function, removing surrounding single or double quotes (if any).
+This function evaluates a parameter for an option. Some options need an
+additional parameter (ie. like \ref SecOptOutpath). It gets read by
+this function, removing surrounding single or double quotes (if any).
 
 In case of no further parameter or when the parameter starts by an
 "`-`" character an error messages gets created.
@@ -111,7 +111,7 @@ FUNCTION Options.parseCLI() AS RunModes
         IF RunMode <> DEF_MODE THEN Errr &= ", multiple run modes" : RETURN ERROR_MESSAGE
         RunMode = GEANY_MODE
         EmitTyp = GTK_DOC_TEMPLATES
-        emi = parseOptpara(i)
+        IF LEN(COMMAND(i + 1)) THEN emi = parseOptpara(i)
       CASE "-l", "--list-mode"
         IF RunMode <> DEF_MODE THEN Errr &= ", multiple run modes" : RETURN ERROR_MESSAGE
         RunMode = LIST_MODE
@@ -298,7 +298,7 @@ END FUNCTION
 \returns -1 on error, else 0
 
 This FUNCTION gets called to prepare the folders for file output in
-`--file-mode`. It creates matching subfolders in the target
+mode \ref SecModFile. It creates matching subfolders in the target
 directory set by option `--outpath` or its default.
 
 '/
@@ -340,7 +340,7 @@ SUB Options.FileModi()
   END IF
 
   IF 0 = LEN(OutPath) ANDALSO RunMode = FILE_MODE THEN
-    OutPath = ".." & SLASH & "doc" & SLASH '   def. OutPath in file mode
+    OutPath = ".." & SLASH                 '   def. OutPath in file mode
     SELECT CASE AS CONST EmitTyp '          + emitter specific extension
     CASE C_SOURCE      : OutPath &= "c_src"
     CASE SYNTAX_REPAIR : OutPath &= "fb_html"
@@ -418,9 +418,16 @@ SUB Options.doFile(BYREF Fnam AS STRING)
     Pars->File_(Fnam, InTree)
     IF LEN(Pars->ErrMsg) THEN MSG_CONT(Pars->ErrMsg)
   CASE SYNT_MODE
-    VAR nix = NEW Highlighter(Pars)
-    nix->doDoxy(Fnam)
-    DELETE nix
+    IF LCASE(RIGHT(Fnam, 4)) = ".bas" ORELSE _
+       LCASE(RIGHT(Fnam, 3)) = ".bi" THEN
+      MSG_LINE(Fnam)
+      Pars->File_(Fnam, InTree)
+      IF LEN(Pars->ErrMsg) THEN MSG_CONT(Pars->ErrMsg)
+    ELSE
+      VAR nix = NEW Highlighter(Pars)
+      nix->doDoxy(Fnam)
+      DELETE nix
+    END IF
   CASE LIST_MODE
     IF LCASE(RIGHT(Fnam, 4)) = ".bas" ORELSE _
        LCASE(RIGHT(Fnam, 3)) = ".bi" THEN
@@ -504,7 +511,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
     IF checkDir(path) THEN
       ERROUT("couldn't create directory " & path)
     ELSE
-      out_name = OutPath & out_name & *IIF(RIGHT(FNam, 3) = ".bas", @"c", @"h")
+      out_name = OutPath & out_name & *IIF(RIGHT(FNam, 3) = ".bi", @"h", @"c")
       Ocha = FREEFILE
       IF OPEN(out_name FOR OUTPUT AS #Ocha) THEN
         ERROUT("couldn't write " & out_name)

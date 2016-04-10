@@ -10,7 +10,7 @@ This file includes the main function to execute.
 #INCLUDE ONCE "fbdoc_emit_lfn.bi"
 
 
-/'* \brief The help message for the command line interface (option `--help`) '/
+/'* \brief The help message for the command line interface (mode \ref SecModHelp) '/
 #DEFINE MSG_HELP _
   "Command line tool for generating documentation from FreeBASIC source code." & NL & NL & _
   "Usage" & NL & _
@@ -36,16 +36,16 @@ This file includes the main function to execute.
   "      (emits gtk-doc templates for ENUM, UNION, TYPE, SUB, FUNCTION, PROPERTY)" & NL & _
   "  " & FBDOC_BINARY & " -f -t MyProject.bas" & NL & _
   "      Load MyProject.bas from current folder and follow source tree" & NL & _
-  "      emit pseudo C code in ../doc/c_src" & NL & _
+  "      emit pseudo C code in ../c_src" & NL & _
   "For details see file 'ReadMe.txt' or visit:" & NL & _
   "  http://www.freebasic.net/forum/viewtopic.php?f=8&t=19810 (en)" & NL
 
-/'* \brief The welcome message, shown when running as a program (option `--file-mode`) '/
+/'* \brief The welcome message, shown when running as a program (mode \ref SecModFile) '/
 #DEFINE MSG_WELCOME _
   "version " & PROJ_VERS & ", License GPLv3" & NL & _
   "        Copyright (C) 2012-" & PROJ_YEAR & " by " & PROJ_MAIL & NL
 
-/'* \brief The version information for the command line interface (option `--version`) '/
+/'* \brief The version information for the command line interface (mode \ref SecModVersion) '/
 #DEFINE MSG_VERSION _
   "  Compiled: " & __DATE__ & ", " & __TIME__ & " for " & _
   FBDOC_TARGET & ". (" & __FB_SIGNATURE__ & ")" & NL
@@ -54,7 +54,7 @@ This file includes the main function to execute.
 /'* \brief The target operation system (used in \ref MSG_VERSION, UNIX version here) '/
  #DEFINE FBDOC_TARGET "UNIX/LINUX"
 /'* \brief The name of the binary (used in \ref MSG_HELP, UNIX version here) '/
- #DEFINE FBDOC_BINARY "./" & PROJ_NAME
+ #DEFINE FBDOC_BINARY PROJ_NAME
 #ELSE
 '&/*
  #DEFINE FBDOC_TARGET "win/dos"

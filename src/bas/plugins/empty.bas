@@ -12,7 +12,7 @@ parser for this input.
 Before you can use this emitter, you have to compile it first, using
 the command
 
-~~~{.sh}
+~~~{.txt}
 fbc -dylib empty.bas
 ~~~
 
@@ -28,7 +28,7 @@ To use this emitter in \Proj set its name (without the suffix .bas) as
 parameter to option `-e`. Ie. the emitter output for the context of
 this file can get written to a text file by
 
-~~~{.sh}
+~~~{.txt}
 ./fb-doc --emitter "empty" empty.bas > test.txt
 ~~~
 
@@ -73,7 +73,7 @@ follow a source tree.
 \since 0.2.0
 '/
 
-#INCLUDE ONCE "../bas/fbdoc_options.bi"
+#INCLUDE ONCE "../fbdoc_options.bi"
 
 
 /'* \brief Emitter called when the Parser is at a variable declaration
@@ -191,7 +191,7 @@ SUB empty_error CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-/'* \brief Emitter called for an empty block in mode `--geany-mode`
+/'* \brief Emitter called for an empty block in mode \ref SecModGeany.
 \param P The parser calling this emitter
 
 FIXME

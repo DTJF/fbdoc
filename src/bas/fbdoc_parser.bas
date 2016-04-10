@@ -764,8 +764,7 @@ FUNCTION Parser.Errr(BYREF E AS STRING) AS INTEGER
 END FUNCTION
 
 
-/'*
-\brief Check word at current parser position
+/'* \brief Check word at current parser position
 \returns: The token for the word at current position
 
 This function checks the word at the current parser position. In
@@ -1072,7 +1071,9 @@ SUB Parser.pre_parse()
                       IF                         TYPE_() = MSG_STOP THEN EXIT DO
       CASE TOK_UNIO : IF Emit->Unio_ ANDALSO    UNION_() = MSG_STOP THEN EXIT DO
       CASE TOK_ENUM : IF Emit->Enum_ ANDALSO     ENUM_() = MSG_STOP THEN EXIT DO
-      CASE TOK_DECL : IF Emit->Decl_ ANDALSO  DECLARE_() = MSG_STOP THEN EXIT DO
+      CASE TOK_DECL
+        IF 0 = Emit->Decl_ THEN ToLast = *StaTok : Tok = "" : CONTINUE DO
+        IF                                    DECLARE_() = MSG_STOP THEN EXIT DO
       CASE TOK_DEFI : IF Emit->Defi_ ANDALSO   DEFINE_() = MSG_STOP THEN EXIT DO
       CASE TOK_MACR : IF Emit->Defi_ ANDALSO    MACRO_() = MSG_STOP THEN EXIT DO
       CASE TOK_INCL : IF Emit->Incl_ ANDALSO  INCLUDE_() = MSG_STOP THEN EXIT DO
@@ -1111,15 +1112,16 @@ SUB Parser.File_(BYREF File AS STRING, BYVAL Tree AS INTEGER)
   IF OPT->InTree THEN InPath = LEFT(File, INSTRREV(File, SLASH))
   Fnam = File
   pre_parse()
+  ErrMsg = "done"
 END SUB
 
 
-/'* \brief Read a buffer from pipe STDIN and parse
+/'* \brief Read a buffer from pipe `STDIN` and parse
 \returns The translated code (or an informal text)
 
-Get all characters from STDIN. Start the parsing process. If there is
+Get all characters from `STDIN`. Start the parsing process. If there is
 no input (an empty line) then call function \ref EmitterIF::Empty_().
-(Useful for generating file templates in mode `--geany-mode`.)
+(Useful for generating file templates in mode \ref SecModGeany.)
 
 '/
 SUB Parser.StdIn()
@@ -1139,7 +1141,7 @@ SUB Parser.StdIn()
   END IF
 
   Fin = LEN(Buf) - 1
-  pre_parse() : IF Tk1 THEN EXIT SUB
+  pre_parse() : IF Po THEN EXIT SUB
 
   Code(  "'                   " & PROJ_NAME & ": no --geany-mode output:" & _
     NL & "'                        select either a line" & _

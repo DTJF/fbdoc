@@ -34,7 +34,7 @@ related websides, linked by the name in the first column.
 
 -# First, install the distributed (D) packages of your choise. Ie. on
    Debian LINUX execute
-   ~~~{.sh}
+   ~~~{.txt}
    sudo apt-get install git cmake doxygen graphviz texlive geany doxygen-latex
    ~~~
 
@@ -45,7 +45,7 @@ related websides, linked by the name in the first column.
 
 -# Install cmakefbc, if wanted. That's easy, when you have GIT and CMake.
    Execute the commands
-   ~~~{.sh}
+   ~~~{.txt}
    git clone https://github.com/DTJF/cmakefbc
    cd cmakefbc
    mkdir build
@@ -68,7 +68,7 @@ Using GIT is the prefered way to download the \Proj package (since it
 helps users to get involved in to the development process). Get your
 copy and change to the source tree by executing
 
-~~~{.sh}
+~~~{.txt}
 git clone https://github.com/DTJF/fb-doc
 cd fb-doc
 ~~~
@@ -84,8 +84,8 @@ the archive. Then change to the newly created folder.
 # Build  {#SecBuild}
 
 Depending on whether the optional CMake package is installed
-(recommended), the \Proj executable can get compiled by the build
-management scripts or has to get compiled manually.
+(recommended), the \Proj executable can either get compiled by the
+build management scripts or has to get compiled manually.
 
 ## CMake Build  {#SubCMake}
 
@@ -102,17 +102,19 @@ Anyway, the first run will complain about the missing \Proj executable.
 This executable has to get built and installed before the doc target
 can get configured and used.
 
+
+### Executable  {#SubCmakeExe}
+
 Either  in-source or out-of-source builds are supported. The later
 should be the prefered choise. Execute the following commands starting
 at the root directory of the package.
 
-
-### In-Source-Build  {#SubCmakeISB}
+#### In-Source-Build  {#SubCmakeISB}
 
 The following command triple will compile the executable in the source
 tree and install it on the system:
 
-~~~{.sh}
+~~~{.txt}
 cmake .
 make
 sudo make install
@@ -124,13 +126,13 @@ sudo make install
       and folders.
 
 
-### Out-Of-Source-Build  {#SubCmakeOSB}
+#### Out-Of-Source-Build  {#SubCmakeOSB}
 
 The following command quintuple will create a new *build* folder,
 change to that folder, compile the executable and install it on the
 system:
 
-~~~{.sh}
+~~~{.txt}
 mkdir build
 cd build
 cmake ..
@@ -151,7 +153,7 @@ The following command will build the documentation in form of an HTML
 file tree and in form of a PDF file (either in-source or
 out-of-source):
 
-~~~{.sh}
+~~~{.txt}
 make doc
 ~~~
 
@@ -160,7 +162,7 @@ make doc
 
 Both targets can get build separately by executing
 
-~~~{.sh}
+~~~{.txt}
 make doc_htm
 make doc_pdf
 ~~~
@@ -171,7 +173,7 @@ make doc_pdf
 In order to uninstall the package, remove the files listed in the
 file `install_manifest.txt`. Ie. on Debian LINUX (or Ubuntu) execute
 
-~~~{.sh}
+~~~{.txt}
 sudo xargs rm < install_manifest.txt
 ~~~
 
@@ -189,7 +191,7 @@ Beside the module files this folder also contains a file named
 `fb-doc.bas`, which collects all modules files in to a single source
 tree, in order to compile all-in-one by executing
 
-~~~{.sh}
+~~~{.txt}
 cd src/bas
 fbc -w all fbdoc.bas -x fb-doc
 ~~~
@@ -208,7 +210,7 @@ its features, see \ref SecExaTut for examples.
 To install the program just copy the executable in to a directory of
 your system `PATH`. Ie. on Debian LINUX execute
 
-~~~{.sh}
+~~~{.txt}
 cp src/bas/fb-doc /usr/local/bin
 ~~~
 
@@ -226,7 +228,7 @@ out-of-source). Privious to the Doxygen run the list of function names
 get updated and after the run the syntax highlighting of the source
 code listings gets fixed.
 
-~~~{.sh}
+~~~{.txt}
 cd doxy
 fb-doc -l
 doxygen
@@ -247,7 +249,7 @@ fb-doc -s
 In order to uninstall just remove the executable. Ie. on Debian LINUX
 execute
 
-~~~{.sh}
+~~~{.txt}
 sudo rm /usr/local/bin/fb-doc
 ~~~
 
@@ -265,7 +267,7 @@ To get this working, Geany has to get started and the menu item `Edit
 selected. In the newly opened dialog a click on `Add` creates a new
 item with an entry box, which get filled by
 
-~~~{.sh}
+~~~{.txt}
 fb-doc --geany-mode "DoxygenTemplates"
 ~~~
 
@@ -289,7 +291,7 @@ To test the installation
 The following text should appear (assuming you're using the
 DoxygenTemplates setting)
 
-~~~{.txt}
+\code{.txt}
 /'* \file FIXME
 \brief FIXME
 
@@ -297,12 +299,12 @@ FIXME
 
 \since FIXME
 '/
-~~~
+\endcode
 
 If you don't get this text nor any other message in the editor window,
 then check the `status` message tab (in the notebook window at the
 bottom) to get a hint for solving the problem.
 
 \note Instead of the right-click menu try also keybindings &mdash;
-       `<Crtl>-[1 | 2 | 3]` is default. Find further details in [Geany
-       documentation](http://www.geany.org/manual/current/index.html#sending-text-through-custom-commands").
+      `<Crtl>-[1|2|3]` is default. Find further details in [Geany
+      documentation](http://www.geany.org/manual/current/index.html#sending-text-through-custom-commands").

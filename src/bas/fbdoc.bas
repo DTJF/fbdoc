@@ -7,7 +7,7 @@ If you don't like the modular compiling by the CMake scripts, you can
 instead compile this file with the FreeBASIC compiler in order to
 create your fb-doc binary. Execute
 
-~~~{.sh}
+~~~{.txt}
 fbc -w all fbdoc.bas -x fb-doc
 ~~~
 

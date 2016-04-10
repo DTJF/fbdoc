@@ -276,7 +276,7 @@ aren't present. \Proj searches for the files in the EXEPATH (the
 folder of the \Proj binary).
 
 
-## ../doc/c_src  {#SecFoldCsrc}
+## ../c_src  {#SecFoldCsrc}
 
 This folder gets created by \Proj to write the file output. It's
 used to collect the translations from the `C_Source` emitter. The

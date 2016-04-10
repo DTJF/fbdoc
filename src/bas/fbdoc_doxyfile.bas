@@ -6,7 +6,7 @@ from a Doxyfile, a file that contain settings to control the operations
 of Doxygen. \Proj reads this files to operate similar on the same
 folders and files as Doxygen.
 
-The Doxyfile is used in modes `--list-mode` and `--syntax-mode`.
+The Doxyfile is used in modes \ref SecModList and \ref SecModSyntax.
 
 '/
 

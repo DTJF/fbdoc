@@ -78,17 +78,19 @@ TYPE Highlighter
       Ifnr _  '*< The file number for input
     , LineNo  '*< The current line number
 
+  '* \brief All flags for output formats in a UNION.
   UNION
+    '* \brief Individual flags for a single output format.
     TYPE
       AS UBYTE _
-        GenHtml      _ '*< Flag for html output
-       , GenTex      _ '*< Flag for LaTeX output
-       , GenXml        '*< Flag for XML output
+        GenHtm _   '*< Flag for html output
+      , GenTex _   '*< Flag for LaTeX output
+      , GenXml     '*< Flag for XML output
     END TYPE
-    AS LONG GenAny '*< All output flags
+    AS LONG GenAny '*< Summary of all output flags
   END UNION
 
-  DECLARE CONSTRUCTOR()
+  'DECLARE CONSTRUCTOR()
   DECLARE CONSTRUCTOR(BYVAL AS Parser PTR)
   DECLARE SUB doDoxy(BYREF AS STRING)
   DECLARE SUB do_files()
@@ -100,13 +102,13 @@ TYPE Highlighter
   DECLARE FUNCTION word_type(BYREF AS STRING) AS ZSTRING PTR
   DECLARE FUNCTION searchPathNam(BYREF AS STRING) AS STRING
 
-  '* \brief the function is called to end a line and start a new one
+  '* \brief The function called to end a line and start a new one
   eol AS FUNCTION(BYVAL AS RepData PTR, BYref AS INTEGER) AS STRING _
     = @html_eol()
-  '* \brief the function is called to extract links from original files
+  '* \brief The function called to extract links from original files
   prepare AS FUNCTION(BYVAL AS Highlighter PTR) AS STRING _
     = @prepare_html()
-  '* \brief the function is called for normal code to replace special characters
+  '* \brief The function called for normal code to replace special characters
   special_chars AS FUNCTION(BYVAL AS UBYTE PTR, BYVAL AS INTEGER, BYVAL AS INTEGER) AS STRING _
     = @html_specials()
 END TYPE
