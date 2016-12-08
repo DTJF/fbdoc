@@ -15,7 +15,6 @@ Doxygen.
 '/
 
 #INCLUDE ONCE "fbdoc_options.bi"
-#INCLUDE ONCE "fbdoc_emit_lfn.bi"
 
 
 '* The list of function names (for caller / callee graphs)
@@ -30,13 +29,19 @@ for mode \ref SecModGeany). It loads the file \ref SubInLfn, if any.
 
 '/
 SUB c_CTOR CDECL(BYVAL O AS Options PTR)
-  VAR fnr = FREEFILE
-  IF OPEN(LFN_FILE FOR INPUT AS #fnr) THEN EXIT SUB
-  MSG_LINE(LFN_FILE)
-  LOFN = STRING(LOF(fnr), 0)
-  GET #fnr, , LOFN
-  CLOSE #fnr
-  MSG_CONT("loaded")
+  WITH *O
+    IF 0 = LEN(.LfnPnN) THEN .LfnPnN = .OutPath & LFN_FILE
+    MSG_LINE(.LfnPnN)
+    VAR fnr = FREEFILE
+    IF OPEN(.LfnPnN FOR INPUT AS #fnr) THEN
+      MSG_CONT("not present (List fo Function Names)")
+    ELSE
+      LOFN = STRING(LOF(fnr), 0)
+      GET #fnr, , LOFN
+      CLOSE #fnr
+      MSG_CONT("loaded")
+    END IF
+  END WITH
 END SUB
 
 

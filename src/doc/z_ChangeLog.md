@@ -31,6 +31,24 @@ or to the
 or feel free to send your ideas directly to the author (\Mail).
 
 
+# fb-doc-0.4.2 {#SecV-0-4-2}
+
+New:
+
+- option -L (supports out-of source builds)
+- evaluation of Doxygen tag `STRIP_CODE_COMMENTS`
+
+Changes:
+
+- adapted CMake scripts (folder cmake)
+
+Bugfixes:
+
+- parsing of Doxyfile flags no more case sensitive (YES = Yes = yes == True == Y)
+
+Released on 2016 December, ??.
+
+
 # fb-doc-0.4.0 {#SecV-0-4-0}
 
 New:

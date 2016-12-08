@@ -265,18 +265,19 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
   MSG_END(PROJ_NAME & " syntax highlighting")
   MSG_LINE("Doxyfile " & Fnam)
   WHILE doxy->Length
-    GenHtm = IIF(doxy->Tag(GENERATE_HTML) = "YES" ANDALSO _
-                doxy->Tag(SOURCE_BROWSER) = "YES", 1, 0)
-    GenTex = IIF(doxy->Tag(GENERATE_LATEX) = "YES" ANDALSO _
-                doxy->Tag(LATEX_SOURCE_CODE) = "YES", 1, 0)
-    GenXml = IIF(doxy->Tag(GENERATE_XML) = "YES" ANDALSO _
-                doxy->Tag(XML_PROGRAMLISTING) = "YES", 1, 0)
+    GenHtm = doxy->Flag(GENERATE_HTML) AND _
+             doxy->Flag(SOURCE_BROWSER)
+    GenTex = doxy->Flag(GENERATE_LATEX) AND _
+             doxy->Flag(LATEX_SOURCE_CODE)
+    GenXml = doxy->Flag(GENERATE_XML) AND _
+             doxy->Flag(XML_PROGRAMLISTING)
 
     IF GenAny THEN MSG_CONT("parsed") _
               ELSE MSG_CONT("nothing to do") : EXIT WHILE
 
     FbPath = doxy->Tag(INPUT_TAG)
-    OPT->InRecursiv = IIF(doxy->Tag(RECURSIVE) = "YES", 1, 0)
+    OPT->InRecursiv = doxy->Flag(RECURSIVE)
+    OPT->DoCom = IIF(OPT->DoCom + doxy->Flag(STRIP_CODE_COMMENTS), OPT->DoCom, 1)
     MSG_LINE("FB source " & FbPath)
     CHDIR(OPT->StartPath)
     IF CHDIR(FbPath) THEN MSG_CONT("error (couldn't change directory)") : EXIT WHILE
@@ -292,7 +293,7 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
       HtmlPath = OPT->addPath(InPath, doxy->Tag(HTML_OUTPUT))
       HtmlSuff = doxy->Tag(HTML_FILE_EXTENSION)
       IF 0 = LEN(HtmlSuff) THEN HtmlSuff = ".html"
-      OPT->InRecursiv = IIF(doxy->Tag(CREATE_SUBDIRS) = "YES", 1, 0)
+      OPT->InRecursiv = doxy->Flag(CREATE_SUBDIRS)
       CHDIR(OPT->StartPath)
       MSG_LINE("HTML source " & LEFT(HtmlPath, LEN(HtmlPath) - 1))
       IF CHDIR(HtmlPath) THEN
@@ -467,7 +468,7 @@ SUB Highlighter.generate_all(BYVAL Buf AS ZSTRING PTR, BYVAL Stop_ AS INTEGER)
         IF i >= start THEN Code(generate_code(Buf, start, i - start))
         start = i
         SCAN_SL_COMM(Buf,i)
-        IF Buf[start + 1] <> OPT->JoComm ORELSE OPT->Docom THEN _
+        IF Buf[start + 1] <> OPT->JoComm ORELSE OPT->DoCom THEN _
           Code(*CMNT_A & special_chars(Buf, start, i - start) & *SPAN_E)
         start = i
         CONTINUE WHILE
@@ -475,7 +476,7 @@ SUB Highlighter.generate_all(BYVAL Buf AS ZSTRING PTR, BYVAL Stop_ AS INTEGER)
         IF i >= start THEN Code(generate_code(Buf, start, i - start))
         start = i
         i += 2
-        VAR fl = Buf[i] <> OPT->JoComm OR OPT->Docom
+        VAR fl = Buf[i] <> OPT->JoComm OR OPT->DoCom
         DO
           SELECT CASE AS CONST Buf[i]
           CASE 0 : EXIT DO

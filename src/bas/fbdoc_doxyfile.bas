@@ -56,6 +56,7 @@ CONSTRUCTOR DoxyUDT(BYREF Fnam AS STRING)
     VAR d = NEW DoxyUDT(TRIM(MID(*Doxy, a, e - a), ANY !"= \v\t\\"))
     PULL_TAG(GENERATE_HTML)
     PULL_TAG(SOURCE_BROWSER)
+    PULL_TAG(STRIP_CODE_COMMENTS)
     PULL_TAG(GENERATE_LATEX)
     PULL_TAG(LATEX_SOURCE_CODE)
     PULL_TAG(GENERATE_XML)
@@ -74,6 +75,7 @@ CONSTRUCTOR DoxyUDT(BYREF Fnam AS STRING)
 
   GET_TAG(GENERATE_HTML)
   GET_TAG(SOURCE_BROWSER)
+  GET_TAG(STRIP_CODE_COMMENTS)
   GET_TAG(GENERATE_LATEX)
   GET_TAG(LATEX_SOURCE_CODE)
   GET_TAG(GENERATE_XML)
@@ -110,6 +112,24 @@ error checking agianst index out of range).
 '/
 PROPERTY DoxyUDT.Tag(BYVAL I AS INTEGER) AS STRING
   RETURN MID(Tags(I), LEN(INTEGER) + 1)
+END PROPERTY
+
+
+/'* \brief return a tag value
+\param I the index of the tag to get
+\returns the tags value (if any)
+
+This property returns the value of a Doxyfile tag. This is the context
+of the tag array at index I (an empty `STRING` if the tag has no
+value). Use enumerators DoxyTags for index values (since there's no
+error checking agianst index out of range).
+
+'/
+PROPERTY DoxyUDT.Flag(BYVAL I AS INTEGER) AS BYTE
+  SELECT CASE UCASE(MID(Tags(I), LEN(INTEGER) + 1))
+  CASE "YES", "Y", "TRUE" : RETURN 1
+  CASE ELSE               : RETURN 0
+  END SELECT
 END PROPERTY
 
 

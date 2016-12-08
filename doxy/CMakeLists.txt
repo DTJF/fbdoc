@@ -6,13 +6,15 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
 IF(NOT COMMAND FB_DOCUMENTATION)
   INCLUDE(UseFb-Doc)
+  IF(NOT COMMAND FB_DOCUMENTATION)
+    RETURN()
+  ENDIF()
 ENDIF()
 
 FB_DOCUMENTATION(
 BAS_SRC
   ${BAS_SRC}
-  ../src/bas/plugins/empty.bas
-  ../src/bas/plugins/py_ctypes.bas
+  ${EXT_SRC}
 DEPENDS
   ../CMakeLists.txt
   ../ReadMe.md

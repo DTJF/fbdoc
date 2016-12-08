@@ -315,19 +315,19 @@ emitter \ref SecEmmCSource gets replaced by the plugin emitter called
 `py_ctypes`. Its binary file `libpy_ctypes.so` (or `libpy_ctypes.dll`
 on non-LINUX systems) has to be located in the current folder.
 
-Related run modi: all (\ref SecModDef, \ref SecModFile, \ref SecModList, \ref SecModSyntax, \ref SecModGeany)
-
 \note Only one emitter can be active at a time. Specifying multiple
       emitters results in an error message and no operation.
 
+Related run modi: all (\ref SecModDef, \ref SecModFile, \ref SecModList, \ref SecModSyntax, \ref SecModGeany)
 
-## --outpath (-o)  {#SecOptPath}
+
+## --outpath (-o)  {#SecOptOutpath}
 
 This option makes \Proj to use a customized path for file output. Each
-emitter has its default output path. This option is used to override
-the default setting. The new path gets specified behind the option,
-separated by a white space character. The path can get enclosed by
-quotes (single `'` or double `"` quotes).
+emitter with file output has its default output path. This option is
+used to override the default setting. The new path gets specified
+behind the option, separated by a white space character. The path can
+get enclosed by quotes (single `'` or double `"` quotes).
 
 Related run modi: \ref SecModFile, \ref SecModList, ???
 
@@ -340,14 +340,14 @@ files matching that pattern get executed. By default only the specified
 path gets searched. When this option is set, also subfolders get
 searched.
 
-Related run modi: \ref SecModDef, \ref SecModFile, \ref SecModList, \ref SecModSyntax
-
 \note In case of emitters \ref SecModList and \ref SecModSyntax \Proj
       scans for source files in the path specified by the tag `INPUT`
       in the doxy file (when no `.bas` or `.bi` files are specified at
       the command line). In that case this option also affects the
       scanning process (although no file pattern is given at the
       command line).
+
+Related run modi: \ref SecModDef, \ref SecModFile, \ref SecModList, \ref SecModSyntax
 
 
 ## --tree (-t)  {#SecOptTree}
@@ -383,33 +383,48 @@ start `/'*` gets `/*!` and at the end `'/` gets `*/`). The lines
 between those markers get transfered unchanged.
 
 Some backends (like gtk-doc) expect an asterix character in front of
-each line. This character makes it difficult to format the comment
-paragraphs, since the asterix character may get included in the text
-when a line break gets executed. Using this option you can edit clean
-documentation comments in the FB source code and add the asterix only
-in the C like output for the backend.
-
-Related emitter: \ref SecEmmCSource
+each comment line. This character makes it difficult to format the
+comment paragraphs, since the asterix character may get included in the
+text when a line break gets executed. Using this option you can edit
+clean documentation comments in the FB source code and add the asterix
+only in the C like output for the backend.
 
 Example:
 
 The emitter transforms a FB source code documentational comment like
 
 ~~~{.txt}
-???
+/'* GooBar2dClass:
+
+The #GooBar2dClass-struct struct contains private data only.
+
+Since: 0.0
+'/
 ~~~
 
 by default to
 
 ~~~{.c}
-???
+/*! GooBar2dClass:
+
+The #GooBar2dClass-struct struct contains private data only.
+
+Since: 0.0
+*/
 ~~~
 
-and it creates with this option is set
+and when this option is set it creates
 
 ~~~{.c}
-???
+/*! GooBar2dClass:
+*
+* The #GooBar2dClass-struct struct contains private data only.
+*
+* Since: 0.0
+*/
 ~~~
+
+Related emitter: \ref SecEmmCSource
 
 
 ## --cstyle (-c)  {#SecOptCStyle}
@@ -419,8 +434,6 @@ code. By default FB types get transformed to pseudo C types. Ie. the FB
 type `ZSTRING PTR` gets transformed to the user defined C type
 `ZSTRING_PTR`. When this option is set, the FB types get transformed to
 real C types. In that case `ZSTRING PTR` gets `char*` in the output.
-
-Related emitters: \ref SecEmmCSource, \ref SecEmmDoxy
 
 Examples:
 
@@ -435,16 +448,20 @@ the output useful to get processed with a real C compiler, ie. when you
 wrote a library in FB and you want to auto-generate a C header for that
 library.
 
+Related emitters: \ref SecEmmCSource, \ref SecEmmDoxy
+
 
 ## --doc-comments (-d)  {#SecOptDocom}
 
 This option makes \Proj to export documentational comments in the
-output of the emitter \ref SecEmmSyntax. By default this emitter strips
+output of the emitter \ref SecEmmSyntax. This emitter follows the
+Doxygen tag `STRIP_CODE_COMMENTS` (which defaults to `YES`) and strips
 the documentational comments, since they are redundant (their content
-was used to generate the documentation text). In the output single line
-documentational comments get dropped and at the place of a multi line
+was used to generate the documentation text). In the output, single
+line documentational comments get dropped (they leave an empty line if
+the line only contains the comment). And at the place of a multi line
 documentational comment there's a gap in the line numbers. When this
-option is set, the emitter transforms all comments from the FB source
-code.
+option is set, the emitter ignores the `STRIP_CODE_COMMENTS` setting
+and transforms all comments from the FB source code.
 
 Related emitter: \ref SecEmmSyntax

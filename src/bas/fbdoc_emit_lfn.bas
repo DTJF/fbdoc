@@ -12,30 +12,35 @@ line character `CHR(10)`.
 '/
 
 #INCLUDE ONCE "fbdoc_options.bi"
-#INCLUDE ONCE "fbdoc_emit_lfn.bi"
 
 
+/'* \brief FIXME
+\param O FIXME
 
-FUNCTION startLFN(BYREF Path AS STRING) AS INTEGER
-  VAR fnr = FREEFILE
-  IF OPEN(Path & LFN_FILE FOR OUTPUT AS #fnr) THEN RETURN 0
-  PRINT #fnr, "+++ List of Function Names +++"
-  RETURN fnr
-END FUNCTION
+FIXME
+
+\since FIXME
+'/
+SUB lfn_CTOR CDECL(BYVAL O AS Options PTR)
+  WITH *O
+    IF 0 = LEN(.LfnPnN) THEN .LfnPnN = .OutPath & LFN_FILE
+    MSG_LINE(.LfnPnN)
+    .Ocha = FREEFILE
+    IF OPEN(.LfnPnN FOR OUTPUT AS #.Ocha) THEN
+      .Ocha = 0
+      MSG_CONT("error (couldn't write)")
+    ELSE
+      PRINT #.Ocha, "+++ List of Function Names +++"
+      MSG_CONT("opened")
+    END IF
+  END WITH
+END SUB
 
 
-'SUB lfn_CTOR CDECL(BYVAL P AS Parser PTR)
-      'IF 0 = Ocha THEN
-        'MSG_LINE(OutPath & LFN_FILE)
-        'Ocha = startLFN(OutPath)
-        'IF 0 = Ocha THEN MSG_END("error (couldn't write)") : EXIT SUB
-        'MSG_END("opened")
-      'END IF
-'END SUB
-
-
-'SUB lfn_DTOR CDECL(BYVAL P AS Parser PTR)
-'END SUB
+SUB lfn_DTOR CDECL(BYVAL O AS Options PTR)
+  CLOSE O->Ocha
+  MSG_CONT(O->LfnPnN & "written")
+END SUB
 
 
 /'* \brief Emitter to generate a declaration line
@@ -121,6 +126,9 @@ FIXME
 '/
 SUB init_lfn(BYVAL Emi AS EmitterIF PTR)
   WITH *Emi
+    .CTOR_ = @lfn_CTOR()
+    .DTOR_ = @lfn_DTOR()
+
     .Clas_ = @lfn_class_()
     .Unio_ = @lfn_class_()
     .Func_ = @lfn_func_()

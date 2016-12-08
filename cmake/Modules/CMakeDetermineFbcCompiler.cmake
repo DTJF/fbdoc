@@ -1,7 +1,7 @@
 #
 # CMakeFbc - CMake module for FreeBASIC Language
 #
-# Copyright (C) 2014-2015, Thomas{ dOt ]Freiherr[ aT ]gmx[ DoT }net
+# Copyright (C) 2014-2016, Thomas{ dOt ]Freiherr[ aT ]gmx[ DoT }net
 #
 # All rights reserved.
 #
@@ -49,21 +49,13 @@ IF(NOT CMAKE_Fbc_COMPILER)
     SET(CMAKE_Fbc_COMPILER "${CMAKE_Fbc_COMPILER_INIT}" CACHE FILEPATH "fbc compiler" FORCE)
   ENDIF()
 ENDIF()
-GET_FILENAME_COMPONENT(COMPILER_LOCATION "${CMAKE_Fbc_COMPILER}" PATH)
 
 IF(NOT CMAKE_Fbc_DEPS_TOOL)
-  FIND_PROGRAM(CMAKE_Fbc_DEPS_TOOL cmake_fb_deps DOC "FreeBASIC dependencies tool.")
+  FIND_PROGRAM(CMAKE_Fbc_DEPS_TOOL cmakefbc_deps DOC "FreeBASIC dependencies tool.")
   IF(CMAKE_Fbc_DEPS_TOOL)
     SET(CMAKE_Fbc_DEPS_TOOL "${CMAKE_Fbc_DEPS_TOOL}" CACHE FILEPATH "cmake FB dependency tool" FORCE)
-    MESSAGE(STATUS "Check for working cmake_fb_deps tool OK ==> ${CMAKE_Fbc_DEPS_TOOL}")
+    MESSAGE(STATUS "Check for working cmakefbc_deps tool OK ==> ${CMAKE_Fbc_DEPS_TOOL}")
   ENDIF()
-ENDIF()
-
-FIND_PROGRAM(CMAKE_AR NAMES ar PATHS ${COMPILER_LOCATION} )
-
-FIND_PROGRAM(CMAKE_RANLIB NAMES ranlib)
-IF(NOT CMAKE_RANLIB)
-   SET(CMAKE_RANLIB : CACHE INTERNAL "noop for ranlib")
 ENDIF()
 
 SET(CMAKE_COMPILER_IS_FBC 1)
@@ -84,8 +76,7 @@ CONFIGURE_FILE(
   )
 
 MARK_AS_ADVANCED(
-  CMAKE_AR
-  CMAKE_RANLIB
   CMAKE_Fbc_COMPILER
+  CMAKE_Fbc_DEPS_TOOL
   )
 SET(CMAKE_Fbc_COMPILER_ENV_VAR "FBC")

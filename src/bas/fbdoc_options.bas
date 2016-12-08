@@ -13,7 +13,6 @@ responsible for user interaction
 #INCLUDE ONCE "fbdoc_options.bi"
 #INCLUDE ONCE "fbdoc_version.bi"
 #INCLUDE ONCE "fbdoc_emit_syntax.bi"
-#INCLUDE ONCE "fbdoc_emit_lfn.bi"
 #INCLUDE ONCE "fbdoc_doxyfile.bi"
 
 
@@ -126,17 +125,21 @@ FUNCTION Options.parseCLI() AS RunModes
                  Types = C_STYLE
         CreateFunction = @cCreateFunction()
         CreateVariable = @cCreateTypNam()
-      CASE "-d", "--doc-comments" : Docom = 1
+      CASE "-d", "--doc-comments" : DoCom = 1
       CASE "-t", "--tree" : InTree = 1
 
       CASE "-e", "--emitter"
         IF LEN(emi) THEN      Errr &= ", multiple emitter setting" : RETURN ERROR_MESSAGE
         emi = parseOptpara(i)
-        IF 0 = LEN(emi) THEN   Errr &= ", invalid emitter setting" : RETURN ERROR_MESSAGE
+        IF 0 = LEN(emi) THEN     Errr &= ", empty emitter setting" : RETURN ERROR_MESSAGE
+      CASE "-L", "--ListFunctionNames"
+        IF LEN(LfnPnN) THEN  Errr &= ", multiple lfn-file setting" : RETURN ERROR_MESSAGE
+        LfnPnN = parseOptpara(i)
+        IF 0 = LEN(LfnPnN) THEN Errr &= ", empty lfn-file setting" : RETURN ERROR_MESSAGE
       CASE "-o", "--outpath"
         IF LEN(OutPath) THEN         Errr &= ", multiple outpaths" : RETURN ERROR_MESSAGE
         OutPath = parseOptpara(i)
-        IF 0 = LEN(OutPath) THEN       Errr &= ", invalid outpath" : RETURN ERROR_MESSAGE
+        IF 0 = LEN(OutPath) THEN         Errr &= ", empty outpath" : RETURN ERROR_MESSAGE
       CASE "-r", "--recursiv" : InRecursiv = 1
 
       CASE "-h", "--help" : RETURN HELP_MESSAGE
@@ -154,7 +157,7 @@ FUNCTION Options.parseCLI() AS RunModes
   WEND
 
   EmitIF = chooseEmitter(emi, par)
-  IF LEN(par) THEN Errr &= "unknown options '" & par & "'"
+  'IF LEN(par) THEN Errr &= ", unknown options '" & par & "'"
 
   IF 0 = LEN(InFiles) ANDALSO RunMode = DEF_MODE THEN RunMode = HELP_MESSAGE
   Pars = NEW Parser(EmitIF)
@@ -214,6 +217,7 @@ FUNCTION Options.chooseEmitter(BYREF F AS STRING, BYREF P AS STRING) AS EmitterI
           = DYLIBSYMBOL(DllEmitter, "EMITTERINIT") '&EmitterInit();
     IF 0 = ini THEN Errr &= ", no EMITTERINIT function in emitter " & F : EXIT SELECT
     EmitIF = ini(r, P) : EmitTyp = EXTERNAL
+    IF LEN(P) THEN Errr &= ", unknown options '" & P & "'"
   END SELECT
 #ENDIF
   RETURN r
@@ -396,10 +400,7 @@ SUB Options.FileModi()
   LOOP
 
   IF EmitIF->DTOR_ THEN EmitIF->DTOR_(@THIS)
-  SELECT CASE AS CONST RunMode
-  CASE LIST_MODE : IF Ocha THEN CLOSE #Ocha : MSG_LINE(LFN_FILE) : MSG_CONT("written")
-  CASE ELSE      : IF Ocha THEN CLOSE #Ocha
-  END SELECT
+  IF Ocha THEN CLOSE #Ocha
   MSG_END("")
 END SUB
 
@@ -429,14 +430,9 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       DELETE nix
     END IF
   CASE LIST_MODE
+    IF 0 = Ocha THEN EXIT SUB
     IF LCASE(RIGHT(Fnam, 4)) = ".bas" ORELSE _
        LCASE(RIGHT(Fnam, 3)) = ".bi" THEN
-      IF 0 = Ocha THEN
-        MSG_LINE(OutPath & LFN_FILE)
-        Ocha = startLFN(OutPath)
-        IF 0 = Ocha THEN MSG_CONT("error (couldn't write)") : EXIT SUB
-        MSG_CONT("opened")
-      END IF
       MSG_LINE(Fnam)
       Pars->File_(Fnam, InTree)
       IF LEN(Pars->ErrMsg) THEN MSG_CONT(Pars->ErrMsg)
@@ -457,7 +453,7 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       IF 0 = doxy->Length THEN MSG_CONT(doxy->Errr) : DELETE doxy : EXIT SUB
     END IF
 
-    InRecursiv = IIF(doxy->Tag(RECURSIVE) = "YES", 1, 0)
+    InRecursiv = doxy->Flag(RECURSIVE)
     VAR in_path = addPath(StartPath, doxy->Tag(INPUT_TAG))
     DELETE doxy
     IF CHDIR(in_path) THEN
@@ -467,23 +463,14 @@ SUB Options.doFile(BYREF Fnam AS STRING)
       IF 0 = LEN(patt) THEN
         MSG_CONT("error (no input files in " & in_path & ")")
       ELSE
-        MSG_CONT("scanned") _
-
-        MSG_LINE(StartPath & LFN_FILE)
-        Ocha = startLFN(StartPath)
-        IF 0 = Ocha THEN
-          MSG_CONT("error (couldn't write)")
-        ELSE
-          MSG_CONT("opened")
-          VAR a = 1, e = a, l = LEN(patt)
-          WHILE a < l
-            e = INSTR(a + 1, patt, !"\n")
-            Pars->File_(MID(patt, a, e - a), InTree)
-            MSG_LINE(MID(patt, a, e - a)) : MSG_CONT("scanned")
-            a = e + 1
-          WEND
-          CLOSE #Ocha : MSG_LINE(StartPath & LFN_FILE) : MSG_CONT("written")
-        END IF
+        MSG_CONT("scanned")
+        VAR a = 1, e = a, l = LEN(patt)
+        WHILE a < l
+          e = INSTR(a + 1, patt, !"\n")
+          Pars->File_(MID(patt, a, e - a), InTree)
+          MSG_LINE(MID(patt, a, e - a)) : MSG_CONT("scanned")
+          a = e + 1
+        WEND
       END IF
     END IF
 

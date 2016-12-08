@@ -1,6 +1,6 @@
 Welcome to the *fb-doc* package. It's a cross-platform
 multifunctional tool, mainly for generating documentation from and for
-FreeBASIC (= FB) source code, but useful for other pruposes as well,
+FreeBASIC (= FB) source code, but useful for other purposes as well,
 ie. like generating header files. Rather than creating the
 documentation output directly, *fb-doc* is designed to close the
 gap between FB and C syntax to allow for using any C / C++

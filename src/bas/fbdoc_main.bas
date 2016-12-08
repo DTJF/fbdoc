@@ -7,7 +7,6 @@ This file includes the main function to execute.
 
 #INCLUDE ONCE "fbdoc_options.bi"
 #INCLUDE ONCE "fbdoc_version.bi"
-#INCLUDE ONCE "fbdoc_emit_lfn.bi"
 
 
 /'* \brief The help message for the command line interface (mode \ref SecModHelp) '/
@@ -27,6 +26,7 @@ This file includes the main function to execute.
   " -c (--cstyle)      : emit real C types" & NL & _
   " -d (--doc-comment) : force documentational comments in listings" & NL & _
   " -e (--emitter)     : specify emitter name" & NL & _
+  " -L (--ListFunctionNames) : specify path & name of *.lfn file" & NL & _
   " -o (--outpath)     : specify output directory" & NL & _
   " -r (--recursiv)    : scan input files also in subfolders" & NL & _
   " -t (--tree)        : scan source tree (follow #INCLUDEs)" & NL & _
@@ -37,8 +37,8 @@ This file includes the main function to execute.
   "  " & FBDOC_BINARY & " -f -t MyProject.bas" & NL & _
   "      Load MyProject.bas from current folder and follow source tree" & NL & _
   "      emit pseudo C code in ../c_src" & NL & _
-  "For details see file 'ReadMe.txt' or visit:" & NL & _
-  "  http://www.freebasic.net/forum/viewtopic.php?f=8&t=19810 (en)" & NL
+  "Find detailed description at:" & NL & _
+  "  " & PROJ_WEBS & NL
 
 /'* \brief The welcome message, shown when running as a program (mode \ref SecModFile) '/
 #DEFINE MSG_WELCOME _

@@ -1,0 +1,79 @@
+.TH FB-DOC 1 "2016-11-21" "FreeBASIC documentation tool"
+.SH NAME
+fb-doc \- FreeBASIC tool for documentation and source processing
+.SH DESCRIPTION
+Parses FreeBASIC source code and generates different output formats.
+.SH SYNOPSIS
+.B fb-doc \fR[OPTIONS] [\fIinput-files\fR]
+.
+.SH OPTIONS
+.TP
+.I none\fR
+no option is equal to \fB\-h\fR, otherwise run in default mde: file in --> STDOUT
+.TP
+.I input-files\fR
+a list of file names (or patterns), separated by white spaces
+.TP
+\fB\-h\fR, \fB\--help\fR
+print help text and stop
+.TP
+\fB\-v\fR, \fB\--version\fR
+print version information and stop
+.TP
+\fB\-f\fR, \fB\--file-mode\fR
+run in file mode: file in --> file out
+.TP
+\fB\-g\fR, \fB\--geany-mode\fR
+run in geany mode: STDIN --> STDOUT
+.TP
+\fB\-l\fR, \fB\--list-mode\fR
+run in list mode: Doxgfile inputs --> fb-doc.lfn
+.TP
+\fB\-s\fR, \fB\--syntax-mode\fR
+run in syntax mode: scan doxygen output, repair syntax highlighting
+.TP
+\fB\-a\fR, \fB\--asterix\fR
+prepend '* ' in ML comments (gtk-doc style)
+.TP
+\fB\-c\fR, \fB\--cstyle\fR
+emit real C types
+.TP
+\fB\-d\fR, \fB\--doc-comment\fR
+force documentational comments in listings
+.TP
+\fB\-e\fR, \fB\--emitter\fR
+specify emitter name
+.TP
+\fB\-o\fR, \fB\--outpath\fR
+specify output directory
+.TP
+\fB\-r\fR, \fB\--recursiv\fR
+scan input files also in subfolders
+.TP
+\fB\-t\fR, \fB\--tree\fR
+scan source tree (follow #INCLUDEs)
+
+.SH EXAMPLE
+.TP
+\fB\fb-doc --geany-mode\fR
+Get input from STDIN, prepend a matching comment block, emit to STDOUT
+(emits gtk-doc templates for ENUM, UNION, TYPE, SUB, FUNCTION, PROPERTY)
+.TP
+\fB\fb-doc -f -t MyProject.bas\fR
+Load MyProject.bas from current folder and follow source tree emit
+pseudo C code in ../c_src
+.SH "SEE ALSO"
+A detailed documentation is available in html format at
+.B
+http://users.freebasic-portal.de/tjf/Projekte/fb-doc/doc/html/
+.SH COPYRIGHT
+Copyright \(co 2014\-2016 Thomas{ doT ]Freiherr[ At ]gmx[ DoT }net
+.br
+This is free software.  You may redistribute copies of it under the terms of
+the GNU General Public License GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>.
+There is NO WARRANTY, to the extent permitted by law.
+.SH BUGS
+Any bugs should be reported on the github tracker located at https://github.com/DTJF/fb-doc
+.
+.SH AUTHOR
+This manpage written by Thomas Freiherr (https://github.com/DTJF/fb-doc)

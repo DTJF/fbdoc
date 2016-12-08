@@ -11,7 +11,7 @@ compiled accordingly.
 
 CONST PROJ_NAME = "fb-doc" '*< The project name
 CONST PROJ_DESC = "FreeBASIC documentation tool" '*< The project description
-CONST PROJ_VERS = "0.4.0" '*< The version number
+CONST PROJ_VERS = "0.4.2" '*< The version number
 CONST PROJ_YEAR = "2016" '*< The year of the release
 CONST PROJ_AUTH = "DTJF" '*< The authors
 CONST PROJ_MAIL = "Thomas{ At ]Freiherr{ at }gmx[ dOt ]net" '*< An email address to get in contact

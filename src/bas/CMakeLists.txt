@@ -17,18 +17,11 @@ SET(BAS_SRC
   "${CMAKE_CURRENT_SOURCE_DIR}/fbdoc_main.bas"
   CACHE FILEPATH "BAS files" FORCE
   )
-#SET(BAS_SRC
-  #fb-doc_doxyfile.bas
-  #fb-doc_emit_lfn.bas
-  #fb-doc_emit_doxy.bas
-  #fb-doc_emit_gtk.bas
-  #fb-doc_emit_syntax.bas
-  #fb-doc_emitters.bas
-  #fb-doc_options.bas
-  #fb-doc_parser.bas
-  #fb-doc_main.bas
-  #CACHE FILEPATH "BAS files" FORCE
-  #)
+SET(EXT_SRC
+  "${CMAKE_CURRENT_SOURCE_DIR}/plugins/empty.bas"
+  "${CMAKE_CURRENT_SOURCE_DIR}/plugins/py_ctypes.bas"
+  CACHE FILEPATH "Plugin source files" FORCE
+  )
 
 # fb-doc[.exe]: compile and link the final executable
 ADD_EXECUTABLE(${PROJ_NAME} ${BAS_SRC})

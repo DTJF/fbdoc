@@ -10,6 +10,10 @@ execution.
 #INCLUDE ONCE "dir.bi"
 #INCLUDE ONCE "fbdoc_parser.bi"
 
+CONST _
+  LFN_FILE = "fb-doc.lfn" _ '*< File name for list of function names (caller / callees graphs)
+ , LFN_SEP = !"\n"          '*< Separator for entries in file `fb-doc.lfn` (one character!).
+
 
 /'* \brief Emit an error message to STDERR '/
 #DEFINE ERROUT(_T_) PRINT #OPT->Efnr, PROJ_NAME & ": " & _T_
@@ -113,6 +117,14 @@ TYPE Options
     CASE_UPPER '*< Output keywords in upper case
   END ENUM
 
+  AS STRING _
+          Errr = "" _ '*< the error message (if any)
+     , InFiles = "" _ '*< name or pattern of all input file[s]
+   , StartPath = "" _ '*< path at program start
+    , FileIncl = "" _ '*< names of #`INCLUDE` files
+     , OutPath = "" _ '*< path for file output (option \ref SecOptOutpath)
+      , LfnPnN = ""   '*< path and name of custom list of function name file
+
   AS RunModes      RunMode = DEF_MODE '*< the mode to operate (defaults to DOXYFILTER)
   AS TypesStyle      Types = FB_STYLE '*< the style for the type generation (defaults to FB_STYLE)
   AS Parser PTR       Pars = 0        '*< the parser we use
@@ -128,15 +140,9 @@ TYPE Options
   AS ZSTRING PTR     DirUp = @"..\"
 '&*/
 #ENDIF
-  AS STRING _
-       InFiles = "" _ '*< name or pattern of all input file[s]
-   , StartPath = "" _ '*< path at program start
-    , FileIncl = "" _ '*< names of #`INCLUDE` files
-     , OutPath = "" _ '*< path for file output (option \ref SecOptOutpath)
-        , Errr = ""   '*< the error message (if any)
   AS INTEGER _
        Asterix = 0 _ '*< comment block style for emitter \ref SecEmmCSource
-       , Docom = 0 _ '*< include documentational comments in source code (\ref SecEmmSyntax)
+       , DoCom = 0 _ '*< include documentational comments in source code (\ref SecEmmSyntax)
   , AllCallees = 0 _ '*< export external callee names as well (mode \ref SecModList)
   , InRecursiv = 0 _ '*< flag set when InFiles should get scaned recursiv in subfolders (option \ref SecOptRecursiv)
       , InTree = 0 _ '*< flag set when source tree should get scanned (option \ref SecOptTree)
@@ -161,7 +167,6 @@ TYPE Options
   DECLARE FUNCTION scanFiles(BYREF AS STRING, BYREF AS STRING) AS STRING
   DECLARE FUNCTION addPath(BYREF AS STRING, BYREF AS STRING) AS STRING
 END TYPE
-
 
 '&typedef Options* Options_PTR; //!< Doxygen internal (ignore this).
 /'* \brief The global struct for all parameters read from the command line '/
