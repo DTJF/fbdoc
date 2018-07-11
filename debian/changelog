@@ -1,4 +1,10 @@
-fb-doc (0.1) wheezy; urgency=low
+fb-doc (0.0.0) xenial; urgency=low
+
+  * Initial Release.
+
+ -- Thomas Freiherr <Thomas.Freiherr@gmx.net>  Fri, 09 Dec 2016 21:02:24 +0100
+
+fb-doc (0.0.0) wheezy; urgency=low
 
   * Initial Release.
 

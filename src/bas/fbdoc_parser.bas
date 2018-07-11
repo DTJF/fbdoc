@@ -163,7 +163,7 @@ END FUNCTION
          MSG_STOP on the end of the token list)
 
 Pre-check the token list for a declaration of a function, starting at
-the token behind the DECLARE statement. When OK, use demuxTyp() to
+the token behind the `DECLARE` statement. When OK, use demuxTyp() to
 evaluate the type of the declaration.
 
 '/
@@ -198,13 +198,13 @@ END FUNCTION
 /'* \brief Evaluate a type declaration in the token list
 \param DeclMod The modus (normal or declaration)
 \returns The (doubled) number of steps gone in the token list (or
-          MSG_ERROR on error and MSG_STOP on the end of the token list)
+         MSG_ERROR on error and MSG_STOP on the end of the token list)
 
 Check the token list for a type declaration. Starting at the AS
 statement we read the name of the type and all following 'PTR'
-statements. The type may be a SUB, FUNCTION, PROPERTY, ... After
+statements. The type may be a `SUB, FUNCTION, PROPERTY, ...` After
 execution the current position is at the next token behind the last
-PTR, or at the type name, or at the closing parenthesis. An error is
+`PTR`, or at the type name, or at the closing parenthesis. An error is
 returned if there is no word at the current position, or the token
 list doesn't start with 'AS', or the next token isn't a word.
 
@@ -298,8 +298,8 @@ END FUNCTION
 \param Export_ The function to call on each find
 
 Scan the token list for variable declarations and call the emitter
-for each find (ie. for constructs like DIM AS BYTE Nam1, Nam2(5) =
-{0,1,2,3,4,5}, Nam3, ...).
+for each find (ie. for constructs like `DIM AS BYTE Nam1, Nam2(5) =
+{0,1,2,3,4,5}, Nam3, ...`).
 
 '/
 SUB Parser.parseListNam(BYVAL Export_ AS EmitFunc) EXPORT
@@ -317,8 +317,8 @@ END SUB
 \param Export_ The function to call on each find
 
 Scan the token list for variable declarations and call the emitter
-for each find (ie. for constructs like DIM Nam1 AS BYTE, Nam2(5) AS
-UBYTE = {0,1,2,3,4,5}, Nam3 AS STRING, ...).
+for each find (ie. for constructs like `DIM Nam1 AS BYTE, Nam2(5) AS
+UBYTE = {0,1,2,3,4,5}, Nam3 AS STRING, ...`).
 
 '/
 SUB Parser.parseListNamTyp(BYVAL Export_ AS EmitFunc) EXPORT
@@ -335,7 +335,7 @@ END SUB
 /'* \brief Evaluate the context of an ENUM block
 \param Export_ The function to call on each find
 
-The emitter calls us to evaluate statements inside an ENUM block. So
+The emitter calls us to evaluate statements inside an `ENUM` block. So
 we stop after finding a statement and call the emitter handler
 one-by-one.
 
@@ -888,9 +888,8 @@ END FUNCTION
 
 /'* \brief Find the end of a multi line comment
 
-This snippet is used to find the end of a multi line comment block.
-It stops at the characters ' and / (if Buf[Po] isn't ASC("/") then the
-end of the buffer is reached).
+This snippet is used to find the end of a multi line comment block. It
+stops at the characters `&apos;/`.
 
 '/
 #MACRO SCAN_ML_COMM()
@@ -1183,9 +1182,9 @@ END PROPERTY
 /'* \brief The initialization of a bitfield
 \returns The bitfield initialization
 
-This property returns the initialization of a bitfield in a TYPE / UNION
-block. The size of the bitfield may either be an integer number or a
-macro (= TOK_WORD).
+This property returns the initialization of a bitfield in a `TYPE` /
+`UNION` block. The size of the bitfield may either be an integer number
+or a macro (= TOK_WORD).
 
 '/
 PROPERTY Parser.BitIni() AS STRING EXPORT
@@ -1212,11 +1211,11 @@ PROPERTY Parser.SubStr() AS STRING EXPORT
   RETURN MID(Buf, Tk[1] + 1, Tk[2])
 END PROPERTY
 
-/'* \brief Check current token position, extract word if string type
+/'* \brief Context of current token at position T
 \param T The token to read
 \returns The context of the token T
 
-This property returns the context of the token T from the
+This property returns the context of the token at position T from the
 input buffer.
 
 '/
@@ -1243,7 +1242,7 @@ END PROPERTY
 
 This procedure is used by the emitter handlers for #`INCLUDE`
 statements. It checks if the file has been done already or can get
-opened. If one of these fails a message gets sent to STDERR and the
+opened. If one of these fails a message gets sent to `STDERR` and the
 file gets skipped.
 
 Otherwise a new parser gets started to operate on that file.

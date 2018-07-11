@@ -70,17 +70,17 @@ make \Proj operate on FB source code.)
 <td> \ref SecModDef
 <td> \ref SecEmmCSource
 <td> one file (or a list of file names or patterns)
-<td> stream to STDOUT
+<td> stream to `STDOUT`
 <tr>
 <td> \ref SecModFile
 <td> \ref SecEmmCSource
 <td> one file (or a list of file names or patterns)
-<td> files `*. c` and `*. h`
+<td> files `*.c` and `*.h`
 <tr>
 <td> \ref SecModGeany
 <td> \ref SecEmmGtk
-<td> stream from STDIN
-<td> stream to STDOUT
+<td> stream from `STDIN`
+<td> stream to `STDOUT`
 <tr>
 <td> \ref SecModList
 <td> \ref SecEmmLfn
@@ -95,12 +95,12 @@ make \Proj operate on FB source code.)
 <td> \ref SecModHelp
 <td> none
 <td> none
-<td> stream to STDOUT
+<td> stream to `STDOUT`
 <tr>
 <td> \ref SecModVersion
 <td> none
 <td> none
-<td> stream to STDOUT
+<td> stream to `STDOUT`
 </table>
 
 \note Only one run mode can be active at a time. Specifying multiple
@@ -230,23 +230,25 @@ file list or patterns can get specified.
 ## --geany-mode (-g)  {#SecModGeany}
 
 This run mode is designed to be used as a filter for the [Geany
-IDE][http://www.geany.org]. Input gets read from STDIN and output gets
-sent to `STDOUT`. By default it uses the emitter \ref SecEmmGtk.
+IDE](http://www.geany.org). Input gets read from `STDIN` and output
+gets sent to `STDOUT`. By default it uses the emitter \ref SecEmmGtk.
 
 The Geany IDE can send selected context from an editor to an external
-program and then replace the selection by the output of that program.
-This feature is useful when working with backend gtk-doc, which
-requires to list all symbols in the documentational comments. \Proj can
-auto-generate such documentational comment blocks listing all symbols
-(= template) from the FB source code, so that the programmer has a
-complete list without typing errors and just has to add the description
-texts. It's also useful with backend Doxygen to create templates for
-`FUNCTION` documentation.
+program and then replace the selection by the output of that program,
+see [Geany manual](http://www.geany.org/manual/dev/index.html#id49) for
+details. This feature is useful when working with backend gtk-doc,
+which requires to list all symbols in the documentational comments.
+\Proj can auto-generate such documentational comment blocks (=
+template) listing all symbols from the FB source code, so that the
+programmer has a complete list without typing errors and just has to
+add the description texts. It's also useful with backend Doxygen to
+create templates for `FUNCTION` documentation, in order to
+auto-generate a list for the parameter descriptions.
 
-Since input comes from STDIN and no file name is required, there's a
+Since input comes from `STDIN` and no file name is required, there's a
 special use case for this option. It allows to specify an emitter name
 behind the option, separated by a white space character. The name can
-get enclosed by quotes (single `'` or double `"` quotes). Exmples:
+get enclosed by quotes (single `&apos;` or double quotes `"`). Exmples:
 
 ~~~{.txt}
 fb-doc --geany-mode --emitter "DoxygenTemplates"
@@ -254,9 +256,9 @@ fb-doc --geany-mode 'DoxygenTemplates'
 fb-doc -g doxy
 ~~~
 
-All three lines run \Proj in Geany mode on the input at STDIN. The
+All three lines run \Proj in Geany mode on the input at `STDIN`. The
 default emitter \ref SecEmmGtk gets replaced by the emitter \ref
-SecEmmDoxy. (See also option \ref SecOptEmitter.)
+SecEmmDoxy. (So it's a short form for option \ref SecOptEmitter.)
 
 
 
@@ -379,15 +381,15 @@ overview of the emitter options and the related emitters in section
 This option makes \Proj to start a line in a multi line comment with an
 asterix character (`*`). By default the emitter \ref SecEmmCSource
 transforms only the comment markers for multi line comments (at the
-start `/'*` gets `/*!` and at the end `'/` gets `*/`). The lines
-between those markers get transfered unchanged.
+start `/&apos;*` gets `/*!` and at the end `&apos;/` gets `*/`. The
+context between those markers gets transfered unchanged.
 
 Some backends (like gtk-doc) expect an asterix character in front of
 each comment line. This character makes it difficult to format the
 comment paragraphs, since the asterix character may get included in the
-text when a line break gets executed. Using this option you can edit
-clean documentation comments in the FB source code and add the asterix
-only in the C like output for the backend.
+text when an editor executes auto-formating. Using this option you can
+edit clean documentation comments in the FB source code and add the
+asterix only in the C like output for the backend.
 
 Example:
 
@@ -413,7 +415,7 @@ Since: 0.0
 */
 ~~~
 
-and when this option is set it creates
+and when this option is set, it creates
 
 ~~~{.c}
 /*! GooBar2dClass:
@@ -423,6 +425,9 @@ and when this option is set it creates
 * Since: 0.0
 */
 ~~~
+
+\note This option is related to multi line comments, only. It has no
+      effect on single line comments.
 
 Related emitter: \ref SecEmmCSource
 

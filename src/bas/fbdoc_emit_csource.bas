@@ -225,7 +225,7 @@ END SUB
 This emitter gets called when the parser is in a declaration (VAR /
 DIM / CONST / COMMON / EXTERN / STATIC). It generates a C
 translation for each variable name and sends it (them) to the output
-stream. Documantation comments get emitted at the appropriate place.
+stream. Documentation comments get emitted at the appropriate place.
 Each declaration get a single line, even if the original source code
 is a comma-separated list. (This may destroy line synchonisation, so
 it's better to place each declaration in a single line.)

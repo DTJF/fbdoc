@@ -15,16 +15,16 @@ CONST _
  , LFN_SEP = !"\n"          '*< Separator for entries in file `fb-doc.lfn` (one character!).
 
 
-/'* \brief Emit an error message to STDERR '/
+/'* \brief Emit an error message to `STDERR` '/
 #DEFINE ERROUT(_T_) PRINT #OPT->Efnr, PROJ_NAME & ": " & _T_
 
-/'* \brief Emit a message to STDERR '/
+/'* \brief Emit a message to `STDERR` '/
 #DEFINE MSG_LINE(_T_) PRINT #OPT->Efnr, NL; SPC(38 - LEN(_T_)); _T_; " -->";
 
-/'* \brief Emit a message to STDERR '/
+/'* \brief Emit a message to `STDERR` '/
 #DEFINE MSG_CONT(_T_) PRINT #OPT->Efnr, " " & _T_;
 
-/'* \brief Emit a message to STDERR '/
+/'* \brief Emit a message to `STDERR` '/
 #DEFINE MSG_END(_T_) PRINT #OPT->Efnr, _T_
 
 

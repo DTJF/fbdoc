@@ -128,7 +128,7 @@ END SUB
 /'* \brief Export the initializer(s) for a variable
 \param P the parser calling this emitter
 
-This sub reads the initializer from the input buffer and emits it
+This sub reads the initializer from the input buffer and emits them
 unchanged. This may be a bunch of text in case of an array initializer.
 
 '/

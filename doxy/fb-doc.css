@@ -13,7 +13,7 @@ span.keywordflow {
 }
 
 span.comment {
-  color: #b0b080
+  color: #a0a080
 }
 
 span.preprocessor {
@@ -26,11 +26,12 @@ span.stringliteral {
 
 div.line {
   font-size: 85%;
-  padding-bottom: 2px;
+  background-color: #EFEFEF;
 }
 
 code {
   font-size: 85%;
+  background-color: #EFEFEF;
 }
 
 table.doxtable th {

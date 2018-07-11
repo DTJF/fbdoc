@@ -24,7 +24,7 @@ SET(src # files & dirs to copy from root dir
   src
   )
 # create target deb for out-of-source debuild
-ADD_CUSTOM_TARGET(deb rm -rf ${PROJ_NAME} ${CMAKE_SOURCE_DIR}/doxy/fb-doc.lfn
+ADD_CUSTOM_TARGET(deb rm -rf ${PROJ_NAME}
   COMMAND mkdir ${PROJ_NAME}
   COMMAND cd ${CMAKE_SOURCE_DIR} && cp -r ${src} ${CMAKE_CURRENT_BINARY_DIR}/${PROJ_NAME}
 

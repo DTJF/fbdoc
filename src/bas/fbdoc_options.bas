@@ -407,8 +407,8 @@ END SUB
 
 /'* \brief Operate a single file
 
-This SUB gets called to operate on a single file. Depending on the
-\ref RunMode it emits messages to STDERR and it opens a file for the
+This SUB gets called to operate on a single file. Depending on the \ref
+RunMode it emits messages to `STDERR` and it opens a file for the
 output channel \ref Ocha.
 
 '/

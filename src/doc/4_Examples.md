@@ -88,8 +88,9 @@ Otherwise you have to prepend the complete path to execute the binary.
    information to the Doxygen log and the `STDOUT` stream is the
    internal data flow (invisible).
 
--# To see the just the intermediate format (without \Proj messages) you
-   can use \ref SecModGeany and pipe the input to \Proj by executing
+-# In order to see only the intermediate format (without \Proj
+   messages) you can use \ref SecModGeany and pipe the input to \Proj
+   by executing
    ~~~{.txt}
    $ fb-doc --geany-mode < fbdoc.bas
    ~~~
