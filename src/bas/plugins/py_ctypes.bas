@@ -207,10 +207,10 @@ SUB py_function CDECL(BYVAL P AS Parser PTR)
       typ = genCType(P)
       IF typ = "c_char_p" THEN
         typ =    "if sizeof(c_int) == sizeof(c_void_p):" _
-        & NL & "        " & sym & ".restype = ReturnString" _
-        & NL & "    else:" _
-        & NL & "        " & sym & ".restype = String" _
-        & NL & "        " & sym & ".errcheck = ReturnString"
+        & NL & "      " & sym & ".restype = ReturnString" _
+        & NL & "  else:" _
+        & NL & "      " & sym & ".restype = String" _
+        & NL & "      " & sym & ".errcheck = ReturnString"
       ELSE
         typ = sym & ".restype = " & typ
       END IF
