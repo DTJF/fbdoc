@@ -43,7 +43,7 @@ The steps to generate a well documented project are
    documentation output in one or more output formats (ie. \em html,
    \em pdf, \em manpage, ...)
 
-In case of \ref SecUseDoxy step 3 can get integrated in step 4.
+In case of \ref SubDoxygen step 3 can get integrated in step 4.
 
 
 # Executable  {#SecIntExe}
@@ -101,13 +101,13 @@ Further options control the behaviour of the run mode (left justified)
 or the emitter (right justified), or override the default emitter
 setting (centered):
 
-|  Run Mode         | \ref SecOptTree | \ref SecOptRecursiv | \ref SecOptPath || \ref SecOptEmitter || \ref SecOptDocom | \ref SecOptCStyle | \ref SecOptAsterix | Emitter            |
-| ----------------: | :-------------- | :------------------ | :-------------- || :----------------: || ---------------: | ----------------: | -----------------: | :----------------- |
-| \ref SecModDef    |        +        |          +          |         -       ||          *         ||        -         |         +         |          +         | \ref SecEmmCSource |
-| \ref SecModFile   |        +        |          +          |         +       ||          *         ||        -         |         -         |          -         | \ref SecEmmGtk     |
-| \ref SecModList   |        +        |          +          |         +       ||          *         ||        -         |         +         |          -         | \ref SecEmmDoxy    |
-| \ref SecModSyntax |        +        |          +          |        ???      ||          *         ||        -         |         -         |          -         | \ref SecEmmLfn     |
-| \ref SecModGeany  |        -        |          -          |         -       ||          *         ||        +         |         -         |          -         | \ref SecEmmSyntax  |
+|  Run Mode         | \ref SecOptTree | \ref SecOptRecursiv | \ref SecOptOutpath || \ref SecOptEmitter || \ref SecOptDocom | \ref SecOptCStyle | \ref SecOptAsterix | Emitter            |
+| ----------------: | :-------------- | :------------------ | :----------------- || :----------------: || ---------------: | ----------------: | -----------------: | :----------------- |
+| \ref SecModDef    |        +        |          +          |         -          ||          *         ||        -         |         +         |          +         | \ref SecEmmCSource |
+| \ref SecModFile   |        +        |          +          |         +          ||          *         ||        -         |         -         |          -         | \ref SecEmmGtk     |
+| \ref SecModList   |        +        |          +          |         +          ||          *         ||        -         |         +         |          -         | \ref SecEmmDoxy    |
+| \ref SecModSyntax |        +        |          +          |        ???         ||          *         ||        -         |         -         |          -         | \ref SecEmmLfn     |
+| \ref SecModGeany  |        -        |          -          |         -          ||          *         ||        +         |         -         |          -         | \ref SecEmmSyntax  |
 
 \Proj gets invoked in diffenrent manners,
 

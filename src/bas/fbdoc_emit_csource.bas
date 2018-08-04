@@ -255,9 +255,8 @@ SUB c_decl_ CDECL(BYVAL P AS Parser PTR)
       IF .IniTok THEN        CreateIni(P)
     END IF
     IF *.CurTok <= .TOK_EOS THEN Code(";") : EXIT SUB
-    IF .NamTok > .TypTok _
-      THEN Code(", ") _
-      ELSE Code("; ")
+    IF .NamTok > .TypTok    THEN Code(", ") _
+                            ELSE Code("; ")
   END WITH
 END SUB
 

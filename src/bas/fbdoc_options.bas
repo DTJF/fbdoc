@@ -19,7 +19,7 @@ responsible for user interaction
 /'* \brief Read options and parameters from the command line
 
 The constructor scans all command line arguments and checks for
-options and their parameters (, see \ref SecTabOptions for
+options and their parameters (, see \ref PagOptions for
 details). Options may be specified in short form (starting with a
 single minus character) or in human readable LONG form (starting
 with two minus characters). Some options may have an additinal

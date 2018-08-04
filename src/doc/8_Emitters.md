@@ -108,44 +108,58 @@ functions the UDT name and the function name gets emitted.
 
 This is a complex emitter, designed to generate source code listings
 for Doxygen output in different file formats (`.html`, `.tex` and
-`.xml`). By default Doxygen generates those listings based on the
-output of the filter defined by the tag `FILTER_SOURCE_PATTERNS`, which
-should be the intermediate (C-like) format (in order to get correct
-graphs). This means the original Doxygen listing files contain C-like)
-syntax. The files can get overriden by this emitter, generating context
-from the FB source code with correct syntax highlighting and hyperlinks
-to the documentation.
+`.xml`). Therefor it usually doesn't operate on single source code
+files. Instead it reads information form a Doxygen configuration file
+and adapts all files generated in the project.
+
+By default Doxygen generates listings based on the output of the filter
+defined by the tag `FILTER_SOURCE_PATTERNS`, which should be the
+intermediate (C-like) format (in order to get correct graphs). This
+means the original Doxygen listing files contain C-like syntax, so
+they're insufficient for a FreeBASIC documentation. The listing files
+can get overriden by this emitter, generating context directly from the
+FB source code with correct syntax highlighting and hyperlinks to the
+documentation.
 
 For convenience and easy handling, this emitter determines the input
-files by evaluating the Doxygen configuration file:
+files by evaluating the Doxygen configuration file specified as commend
+line parameter:
+
+-# The tag `SOURCE_BROWSER` get evaluated to find out if source files
+   got generated.
 
 -# The FB source file names get scanned in the path specified by tag
    `INPUT`. The scanning is recursiv dependent on the setting of tag
    `RECURSIVE`.
 
+-# The tag `STRIP_CODE_COMMENTS` gets evaluated, in order to specify
+   the comments handling.
+
 -# The Doxygen output files get scanned in the paths specified by tag
-   `OUTPUT_DIRECTORY` combined with
-   |           path | when those switches are set to `YES` |
+   `OUTPUT_DIRECTORY` in combination with
+   |           path | when those switches are set          |
    | -------------: | :----------------------------------- |
-   |  `HTML_OUTPUT` | `GENERATE_HTML   SOURCE_BROWSER`     |
-   | `LATEX_OUTPUT` | `GENERATE_LATEX   LATEX_SOURCE_CODE` |
-   |   `XML_OUTPUT` | `GENERATE_XML   XML_PROGRAMLISTING`  |
+   |  `HTML_OUTPUT` | `GENERATE_HTML,  SOURCE_BROWSER`     |
+   | `LATEX_OUTPUT` | `GENERATE_LATEX,  LATEX_SOURCE_CODE` |
+   |   `XML_OUTPUT` | `GENERATE_XML,  XML_PROGRAMLISTING`  |
    The scanning is recursiv dependent on the setting of tag
    `CREATE_SUBDIRS`.
 
 Each output file gets overriden by a similar file with identical header
-and footer, but newly generated listing body with FB code. The body
-contains syntax highlighting by the style classes `keyword`,
-`keywordtype`, `keywordflow`, `preprocessor`, `comment` and
-`stringliteral`, which are defined by the original Doxygen output.
-Special characters get transformed to the file encoding, depending on
-the output format (HTML, TEX or XML). And original hyperlinks between
-the source and the documentation get transfered to the new body.
+and footer, but newly generated listing body containing the FB code.
+The body contains correct syntax highlighting, using the Doxygen style
+classes `keyword`, `keywordtype`, `keywordflow`, `preprocessor`,
+`comment` and `stringliteral`, which are defined by the original
+Doxygen output. Special characters get transformed to the file
+encoding, depending on the output format (HTML, TEX or XML). And
+original hyperlinks between the source and the documentation get
+transfered to the new FB body.
 
-The emitter also provides a simple use case to operate on source files
-directly (suffix `.bas` or `.bi` instead of a Doxygen configuration
-file). In that case to output is in HTML format only and it gets sent
-to `STDOUT`. See also the note in section \ref #SecModSyntax.
+In addition, the emitter also provides a simple use case to operate on
+source files directly (suffix `.bas` or `.bi` instead of a Doxygen
+configuration file). In that case the output is in HTML format (no
+LATEX or XML support), contains no header or footer, and it gets sent
+to `STDOUT`. See also the note in section \ref SecModSyntax.
 
 
 # External Emitters  {#SecEmmEx}
@@ -165,7 +179,7 @@ SecModGeany for input from `STDIN`. (You can also pipe file context to
 mode \ref SecModGeany.)
 
 Before you can use an external emitter, the source code has to get
-developed and compiled, see section \ref SecPluginDev for details. In
+developed and compiled, see chapter \ref PagPlugin for details. In
 order to load the plugin, the binary has to be located in the current
 directory.
 

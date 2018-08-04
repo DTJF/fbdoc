@@ -1,11 +1,43 @@
 /'* \file py_ctypes.bas
-\brief Example code for an external emitter for Python bindings
+\brief Example code for an external emitter to generate Python bindings
 
 This file contains example source code for an external emitter. The
-emitter outputs Python declarations from the FB headers, in order to
-generate Python bindings based on
+emitter outputs Python declarations from the FB source code, in order
+to generate Python bindings based on
 [ctypes](https://docs.python.org/2/library/ctypes.html#) for libraries
 compiled in FB.
+
+The author is neither keen on Python syntax, nor on ctypes specials.
+Rather than a perfect example, this code is more like a quick and dirty
+solution to generate a Phyton binding for the library
+[libpruio](http://github.com/DTJF/libpruio). But interrested users may
+find some inspiration in the code.
+
+Example:
+
+In order to compute a ctypes binding for libpruio, execute in the
+folder `src/bas/plugins` the following command:
+
+~~~{txt}
+fb-doc -e "py_ctypes" -t -pylib=libpruio ../libpruio/src/pruio/pruio.bi
+~~~
+
+Options
+
+- `-e "py_ctypes"`: choose external emitter named py_ctypes
+- `-t`: follow source tree
+- `-pylib=libpruio`: binary name to include for python code (special plugin option, unknown for \Proj)
+- `../libpruio/src/pruio/pruio.bi`: the file to start at (expects that libpruio source is installed at the same directory level as \Proj project source)
+
+The output comes at STOUT (in the shell). In order to write it to a
+file just append `> libpruio.py` to the command, like
+
+~~~{txt}
+fb-doc -e "py_ctypes" -t -pylib=libpruio ../libpruio/src/pruio/pruio.bi > libpruio.py
+~~~
+
+\ToDo
+load RepData from file in CTOR
 
 \since 0.4.0
 '/
@@ -18,8 +50,8 @@ compiled in FB.
 DIM SHARED AS LONG _
   ENUM_COUNT  '*< A counter for ENUM blocks
 DIM SHARED AS STRING _
-    T0 _      '*< The first type block
-  , T1 _      '*< The second type block
+_    'T0 _      '*< The first type block
+    T1 _      '*< The _fields_ type block
   , T2 _      '*< The list of type names (`,` separated)
   , CLASSES _ '*< The list of class names (`!"\n"` separated)
   , LIBRARY _ '*< The name of the binary to build
@@ -29,34 +61,38 @@ CLASSES = !"\n" ' initialize the list
 
 /'* \brief Transform number literals
 \param T The string to work on
+\returns The transformed number
 
-This procedure checks a string for numerical literals and transforms
-the FB notation to Python equivalents.
+Helper procedure that checks a string for numerical literals and
+transforms the FB notation to Python equivalents.
 
 \since 0.4.0
 '/
-SUB genNLiteral(BYREF T AS STRING)
+FUNCTION genNLiteral(BYREF T AS STRING) AS STRING
   FOR i AS INTEGER = 0 TO LEN(T) - 1
-    IF T[i] = ASC("&") THEN
+    SELECT CASE AS CONST T[i]
+    CASE 0 TO 31, ASC("'"), ASC(",") : RETURN LEFT(T, i)
+    CASE ASC("/") : IF T[i + 1] = ASC("'") THEN RETURN LEFT(T, i)
+    CASE ASC("&")
       SELECT CASE AS CONST T[i + 1]
-      CASE 0 : EXIT FOR
+      CASE 0 : RETURN LEFT(T, i)
       CASE ASC("H"), ASC("h") : MID(T, i + 1, 2) = "0x" : i += 2
       CASE ASC("O"), ASC("o") : MID(T, i + 1, 2) = " 0" : i += 2
       CASE ASC("B"), ASC("b") : MID(T, i + 1, 2) = "0b" : i += 2
       END SELECT
-    END IF
-  NEXT
-END SUB
+    END SELECT
+  NEXT : RETURN T
+END FUNCTION
 
 
 /'* \brief Transform a FB type in to a ctype
 \param P The parser calling this emitter
 \returns A string containing the type
 
-This function transforms a FB type in to the ctypes equivalent in case
-of a standard type. Otherwise the original type symbol gets returned.
-Pointers get enclosed by `POINTER(...)`, but `ZSTRING PTR` gets
-transformed to `c_char_p`.
+Helper function that transforms a FB type in to the ctypes equivalent
+in case of a standard type. Otherwise the original type symbol gets
+returned. Pointers get enclosed by `POINTER(...)`, but `ZSTRING PTR`
+gets transformed to `c_char_p`.
 
 \since 0.4.0
 '/
@@ -89,10 +125,61 @@ FUNCTION genCType(BYVAL P AS Parser PTR) AS STRING
 END FUNCTION
 
 
+/'* \brief Export the initializer(s) for a variable
+\param P the parser calling this emitter
+
+This sub reads the initializer from the input buffer and emits them
+unchanged. This may be a bunch of text in case of an array initializer.
+
+'/
+SUB py_CreateIni CDECL(BYVAL P AS Parser PTR)
+  WITH *P '&Parser* P;
+    VAR kl = 0, i = .IniTok[1], a = i, e = 0, atc = 0, tup = *.StaTok = .TOK_CONS
+    Code(" ")
+    DO
+      i += 1
+      SELECT CASE AS CONST .Buf[i]
+      CASE 0 : EXIT DO
+      CASE ASC(!"\n")
+        Code(MID(.Buf, a + 1, IIF(e, e, i) - a))
+        a = i + 1
+        IF kl <= 0 ANDALSO (e = 0 ORELSE .Buf[e] <> ASC("_")) THEN EXIT SUB
+        Code(NL)
+        e = 0
+      CASE ASC("@")
+        IF kl <= 0 THEN atc = i
+      CASE ASC("_")
+        IF .Buf[i + 1] < ASC("0") ANDALSO .Buf[i - 1] < ASC("0") THEN e = IIF(e, e, i)
+      CASE ASC("'")
+        e = IIF(e, e, i)
+      CASE ASC("/")
+        IF .Buf[i + 1] = ASC("'") THEN e = IIF(e, e, i)
+      CASE ASC("""")
+        VAR esc = IIF(.Buf[i - 1] = ASC("!"), 1, 0)
+        IF atc THEN .Buf[atc] = ASC(" ")
+        DO
+          i += 1
+          SELECT CASE AS CONST .Buf[i]
+          CASE 0, ASC(!"\n") : i -= 1 : EXIT DO
+          CASE ASC("\") : IF esc THEN i += 1
+          CASE ASC("""") : IF .Buf[i + 1] = ASC("""") THEN i += 1 ELSE EXIT DO
+          END SELECT
+        LOOP
+      CASE ASC("("), ASC("{"), ASC("[") : kl += 1 : .Buf[i] = IIF(tup, ASC("("), ASC("["))
+      CASE ASC(")"), ASC("}"), ASC("]") : kl -= 1 : .Buf[i] = IIF(tup, ASC(")"), ASC("]")) : IF kl <  0 THEN EXIT DO
+      CASE ASC(",")                               : IF kl <= 0 THEN EXIT DO
+      END SELECT
+    LOOP UNTIL i >= .EndTok[1] : IF i <= a THEN EXIT SUB
+    Code(MID(.Buf, a + 1, IIF(e, e, i) - a))
+    IF atc THEN .Buf[atc] = ASC("@")
+  END WITH
+END SUB
+
+
 /'* \brief Emitter to extract the types of a parameter list
 \param P The parser calling this emitter
 
-This emitter collects the types of the parameter list in global
+Emitter that collects the types of the parameter list in global
 variable `T2`, to be used in py_function().
 
 \since 0.4.0
@@ -101,90 +188,6 @@ SUB py_entryListPara CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     IF 0 = .TypTok THEN T2 &= ", ???" _
                    ELSE T2 &= ", " & genCType(P)
-  END WITH
-END SUB
-
-/'* \brief Emitter to generate a line for a ENUM block entry
-\param P The parser calling this emitter
-
-This emitter gets called when the parser is in a block (`ENUM`). It
-generates a line for each member and stores it (them) in the out
-variable.
-
-\since 0.4.0
-'/
-SUB py_emitEnumNames CDECL(BYVAL P AS Parser PTR)
-  WITH *P '&Parser* P;
-    IF 0 = .NamTok THEN EXIT SUB
-    VAR v = ""
-    IF .IniTok THEN
-      VAR a = .IniTok[1] + 2, i = a
-      ENUM_COUNT = VALINT(MID(.Buf, a))
-      DO
-        SELECT CASE AS CONST .Buf[i]
-        CASE 0, ASC(!"\n"), ASC(!"\r"), ASC(","), ASC("'") : EXIT DO
-        END SELECT : i += 1
-      LOOP
-      v = MID(.Buf, a, i - a)
-      genNLiteral(v)
-    ELSE
-      ENUM_COUNT += 1
-      v = STR(ENUM_COUNT)
-    END IF
-    ENUM_COUNT = IIF(.IniTok, VALINT(MID(.Buf, .IniTok[1] + 2)), ENUM_COUNT + 1)
-    Code(NL & NL & "try:" _
-            & NL & "    " & .SubStr(.NamTok) & " =" & v _
-            & NL & "except:" _
-            & NL & "    pass")
-  END WITH
-END SUB
-
-/'* \brief Emitter to generate a line for a TYPE / UNION block entry
-\param P The parser calling this emitter
-
-This emitter gets called when the parser is in a block (`TYPE
-UNION`). It generates a line for each member and stores it (them) in
-the output variable.
-
-\since 0.4.0
-'/
-SUB py_emitBlockNames CDECL(BYVAL P AS Parser PTR)
-  STATIC AS STRING ctype
-  WITH *P '&Parser* P;
-    SELECT CASE AS CONST *.Tk1
-    CASE .TOK_PRIV, .TOK_PROT ': .SrcBgn = 0 ' !!! ToDo: hide private?
-    CASE .TOK_PUBL            ': .SrcBgn = 1
-    CASE .TOK_CLAS, .TOK_TYPE, .TOK_UNIO
-      .parseBlockTyUn(@py_emitBlockNames())
-    CASE .TOK_ENUM
-      .parseBlockEnum(@py_emitEnumNames())
-    CASE .TOK_DECL
-    CASE ELSE : IF 0 = .NamTok THEN EXIT SUB
-      IF .TypTok THEN ctype = genCType(P)
-      VAR size = ""
-      IF .DimTok THEN
-        VAR a = .DimTok[1] + 2, i = a
-        size = " * ("
-        DO
-          SELECT CASE AS CONST .Buf[i]
-          CASE 0, ASC(!"\n"), ASC(!"\r"), ASC("'") : EXIT DO
-          CASE ASC(!")")
-            VAR v = TRIM(MID(.Buf, a, i - a + 1), ANY !", \t\v")
-            genNLiteral(v)
-            IF LEN(size) < 6 THEN size &= v & " + 1" _
-                       ELSE size &= "(" & v & " + 1)"
-            EXIT DO
-          CASE ASC(!",")
-            VAR v = TRIM(MID(.Buf, a, i - a + 1), ANY !", \t\v")
-            genNLiteral(v)
-            size &= "(" & v & " + 1) * " : a = i + 1
-          END SELECT : i += 1
-        LOOP
-        size &= ")"
-      END IF
-      T0 &= NL & "    '" & .SubStr(.NamTok) & "',"
-      T1 &= NL & "    ('" & .SubStr(.NamTok) & "', " & ctype & size & "),"
-    END SELECT
   END WITH
 END SUB
 
@@ -208,6 +211,8 @@ SUB py_function CDECL(BYVAL P AS Parser PTR)
         & NL & "    else:" _
         & NL & "        " & sym & ".restype = String" _
         & NL & "        " & sym & ".errcheck = ReturnString"
+      ELSE
+        typ = sym & ".restype = " & typ
       END IF
     ELSE
       typ = sym & ".restype = None"
@@ -216,10 +221,125 @@ SUB py_function CDECL(BYVAL P AS Parser PTR)
     IF .ParTok THEN .parseListPara(@py_entryListPara())
 
     NEW_ENTRY
-    Code(NL & NL & "if hasattr(_libs['" & LIBRARY & "'], '" & sym & "'):" _
-            & NL & "    " & sym & " = _libs['" & LIBRARY & "']." & sym _
-            & NL & "    " & sym & ".argtypes = [" & MID(T2, 3) & "]" _
-            & NL & "    " & typ)
+    Code(NL & "if hasattr(_libs['" & LIBRARY & "'], '" & sym & "'):" _
+       & NL & "  " & sym & " = _libs['" & LIBRARY & "']." & sym _
+       & NL & "  " & sym & ".argtypes = [" & MID(T2, 3) & "]" _
+       & NL & "  " & typ)
+  END WITH
+END SUB
+
+
+/'* \brief Emitter to generate a line for a ENUM block entry
+\param P The parser calling this emitter
+
+Emitter that gets called when the parser is in a block (`ENUM`). It
+generates a line for each member and writes it (them) to the output.
+
+\since 0.4.0
+'/
+SUB py_emitEnumNames CDECL(BYVAL P AS Parser PTR)
+  WITH *P '&Parser* P;
+    IF 0 = .NamTok THEN EXIT SUB
+    VAR v = ""
+    IF .IniTok THEN
+      VAR a = .IniTok[1] + 2, i = a
+      ENUM_COUNT = VALINT(MID(.Buf, a))
+      DO
+        SELECT CASE AS CONST .Buf[i]
+        CASE 0 TO 31, ASC(","), ASC("'") : EXIT DO
+        END SELECT : i += 1
+      LOOP
+      v = genNLiteral(MID(.Buf, a, i - a))
+    ELSE
+      ENUM_COUNT += 1
+      v = STR(ENUM_COUNT)
+    END IF
+    ENUM_COUNT = IIF(.IniTok, VALINT(MID(.Buf, .IniTok[1] + 2)), ENUM_COUNT + 1)
+    Code(NL & "try:" _
+       & NL & "  " & .SubStr(.NamTok) & " =" & v _
+       & NL & "except:" _
+       & NL & "  pass")
+  END WITH
+END SUB
+
+/'* \brief Emitter to generate a line for a TYPE / UNION block entry
+\param P The parser calling this emitter
+
+This emitter gets called when the parser is in a block (`TYPE UNION`).
+It generates a line for each member and writes it (them) to the output.
+
+\since 0.4.0
+'/
+SUB py_emitBlockNames CDECL(BYVAL P AS Parser PTR)
+  STATIC AS STRING ctype
+  WITH *P '&Parser* P;
+    'emit_comments(P, .Tk1[1])
+
+    'SELECT CASE AS CONST *.Tk1
+    'CASE .TOK_PRIV : Code("private:")
+    'CASE .TOK_PROT : Code("protected:")
+    'CASE .TOK_PUBL : Code("public:")
+    'CASE .TOK_ENUM, .TOK_UNIO, .TOK_TYPE, .TOK_CLAS : c_Block(P)
+    'CASE ELSE
+      'IF 0 = .ListCount    THEN Code(STRING(.LevelCount * 2, " "))
+      'IF *.Tk1 = .TOK_DECL THEN OPT->CreateFunction(P) : Code(";") : EXIT SUB
+      'IF .FunTok THEN OPT->CreateFunction(P) _
+                 'ELSE OPT->CreateVariable(P)
+      'IF *.CurTok <= .TOK_EOS THEN Code(";") : EXIT SUB
+      'IF .NamTok  >   .TypTok THEN Code(",") ELSE Code("; ")
+    'END SELECT
+
+
+    SELECT CASE AS CONST *.Tk1
+    CASE .TOK_PRIV, .TOK_PROT ': .SrcBgn = 0 ' !!! ToDo: hide private?
+    CASE .TOK_PUBL            ': .SrcBgn = 1
+    CASE .TOK_CLAS, .TOK_TYPE, .TOK_UNIO
+      .parseBlockTyUn(@py_emitBlockNames())
+    CASE .TOK_ENUM
+      .parseBlockEnum(@py_emitEnumNames())
+    CASE .TOK_DECL
+      'IF .FunTok THEN Code("### member_function: " & .SubStr(.NamTok) & ", " & .SubStr(.FunTok))
+      'IF 0 = .FunTok THEN EXIT SELECT
+
+      'var n = ""
+      'SELECT CASE AS CONST *.FunTok
+      'CASE .TOK_CTOR : n = "CTOR" : T2 = "None"
+      'CASE .TOK_DTOR : n = "DTOR" : T2 = "None"
+      'CASE .TOK_SUB  : n = .SubStr(.NamTok) : T2 = "None"
+      'CASE ELSE : n = .SubStr(.NamTok) : T2 = genCType(P)
+      'END SELECT
+
+      'IF .ParTok THEN .parseListPara(@py_entryListPara())
+
+      ''T0 &= NL & "  '" & n & "',"
+      'T1 &= NL & "  ('" & n & "', CFUNCTYPE(" & T2 & ")),"
+    CASE ELSE : IF 0 = .NamTok THEN EXIT SUB
+      VAR size = ""
+      IF .TypTok THEN
+        ctype = genCType(P)
+        IF ctype = "STRING" then ctype = "c_void_p * 3"
+      END IF
+      IF .DimTok THEN
+        VAR a = .DimTok[1] + 2, i = a
+        size = " * ("
+        DO
+          SELECT CASE AS CONST .Buf[i]
+          CASE 0 TO 31, ASC("'") : EXIT DO
+          CASE ASC(!")")
+            VAR v = genNLiteral(TRIM(MID(.Buf, a, i - a + 1), ANY !", \t\v"))
+            IF LEN(size) < 6 THEN size &= v & " + 1" _
+                       ELSE size &= "(" & v & " + 1)"
+            EXIT DO
+          CASE ASC(!",")
+            VAR v = genNLiteral(TRIM(MID(.Buf, a, i - a + 1), ANY !", \t\v"))
+            size &= "(" & v & " + 1) * " : a = i + 1
+          END SELECT : i += 1
+        LOOP
+        size &= ")"
+      END IF
+      'T0 &= NL & "  '" & .SubStr(.NamTok) & "',"
+      T1 &= NL & "  ('" & .SubStr(.NamTok) & "', " & ctype & size & "),"
+    END SELECT
   END WITH
 END SUB
 
@@ -227,7 +347,8 @@ END SUB
 /'* \brief Emitter called when the Parser is at a variable declaration
 \param P The parser calling this emitter
 
-FIXME
+Emitter that generates a variable (or function) declaration and writes
+it (them) to the output.
 
 \since 0.4.0
 '/
@@ -237,10 +358,16 @@ SUB py_declare CDECL(BYVAL P AS Parser PTR)
 
     NEW_ENTRY
     VAR n = genCType(P)
-    IF n <> .SubStr(.TypTok) THEN Code(NL & NL & .SubStr(.NamTok) & " = " & n) : EXIT SUB
-    CLASSES &= n & !"\n"
-    Code(NL & NL & "class = struct_" & n & "(Structure):" _
-            & NL & "    pass")
+    IF n <> .SubStr(.TypTok) THEN
+      Code(NL & NL & .SubStr(.NamTok) & " = " & n)
+    ELSEIF .IniTok THEN
+      Code(NL & .SubStr(.NamTok))
+      py_CreateIni(P)
+    ELSE
+      CLASSES &= n & !"\n"
+      Code(NL & "class " & n & "(Structure):" _
+         & NL & "  pass")
+    END IF
   END WITH
 END SUB
 
@@ -285,20 +412,19 @@ FIXME
 '/
 SUB py_class CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
-    T0 = "struct_" & .BlockNam & ".__slots__ = ["
-    T1 = "struct_" & .BlockNam & ".__fields__ = ["
+    'T0 = .BlockNam & ".__slots__ = ["
+    T1 = .BlockNam & "._fields_ = ["
     .parseBlockTyUn(@py_emitBlockNames())
     NEW_ENTRY
 
     IF 0 = INSTR(CLASSES, !"\n" & .BlockNam & !"\n") THEN
-      Code(NL & NL & "class struct_" & .BlockNam & "(Structure):" _
-              & NL & "    pass ")
+      Code(NL & NL & "class " & .BlockNam & "(Structure):" _
+              & NL & "  pass ")
     END IF
 
-    Code(NL & NL _
-       & T0 & NL & "]" _
-       & NL & NL _
-       & T1 & NL & "]")
+    'Code(NL & T0 & NL & "]" & NL _
+       '& NL & T1 & NL & "]")
+    Code(NL & T1 & NL & "]")
   END WITH
 END SUB
 
@@ -318,13 +444,12 @@ SUB py_define CDECL(BYVAL P AS Parser PTR)
       , l = .EndTok[1] + .EndTok[2] - a
     IF 0 = l THEN EXIT SUB ' skip empty defines
 
-    VAR v = TRIM(MID(.Buf, a, l))
-    genNLiteral(v)
+    VAR v = genNLiteral(TRIM(MID(.Buf, a, l)))
     NEW_ENTRY
-    Code(NL & NL & "try:" _
-            & NL & "    " & .SubStr(.NamTok) & " = " & v _
-            & NL & "except:" _
-            & NL & "    pass")
+    Code(NL & "try:" _
+       & NL & "  " & .SubStr(.NamTok) & " = " & v _
+       & NL & "except:" _
+       & NL & "  pass")
   END WITH
 END SUB
 
@@ -343,10 +468,10 @@ SUB py_include CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-/'* \brief Emitter called when the Parser is at an #`INCLUDE` line
+/'* \brief Emitter called when the Parser is at the start of a file
 \param P The parser calling this emitter
 
-FIXME
+This emitter sends the HEADER information to the output once.
 
 \since 0.4.0
 '/
@@ -355,10 +480,10 @@ SUB py_init CDECL(BYVAL P AS Parser PTR)
 END SUB
 
 
-/'* \brief Emitter called when the Parser is at an #`INCLUDE` line
+/'* \brief Emitter called when the Parser is at the end of a input file
 \param P The parser calling this emitter
 
-FIXME
+This emitter just adds a new line character to the output.
 
 \since 0.4.0
 '/
@@ -375,8 +500,11 @@ FIXME
 \since 0.4.0
 '/
 SUB py_CTOR CDECL(BYVAL O AS Options PTR)
-  HEADER = "# header file auto generated by fb-doc and plugin py_ctypes.bas" & NL & NL _
-         & "_libs[""" & LIBRARY & """] = load_library(""" & LIBRARY & """)"
+  HEADER = "# header file auto generated by fb-doc and plugin py_ctypes.bas" & NL _
+         & "# to be inported by libpruio.py (do not change)" & NL _
+         & "from ctypes import *"
+         '& "import ctypesloader" & NL _
+         '& "_libs[""" & LIBRARY & """] = load_library(""" & LIBRARY & """)"
 END SUB
 
 
