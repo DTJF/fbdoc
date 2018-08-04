@@ -230,7 +230,7 @@ source code that way.
 
 Exeptions handled in this SUB:
 
- - TypTok = 0: no type, emit only the name (with a space in from)
+ - TypTok = 0: no type, emit only the name (with a space in front)
  - NymTok = 0: no name, emit type and exit
 
 '/

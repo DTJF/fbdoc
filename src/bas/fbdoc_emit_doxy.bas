@@ -23,7 +23,7 @@ The documentation template contains
 
 The placeholder `FIXME` is used to mark the positions where the
 documentation context should get filled in. See section \ref
-SubSecExaDoxy for an example.
+SubDoxygen for an example.
 
 \note Since the prefered way to document with Doxygen is to write the
       comment in front of or behind a statement, this emitter is mostly

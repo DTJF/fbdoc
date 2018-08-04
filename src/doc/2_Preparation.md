@@ -16,17 +16,18 @@ optional. Some are recommended (R) in order to make use of all package
 features. Some are helpful for testing (T) purposes. LINUX users may
 find some packages in their distrubution management system (D).
 
-|                                       Name  | Type |  Function                                                      |
-| ------------------------------------------: | :--: | :------------------------------------------------------------- |
-| [fbc](http://www.freebasic.net)             | M    | FreeBASIC compiler to compile the source code                  |
-| [GIT](http://git-scm.com/)                  | R  D | version control system to organize the files                   |
-| [CMake](http://www.cmake.org)               | R  D | build management system to build executables and documentation |
-| [cmakefbc](http://github.com/DTJF/cmakefbc) | R    | FreeBASIC extension for CMake                                  |
-| [Doxygen](http://www.doxygen.org/)          | R  D | documentation generator (ie. for this text)                    |
-| [Graphviz](http://www.graphviz.org/)        | R  D | Graph Visualization Software (caller/callee graphs)            |
-| [LaTeX](https://latex-project.org/ftp.html) | R  D | A document preparation system (PDF output)                     |
-| [Geany](http://www.geany.org/)              | T  D | Integrated development environment (ie. to test templates)     |
-| [gtk-doc](http://www.gtk.org/gtk-doc/)      | T  D | A further documentation generator (ie. for testing purposes)   |
+|                                            Name  | Type |  Function                                                      |
+| -----------------------------------------------: | :--: | :------------------------------------------------------------- |
+| [fbc](http://www.freebasic.net)                  | M    | FreeBASIC compiler to compile the source code                  |
+| [GIT](http://git-scm.com/)                       | R  D | version control system to organize the files                   |
+| [CMake](http://www.cmake.org)                    | R  D | build management system to build executables and documentation |
+| [cmakefbc](http://github.com/DTJF/cmakefbc)      | R    | FreeBASIC extension for CMake                                  |
+| [Doxygen](http://www.doxygen.org/)               | R  D | documentation generator (ie. for this text)                    |
+| [Graphviz](http://www.graphviz.org/)             | R  D | Graph Visualization Software (caller/callee graphs)            |
+| [LaTeX](https://latex-project.org/ftp.html)      | R  D | A document preparation system (PDF output)                     |
+| [Geany](http://www.geany.org/)                   | T  D | Integrated development environment (ie. to test templates)     |
+| [gtk-doc](http://www.gtk.org/gtk-doc/)           | T  D | A further documentation generator (ie. for testing purposes)   |
+| [devscripts & tools](https://www.debian.org/doc) | R  D | Scripts for building Debian packages (for target deb)          |
 
 It's beyond the scope of this guide to describe the installation for
 those programming tools. Find detailed installation instructions on the
@@ -168,6 +169,40 @@ make doc_pdf
 ~~~
 
 
+### Debian packaging  {#SubDebPack}
+
+The project is prepared to build packages for Debian based Linux
+versions (ie. like Ubuntu, Mint, ...). It's beyond the scope of this
+documentation to explain that process in detail. It's also a bit
+tricky, since the project is self-hosting (it needs itself to build its
+documentation).
+
+In order to create a package, make sure that you installed all
+dependencies listed above. Then adapt the files in folder debian and
+execute the following command (either in-source or out-of-source in the
+build folder):
+
+~~~{.txt}
+make deb
+~~~
+
+Find the resulting files in the folder `debian` (the text `_V_A`
+get replaced by the project version and the system architecture):
+
+- fb-doc_V_A.deb: binary package
+- fb-doc-doc_V_A.deb: the HTML documentation package
+- fb-doc_V_A.tar.xz: source code package
+- fb-doc_V_A.build: log file of packaging process
+- fb-doc_V_A.changes: auxiliary file for auto-uploads
+- fb-doc_V_A.dsc: auxiliary file for auto-uploads
+
+\note For first build and due to the self-hosting issue, you have to
+      deactivate the `Build-Depends` checking. Therefor configure the
+      package by `cmakefbc .. -DDEBUILD_FLAGS=-d`. Once you created and
+      installed the package, you don't need to set the `DEBUILD_FLAGS`
+      variable any more.
+
+
 ### Uninstall  {#SubCmakeUninstall}
 
 In order to uninstall the package, remove the files listed in the
@@ -202,7 +237,7 @@ This creates an executable binary named
 - `fb-doc.exe` (on other systems).
 
 That's all you need to get started. Now you can use \Proj and check
-its features, see \ref SecExaTut for examples.
+its features, see chapter \ref PagExamples for examples.
 
 
 ### Install  {#SubManInstall}

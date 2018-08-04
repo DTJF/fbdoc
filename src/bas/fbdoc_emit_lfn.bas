@@ -1,7 +1,7 @@
 /'* \file fbdoc_emit_lfn.bas
 \brief Emitter to generate the file `fb-doc.lfn`.
 
-This file contains the emitter \ref SecEmmList, which is the default
+This file contains the emitter \ref SecEmmLfn, which is the default
 emitter in mode \ref SecModList. It's used to generate the file \ref
 SubInLfn for the Doxygen back-end filter feature.
 
@@ -100,7 +100,7 @@ SUB lfn_func_ CDECL(BYVAL P AS Parser PTR) ' !!! ToDo member functions
 END SUB
 
 
-/'* \brief Emitter to import a source file
+/'* \brief Handler to import a source file
 \param P the parser calling this emitter
 
 This emitter gets called when the parser finds an #`INCLUDE` statement

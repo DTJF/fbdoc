@@ -435,8 +435,10 @@ SUB Parser.parseBlockTyUn(BYVAL Export_ AS EmitFunc) EXPORT
         skipOverColon()
 
       CASE TOK_DECL : SKIP
-        IF MSG_ERROR >= demuxDecl() THEN IF Errr("syntax error " & SubStr(NamTok)) = MSG_ERROR _
-                                    THEN skipOverColon() : EXIT SELECT ELSE EXIT DO
+        IF MSG_ERROR >= demuxDecl() THEN _
+          IF Errr("syntax error " & SubStr(NamTok)) = MSG_ERROR _
+            THEN skipOverColon() : EXIT SELECT _
+            ELSE EXIT DO
         skipOverColon() : Export_(@THIS)
 
       CASE TOK_PUBL, TOK_PRIV, TOK_PROT

@@ -22,7 +22,7 @@ The documentation template contains
 
 The placeholder `FIXME` is used to mark the positions where the
 documentation context should get filled in. See section \ref
-SubSecExaGtkdoc for an example.
+SubGtkdoc for an example.
 
 '/
 

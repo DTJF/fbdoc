@@ -119,7 +119,7 @@ Otherwise you have to prepend the complete path to execute the binary.
    `fbdoc.c`) and the file gets generated in the (newly created)
    default path `../c_src`, so check file `src/c_src/fbdoc.c`. In order
    to overridde the default path and generate the file in the current
-   directory use option \ref SecOptPath, like
+   directory use option \ref SecOptOutpath, like
    ~~~{.txt}
    $ fb-doc --file-mode --outpath "." fbdoc.bas
 

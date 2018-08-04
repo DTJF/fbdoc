@@ -1,12 +1,11 @@
-Welcome to the *fb-doc* package. It's a cross-platform
+Welcome to the *fb-doc* project. It's a cross-platform and
 multifunctional tool, mainly for generating documentation from and for
 FreeBASIC (= FB) source code, but useful for other purposes as well,
 ie. like generating header files. Rather than creating the
 documentation output directly, *fb-doc* is designed to close the
 gap between FB and C syntax to allow for using any C / C++
-documentation tool-chain. Also it supports the creation of
-documentational comments in the source and it can get extended via
-external plugins.
+documentation tool-chain. Also it supports generating documentational
+comments in the source. And it can get extended via external plugins.
 
 The package is [hosted at GitHub](http://github.com/DTJF/fb-doc) and
 it contains
@@ -32,7 +31,7 @@ Copyright &copy; 2012-2018 by Thomas{ At ]Freiherr{ at }gmx[ dOt ]net
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or (at
+the Free Software Foundation; either version 3 of the License, or (at
 your option) any later version.
 
 This program is distributed in the hope that it will be useful, but

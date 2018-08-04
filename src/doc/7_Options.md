@@ -27,7 +27,7 @@ get interpreted either as
 
 - a file name,
 - a file pattern (when containing a `?` or `*` character), or
-- a path (when behind the option \ref SecOptPath), or
+- a path (when behind the option \ref SecOptOutpath), or
 - an emitter name (when behind option \ref SecOptEmitter or \ref SecModGeany).
 
 \note Multiple file names can get specified in a list, separated by
@@ -140,11 +140,11 @@ used on this set of files.
 In this run mode \Proj reads the specified files and writes the
 transformed output to files in the output path, which is set to
 `../c_src/` by default (to customize that path see option \ref
-SecOptPath). Each input file with suffix `.bas` gets written to a file
-with suffix `.c`, using the same base name. And input files with suffix
-`.bi` gets written to output files with suffix `.h`. When the input
-files get scanned recursivly from subfolders, similar subfolders get
-created in the output path (if not present).
+SecOptOutpath). Each input file with suffix `.bas` gets written to a
+file with suffix `.c`, using the same base name. And input files with
+suffix `.bi` gets written to output files with suffix `.h`. When the
+input files get scanned recursivly from subfolders, similar subfolders
+get created in the output path (if not present).
 
 \note \Proj overrides the files in the output path without warning.
 
@@ -196,8 +196,9 @@ the documentation. When listings are required (tags `SOURCE_BROWSER`,
 generated from the intermediate format as well, which is unusable for
 FB code documentation. This run mode is designed to fix that problem.
 It replaces the bodies of the original Doxygen listings by context
-generated from the FB source code with correct syntax highlighting. See
-section \ref SecEmmSyntax for details.
+generated from the FB source code with correct syntax highlighting. If
+tag `STRIP_CODE_COMMENTS` is set, the documentational comments get
+removed from the listings. See section \ref SecEmmSyntax for details.
 
 By default this run mode evaluates the file `Doxyfile` in the current
 directory. On the command line also any other valid configuration file,
@@ -219,7 +220,7 @@ file list or patterns can get specified.
 
 \note In case of file suffix `.bas` or `.bi` this run mode generates
       html output to `STDOUT` (instead of writing to files) and it
-      operates on single files (considering the option \ref #SecOptTree
+      operates on single files (considering the option \ref SecOptTree
       setting). This is useful to generate html-formated listings for
       embedding anywhere (independandly from Doxygen output). An
       additional CSS file is necessary, specifying the classes
@@ -248,7 +249,8 @@ auto-generate a list for the parameter descriptions.
 Since input comes from `STDIN` and no file name is required, there's a
 special use case for this option. It allows to specify an emitter name
 behind the option, separated by a white space character. The name can
-get enclosed by quotes (single `&apos;` or double quotes `"`). Exmples:
+get enclosed by quotes (single `&apos;` or double quotes `"`).
+Examples:
 
 ~~~{.txt}
 fb-doc --geany-mode --emitter "DoxygenTemplates"
@@ -292,7 +294,7 @@ run mode has its default emitter setting, see section \ref
 SubIntOptions. In order to use an alternate emitter, specify its name
 (or some of the starting characters) behind this option, separated by a
 white space character. The name can get enclosed by quotes (single `'`
-or double `"` quotes). Exmples:
+or double `"` quotes). Examples:
 
 ~~~{.txt}
 fb-doc --emitter "SyntaxHighlighting" test.bas
@@ -449,9 +451,9 @@ Examples:
 
 The default output is easy to read in the documentation, since the
 types are similar to the FB types. Instead setting this option makes
-the output useful to get processed with a real C compiler, ie. when you
-wrote a library in FB and you want to auto-generate a C header for that
-library.
+the output useful for processing with a real C compiler, ie. when you
+write a library in FB syntax, and you want to auto-generate a C binding
+(header) for that library.
 
 Related emitters: \ref SecEmmCSource, \ref SecEmmDoxy
 
@@ -462,11 +464,14 @@ This option makes \Proj to export documentational comments in the
 output of the emitter \ref SecEmmSyntax. This emitter follows the
 Doxygen tag `STRIP_CODE_COMMENTS` (which defaults to `YES`) and strips
 the documentational comments, since they are redundant (their content
-was used to generate the documentation text). In the output, single
-line documentational comments get dropped (they leave an empty line if
-the line only contains the comment). And at the place of a multi line
-documentational comment there's a gap in the line numbers. When this
-option is set, the emitter ignores the `STRIP_CODE_COMMENTS` setting
-and transforms all comments from the FB source code.
+has already been used to generate the documentation text). So usually
+in the output, single line documentational comments get dropped (they
+leave an empty line if the line only contains the comment). And at the
+place of a multi line documentational comment there's a gap in the line
+numbers. When this option is set, the emitter ignores the
+`STRIP_CODE_COMMENTS` setting and transforms all comments from the FB
+source code. This is useful when \Proj operates on FB source code
+directly, without reading the setting from a Doxygen configuration
+file.
 
 Related emitter: \ref SecEmmSyntax

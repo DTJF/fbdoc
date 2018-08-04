@@ -29,6 +29,7 @@ DEPENDS
   #../src/doc/9_Extend.md
   ../src/doc/A_Files.md
   ../src/doc/B_TipsTricks.md
+  ../src/doc/F_Plugin.md
   ../src/doc/z_ChangeLog.md
   Doxyfile
   fb-doc.css
