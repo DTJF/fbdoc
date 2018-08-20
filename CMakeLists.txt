@@ -8,7 +8,7 @@ PROJECT(fb-doc Fbc)
 # constants
 SET(PROJ_NAME "fb-doc"             CACHE STRING "project name" FORCE)
 SET(PROJ_DESC "FreeBASIC documentation tool" CACHE STRING "project description" FORCE)
-SET(PROJ_VERS "0.4.2"               CACHE STRING "project version" FORCE)
+SET(PROJ_VERS "0.4.4"               CACHE STRING "project version" FORCE)
 SET(PROJ_AUTH "DTJF"               CACHE STRING "project authors" FORCE)
 SET(PROJ_MAIL "Thomas{ At ]Freiherr{ at }gmx[ dOt ]net"  CACHE STRING "project mail address" FORCE)
 SET(PROJ_WEBS "http://github.com/DTJF/fb-doc" CACHE STRING "project website" FORCE)
