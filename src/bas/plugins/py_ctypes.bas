@@ -36,9 +36,6 @@ file just append `> libpruio.py` to the command, like
 fb-doc -e "py_ctypes" -t -pylib=libpruio ../libpruio/src/pruio/pruio.bi > libpruio.py
 ~~~
 
-\ToDo
-load RepData from file in CTOR
-
 \since 0.4.0
 '/
 

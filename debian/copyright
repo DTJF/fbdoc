@@ -1,13 +1,13 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: fb-doc
-Source: <url://example.com>
+Source: <url://github.com/DTJF/fb-doc>
 
 Files: *
-Copyright: 2016 Thomas Freiherr <Thomas.Freiherr@gmx.net>
+Copyright: 2016-2018 Thomas Freiherr <Thomas.Freiherr@gmx.net>
 License: GPL-3.0+
 
 Files: debian/*
-Copyright: 2016 Arend Lammertink <lamare@gmail.com>
+Copyright: 2016-2018 Arend Lammertink <lamare@gmail.com>
 License: GPL-3.0+
 
 License: GPL-3.0+

@@ -30,6 +30,23 @@ or to the
 or feel free to send your ideas directly to the author (\Mail).
 
 
+# fb-doc-0.4.4 {#SecV-0-4-4}
+
+New:
+
+-
+
+Changes:
+
+-
+
+Bugfixes:
+
+-
+
+Released on 2018 August.
+
+
 # fb-doc-0.4.2 {#SecV-0-4-2}
 
 New:
