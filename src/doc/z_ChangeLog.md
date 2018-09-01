@@ -3,7 +3,7 @@ Changelog & Credits {#PagChangeLog}
 \tableofcontents
 
 
-# Further Development  {#SecToDo}
+# Further Development # {#SecToDo}
 
 In combination with Doxygen \Proj is a powerful documentation system
 for FreeBASIC source code. This Doxygen support for FreeBASIC is much
@@ -30,7 +30,7 @@ or to the
 or feel free to send your ideas directly to the author (\Mail).
 
 
-# fb-doc-0.4.4 {#SecV-0-4-4}
+# fb-doc-0.4.4 # {#SecV-0-4-4}
 
 New:
 
@@ -38,16 +38,16 @@ New:
 
 Changes:
 
--
+- plugin py_ctypes option -py???
 
 Bugfixes:
 
--
+- small fixes in the documentation
 
 Released on 2018 August.
 
 
-# fb-doc-0.4.2 {#SecV-0-4-2}
+# fb-doc-0.4.2 # {#SecV-0-4-2}
 
 New:
 
@@ -63,10 +63,10 @@ Bugfixes:
 
 - parsing of Doxyfile flags no more case sensitive (YES = Yes = yes == True == Y)
 
-Released on 2016 December, ??.
+Released on 2016 December.
 
 
-# fb-doc-0.4.0 {#SecV-0-4-0}
+# fb-doc-0.4.0 # {#SecV-0-4-0}
 
 New:
 
@@ -108,7 +108,7 @@ Bugfixes:
 Released on 2015 October, ??.
 
 
-# fb-doc-0.2 {#SecV-0-2}
+# fb-doc-0.2 # {#SecV-0-2}
 
 New:
 
@@ -129,13 +129,13 @@ New:
 Released on 2013 June, 1.
 
 
-# fb-doc-0.0 {#SecV-0-0}
+# fb-doc-0.0 # {#SecV-0-0}
 
 Initial release on 2012 April, 29.
 
 
 
-# Credits {#SecCredits}
+# Credits # {#SecCredits}
 
 Thanks go to:
 
@@ -150,6 +150,9 @@ Thanks go to:
   generate this documentation.
 
 - Chris Lyttle, Dan Mueth, Stefan Kost (authors of gtk-doc).
+
+- Arend Lammertink for providing Debian packages for armhf architecture
+  and hosting them on his server.
 
 - AGS (from http://www.freebasic.net/forum) for testing and bug reporting.
 

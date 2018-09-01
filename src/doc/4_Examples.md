@@ -3,7 +3,7 @@ Examples  {#PagExamples}
 \tableofcontents
 
 
-# Documentational Comments  {#SecExaComment}
+# Documentational Comments # {#SecExaComment}
 
 In the development process of a software project some source code gets
 designed and a compiler (or interpreter) transforms that source code to
@@ -18,7 +18,7 @@ class declarations, ... Scanning the source code avoids redundant
 information and helps to keep the documentation up to date.
 
 
-# Command Line Interface  {#SecExaCli}
+# Command Line Interface # {#SecExaCli}
 
 In order to get familiar with the command line interface here are some
 exercises, operating \Proj on its own source code. It's presumed that
@@ -182,9 +182,9 @@ Otherwise you have to prepend the complete path to execute the binary.
    $ fb-doc --geany-mode "Syntax" --doc-comments < fbdoc.bas
    ~~~
 
-# Workflow  {#SecWorkflow}
+# Workflow # {#SecWorkflow}
 
-## Doxygen  {#SubDoxygen}
+## Doxygen ## {#SubDoxygen}
 
-## gtk-doc  {#SubGtkdoc}
+## gtk-doc ## {#SubGtkdoc}
 

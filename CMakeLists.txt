@@ -17,6 +17,11 @@ SET(PROJ_LICE "GPLv3"              CACHE STRING "project licence" FORCE)
 STRING(TIMESTAMP tmp "%Y" UTC)
 SET(PROJ_YEAR "${tmp}"             CACHE STRING "project year" FORCE)
 
+FUNCTION(MSG_LOG Txt)
+  FILE(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeOutput.log "${Txt}\n\n")
+  MESSAGE(STATUS ${Txt})
+ENDFUNCTION()
+
 CONFIGURE_FILE(src/doc/_ReadMe.md.in ${CMAKE_SOURCE_DIR}/ReadMe.md @ONLY)
 
 # the source folders

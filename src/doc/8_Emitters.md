@@ -28,13 +28,13 @@ its features.
 
 
 
-# Inbuild emitters  {#SecEmmIn}
+# Inbuild emitters # {#SecEmmIn}
 
 Inbuild emitters are compiled in to the executable binary. You can use
 them out-of-the-box.
 
 
-## C_Source  {#SecEmmCSource}
+## C_Source ## {#SecEmmCSource}
 
 This emitter is designed to generate the (C-like) intermediate format
 for the documentation generating backends. It translates all related
@@ -58,7 +58,7 @@ pair of empty brackets (no parameters).
       member functions in user defined types.
 
 
-## GtkDocTemplates  {#SecEmmGtk}
+## GtkDocTemplates ## {#SecEmmGtk}
 
 This emitter is designed to generate templates for gtk-doc, when \Proj
 is used as a filter for Geany IDE. It generates documentational comment
@@ -72,7 +72,7 @@ When the input is an empty block in \ref SecModGeany, the emitter
 creates a comment block for documenting the file (`@SECTION` tag).
 
 
-## DoxygenTemplates  {#SecEmmDoxy}
+## DoxygenTemplates ## {#SecEmmDoxy}
 
 This emitter is designed to generate templates for Doxygen, when \Proj
 is used as a filter for Geany IDE. It generates documentational comment
@@ -94,7 +94,7 @@ When the input is an empty block in \ref SecModGeany, the emitter
 creates a comment block for documenting the file (\\ `file` tag).
 
 
-## FunctionNames  {#SecEmmLfn}
+## FunctionNames ## {#SecEmmLfn}
 
 This emitter is designed to generate the file \ref SubOutLfn. It skips
 most of the related constructs, but exports the names of all functions,
@@ -104,7 +104,7 @@ It works on `SUB` `FUNCTION` and `PORPERTY` bodies. In case of member
 functions the UDT name and the function name gets emitted.
 
 
-## SyntaxHighlighting  {#SecEmmSyntax}
+## SyntaxHighlighting ## {#SecEmmSyntax}
 
 This is a complex emitter, designed to generate source code listings
 for Doxygen output in different file formats (`.html`, `.tex` and
@@ -162,7 +162,7 @@ LATEX or XML support), contains no header or footer, and it gets sent
 to `STDOUT`. See also the note in section \ref SecModSyntax.
 
 
-# External Emitters  {#SecEmmEx}
+# External Emitters # {#SecEmmEx}
 
 An external emitter is an executable binary compiled as a shared
 library. \Proj loads that binary at run-time and uses its EmitterIF to

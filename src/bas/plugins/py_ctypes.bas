@@ -1,5 +1,5 @@
 /'* \file py_ctypes.bas
-\brief Example code for an external emitter to generate Python bindings
+\brief Code example for an external emitter, generating Python bindings
 
 This file contains example source code for an external emitter. The
 emitter outputs Python declarations from the FB source code, in order
@@ -19,18 +19,18 @@ In order to compute a ctypes binding for libpruio, execute in the
 folder `src/bas/plugins` the following command:
 
 ~~~{txt}
-fb-doc -e "py_ctypes" -t -pylib=libpruio ../libpruio/src/pruio/pruio.bi
+fb-doc -e "py_ctypes" -t -pylib=pruio ../libpruio/src/pruio/pruio.bi
 ~~~
 
 Options
 
-- `-e "py_ctypes"`: choose external emitter named py_ctypes
+- `-e "py_ctypes"`: choose external emitter named py_ctypes (filename `libpy_ctypes.[so|dll])
 - `-t`: follow source tree
-- `-pylib=libpruio`: binary name to include for python code (special plugin option, unknown for \Proj)
-- `../libpruio/src/pruio/pruio.bi`: the file to start at (expects that libpruio source is installed at the same directory level as \Proj project source)
+- `-pylib=pruio`: binary name to include for python code (special plugin option, unknown for \Proj)
+- `../libpruio/src/pruio/pruio.bi`: the start file (expects that libpruio source is installed at the same directory level as \Proj project source)
 
 The output comes at STOUT (in the shell). In order to write it to a
-file just append `> libpruio.py` to the command, like
+file just append `> pruio.py` to the command, like
 
 ~~~{txt}
 fb-doc -e "py_ctypes" -t -pylib=libpruio ../libpruio/src/pruio/pruio.bi > libpruio.py
@@ -260,7 +260,7 @@ END SUB
 /'* \brief Emitter to generate a line for a TYPE / UNION block entry
 \param P The parser calling this emitter
 
-This emitter gets called when the parser is in a block (`TYPE UNION`).
+This emitter gets called when the parser is in a block (`TYPE` or `UNION`).
 It generates a line for each member and writes it (them) to the output.
 
 \since 0.4.0
@@ -314,7 +314,7 @@ END SUB
 /'* \brief Emitter called when the Parser is at a variable declaration
 \param P The parser calling this emitter
 
-Emitter that generates a variable (or function) declaration and writes
+This emitter generates a variable (or function) declaration and writes
 it (them) to the output.
 
 \since 0.4.0
@@ -343,7 +343,9 @@ END SUB
 /'* \brief Emitter called when the Parser is at the start of a ENUM block
 \param P The parser calling this emitter
 
-FIXME
+This emitter gets called when the parser starts an `ENUM` block. It
+resets the counter and starts parsing line vice the contents, and
+generating related output.
 
 \since 0.4.0
 '/
@@ -359,7 +361,9 @@ END SUB
 /'* \brief Emitter called when the Parser is at the start of a UNION block
 \param P The parser calling this emitter
 
-FIXME
+This emitter gets called when the parser starts an `UNION` block. It
+just starts parsing line vice the contents, and generating related
+output.
 
 \since 0.4.0
 '/
@@ -374,7 +378,9 @@ END SUB
 /'* \brief Emitter called when the Parser is at the start of a TYPE block
 \param P The parser calling this emitter
 
-FIXME
+This emitter gets called when the parser starts a `TYPE` block. It
+stores the block name and starts parsing line vice the contents, as
+well as generating related output.
 
 \since 0.4.0
 '/
@@ -485,7 +491,7 @@ END SUB
 '/'* \brief Emitter called after the input got parsed
 '\param O The parser calling this emitter
 
-'FIXME
+'Maybe useful in future.
 
 '\since 0.4.0
 ''/
@@ -499,7 +505,18 @@ END SUB
 \param Emi The newly created EmitterIF to fill with our callbacks
 \param Par Additional command line parameters, not parsed by \Proj
 
-FIXME
+When the user requires to load this plugin by option \ref
+SecOptEmitter, this SUB gets called to initialize the EmitterIF. Here,
+all default pointers (= NULL) get replaced by custom functions. Those
+functions just report all the \Proj function calls, in order to make
+the parsing process transparent.
+
+The second parameter `Par` is a list of all command line parameters
+which are unknown to \Proj. Those options get collected in a string,
+separated by tabulators (`!"\n"), and starting by a tabulator. This SUB
+extracts and evaluates its parameters from the string. When the string
+isn't empty at the end of this SUB, the calling \Proj program stops
+execution by an `unknown options` error.
 
 \since 0.4.0
 '/
