@@ -15,7 +15,7 @@ Description: Documentation tool for FreeBASIC source code
 
 Package: fbdoc-doc
 Section: doc
-Suggests: fbdoc
+Suggests: fbdoc (= ${binary:Version})
 Architecture: all
 Depends: ${misc:Depends}
 Description: html documentation for fbdoc
