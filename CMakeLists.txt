@@ -2,19 +2,20 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
-#SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-PROJECT(fb-doc Fbc)
+SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 # constants
-SET(PROJ_NAME "fb-doc"             CACHE STRING "project name" FORCE)
+SET(PROJ_NAME "fbdoc"              CACHE STRING "project name" FORCE)
 SET(PROJ_DESC "FreeBASIC documentation tool" CACHE STRING "project description" FORCE)
-SET(PROJ_VERS "0.4.2"               CACHE STRING "project version" FORCE)
+SET(PROJ_VERS "1.0"                CACHE STRING "project version" FORCE)
 SET(PROJ_AUTH "DTJF"               CACHE STRING "project authors" FORCE)
 SET(PROJ_MAIL "Thomas{ At ]Freiherr{ at }gmx[ dOt ]net"  CACHE STRING "project mail address" FORCE)
-SET(PROJ_WEBS "http://github.com/DTJF/fb-doc" CACHE STRING "project website" FORCE)
+SET(PROJ_WEBS "http://github.com/DTJF/fbdoc" CACHE STRING "project website" FORCE)
 SET(PROJ_LICE "GPLv3"              CACHE STRING "project licence" FORCE)
 STRING(TIMESTAMP tmp "%Y" UTC)
 SET(PROJ_YEAR "${tmp}"             CACHE STRING "project year" FORCE)
+
+PROJECT(${PROJ_NAME} Fbc)
 
 CONFIGURE_FILE(src/doc/_ReadMe.md.in ${CMAKE_SOURCE_DIR}/ReadMe.md @ONLY)
 
@@ -39,7 +40,7 @@ IF(UNIX)
       COMMAND rm -rf `find . -name CMakeFiles -print`
       COMMAND rm -rf `find . -name cmake_install.cmake -print`
       COMMAND rm -rf `find . -name install_manifest.txt -print`
-      COMMAND rm -rf doxy/DoxyExtension doxy/HtmOut doxy/PdfOut doxy/fb-doc.lfn doxy/doxygen_sqlite3.db
+      COMMAND rm -rf doxy/DoxyExtension doxy/HtmOut doxy/PdfOut doxy/fbdoc.lfn doxy/doxygen_sqlite3.db
       COMMAND rm -rf doxy/html/ doxy/latex/
       )
   ELSE()                                                 # out-of-source

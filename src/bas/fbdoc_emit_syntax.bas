@@ -318,7 +318,7 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
                   & OPT->scanFiles("*_8bi_source.tex", "")
         IF LEN(DoxyFiles) > 1 THEN
           MSG_CONT("scanned")
-          FBDOC_MARK = @"%%% Syntax-highlighting by fb-doc %%%"
+          FBDOC_MARK = @"%%% Syntax-highlighting by fbdoc %%%"
           KEYW_A = @"\textcolor{keyword}{"
           KWTP_A = @"\textcolor{keywordtype}{"
           KWFL_A = @"\textcolor{keywordflow}{"
@@ -347,7 +347,7 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
                   & OPT->scanFiles("*_8bi.xml", "")
         IF LEN(DoxyFiles) > 1 THEN
           MSG_CONT("scanned")
-          FBDOC_MARK = @"<!-- Syntax-highlighting by fb-doc -->"
+          FBDOC_MARK = @"<!-- Syntax-highlighting by fbdoc -->"
           KEYW_A = @"<highlight class=""keyword"">"
           KWTP_A = @"<highlight class=""keywordtype"">"
           KWFL_A = @"<highlight class=""keywordflow"">"

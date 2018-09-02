@@ -1,5 +1,5 @@
 /'* \file fbdoc_emit_lfn.bas
-\brief Emitter to generate the file `fb-doc.lfn`.
+\brief Emitter to generate the file `fbdoc.lfn`.
 
 This file contains the emitter \ref SecEmmLfn, which is the default
 emitter in mode \ref SecModList. It's used to generate the file \ref

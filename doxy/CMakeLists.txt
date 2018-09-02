@@ -1,11 +1,11 @@
 # Build / install the documentation.
 #
-# Note: this script needs an fb-doc version (0.4).
+# Note: this script needs an fbdoc version (0.4.4).
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
 IF(NOT COMMAND FB_DOCUMENTATION)
-  INCLUDE(UseFb-Doc)
+  INCLUDE(UseFbDoc)
   IF(NOT COMMAND FB_DOCUMENTATION)
     RETURN()
   ENDIF()
@@ -32,7 +32,7 @@ DEPENDS
   ../src/doc/F_Plugin.md
   ../src/doc/z_ChangeLog.md
   Doxyfile
-  fb-doc.css
-  fb-doc.xml
+  fbdoc.css
+  fbdoc.xml
 #NO_SYNTAX
   )

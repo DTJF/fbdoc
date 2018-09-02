@@ -6,9 +6,9 @@ info.txt
 cmake_install.cmake
 install_manifest.txt
 
-fb-doc
-fb-doc.geany
-doxy/fb-doc.lfn
+fbdoc
+fbdoc.geany
+doxy/fbdoc.lfn
 
 # Use wildcards as well
 

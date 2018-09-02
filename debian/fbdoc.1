@@ -1,10 +1,10 @@
-.TH FB-DOC 1 "2016-11-21" "FreeBASIC documentation tool"
+.TH FBDOC 1 "2018-09-02" "FreeBASIC documentation tool"
 .SH NAME
-fb-doc \- FreeBASIC tool for documentation and source processing
+fbdoc \- FreeBASIC tool for documentation and source processing
 .SH DESCRIPTION
 Parses FreeBASIC source code and generates different output formats.
 .SH SYNOPSIS
-.B fb-doc \fR[OPTIONS] [\fIinput-files\fR]
+.B fbdoc \fR[OPTIONS] [\fIinput-files\fR]
 .
 .SH OPTIONS
 .TP
@@ -27,7 +27,7 @@ run in file mode: file in --> file out
 run in geany mode: STDIN --> STDOUT
 .TP
 \fB\-l\fR, \fB\--list-mode\fR
-run in list mode: Doxgfile inputs --> fb-doc.lfn
+run in list mode: Doxgfile inputs --> fbdoc.lfn
 .TP
 \fB\-s\fR, \fB\--syntax-mode\fR
 run in syntax mode: scan doxygen output, repair syntax highlighting
@@ -55,25 +55,25 @@ scan source tree (follow #INCLUDEs)
 
 .SH EXAMPLE
 .TP
-\fB\fb-doc --geany-mode\fR
+\fB\fbdoc --geany-mode\fR
 Get input from STDIN, prepend a matching comment block, emit to STDOUT
 (emits gtk-doc templates for ENUM, UNION, TYPE, SUB, FUNCTION, PROPERTY)
 .TP
-\fB\fb-doc -f -t MyProject.bas\fR
+\fB\fbdoc -f -t MyProject.bas\fR
 Load MyProject.bas from current folder and follow source tree emit
 pseudo C code in ../c_src
 .SH "SEE ALSO"
 A detailed documentation is available in html format at
 .B
-http://users.freebasic-portal.de/tjf/Projekte/fb-doc/doc/html/
+http://users.freebasic-portal.de/tjf/Projekte/fbdoc/doc/html/
 .SH COPYRIGHT
-Copyright \(co 2014\-2016 Thomas{ doT ]Freiherr[ At ]gmx[ DoT }net
+Copyright \(co 2014\-2018 Thomas{ doT ]Freiherr[ At ]gmx[ DoT }net
 .br
 This is free software.  You may redistribute copies of it under the terms of
 the GNU General Public License GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>.
 There is NO WARRANTY, to the extent permitted by law.
 .SH BUGS
-Any bugs should be reported on the github tracker located at https://github.com/DTJF/fb-doc
+Any bugs should be reported on the github tracker located at https://github.com/DTJF/fbdoc
 .
 .SH AUTHOR
-This manpage written by Thomas Freiherr (https://github.com/DTJF/fb-doc)
+This manpage written by Thomas Freiherr (https://github.com/DTJF/fbdoc)

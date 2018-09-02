@@ -23,14 +23,14 @@ SET(EXT_SRC
   CACHE FILEPATH "Plugin source files" FORCE
   )
 
-# fb-doc[.exe]: compile and link the final executable
+# fbdoc[.exe]: compile and link the final executable
 ADD_EXECUTABLE(${PROJ_NAME} ${BAS_SRC})
 SET_TARGET_PROPERTIES(${PROJ_NAME} PROPERTIES
   COMPILE_FLAGS "-m fbdoc_main"
   LINK_FLAGS "-export -Wl -z,relro"
   )
 ADD_Fbc_SRC_DEPS(${PROJ_NAME})
-#ADD_FILE_DEPENDENCIES(${CMAKE_CURRENT_SOURCE_DIR}/fb-doc_main.bas ${fnam}.in)
+#ADD_FILE_DEPENDENCIES(${CMAKE_CURRENT_SOURCE_DIR}/fbdoc_main.bas ${fnam}.in)
 #ADD_DEPENDENCIES(${PROJ_NAME} ${fnam})
 
 INSTALL(TARGETS ${PROJ_NAME}

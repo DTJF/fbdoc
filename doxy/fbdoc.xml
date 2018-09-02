@@ -19,7 +19,7 @@
       <tab type="user" url="@ref PagTipsTricks" title="Tips and Tricks"/>
       <tab type="user" url="@ref PagPlugin" title="Plugin Development"/>
 <!--
-      <tab type="user" url="@ref PagExtend" title="Extending fb-doc"/>
+      <tab type="user" url="@ref PagExtend" title="Extending fbdoc"/>
 -->
       <tab type="user" url="@ref PagChangeLog" title="Changelog &amp; Credits"/>
     </tab>

@@ -30,6 +30,23 @@ or to the
 or feel free to send your ideas directly to the author (\Mail).
 
 
+# fbdoc-1.0 {#SecV-1-0}
+
+New:
+
+- renamed: fb-doc ==> fbdoc
+
+Changes:
+
+- FIXME
+
+Bugfixes:
+
+- FIXME
+
+Released on 2018 September.
+
+
 # fb-doc-0.4.2 {#SecV-0-4-2}
 
 New:

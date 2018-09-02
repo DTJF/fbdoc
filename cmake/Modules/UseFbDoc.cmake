@@ -1,16 +1,16 @@
 # This module prepares a standard doc build by the Doxygen generator,
-# supported by the fb-doc tool (http://github.com/DTJF/fb-doc)
+# supported by the fbdoc tool (http://github.com/DTJF/fbdoc)
 #
 # It defines the following ...
 #
-# Copyright (C) 2014-2016, Thomas{ dOt ]Freiherr[ aT ]gmx[ DoT }net
+# Copyright (C) 2014-2018, Thomas{ dOt ]Freiherr[ aT ]gmx[ DoT }net
 # License GPLv3 (see http://www.gnu.org/licenses/gpl-3.0.html)
 #
 # See ReadMe.md for details.
 
-# check for fb-doc tool
+# check for fbdoc tool
 IF(NOT FbDoc_WORKS)
-  INCLUDE(FindFb-Doc)
+  INCLUDE(FindFbDoc)
 ENDIF()
 
 # check for Doxygen
@@ -77,8 +77,8 @@ ALIASES += \"Mail=${PROJ_MAIL}\" \\
       )
     LIST(APPEND msg "PROJDATA")
   ENDIF()
-  IF(NOT ARG_NO_LFN) #                          generate file fb-doc.lfn
-    SET(lfn ${CMAKE_CURRENT_BINARY_DIR}/fb-doc.lfn)
+  IF(NOT ARG_NO_LFN) #                           generate file fbdoc.lfn
+    SET(lfn ${CMAKE_CURRENT_BINARY_DIR}/fbdoc.lfn)
     LIST(APPEND ARG_DEPENDS ${lfn})
     ADD_CUSTOM_COMMAND(OUTPUT ${lfn}
       COMMAND ${FbDoc_EXECUTABLE} -l -L ${lfn} ${doxyext}

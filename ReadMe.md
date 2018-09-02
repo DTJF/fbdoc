@@ -1,22 +1,22 @@
-Welcome to the *fb-doc* project. It's a cross-platform and
+Welcome to the *fbdoc* project. It's a cross-platform and
 multifunctional tool, mainly for generating documentation from and for
 FreeBASIC (= FB) source code, but useful for other purposes as well,
 ie. like generating header files. Rather than creating the
-documentation output directly, *fb-doc* is designed to close the
+documentation output directly, *fbdoc* is designed to close the
 gap between FB and C syntax to allow for using any C / C++
 documentation tool-chain. Also it supports generating documentational
 comments in the source. And it can get extended via external plugins.
 
-The package is [hosted at GitHub](http://github.com/DTJF/fb-doc) and
+The package is [hosted at GitHub](http://github.com/DTJF/fbdoc) and
 it contains
 
-- the source code of the *fb-doc* tool
+- the source code of the *fbdoc* tool
 - the context of the documentation
 - CMake scripts to build executables and documentation
 - examples for extending the tool by plugins
 
 Find more information in the online documentation at
-http://users.freebasic-portal.de/tjf/Projekte/fb-doc/doc/html/
+http://users.freebasic-portal.de/tjf/Projekte/fbdoc/doc/html/
 or at the world wide web:
 
  - en: http://www.freebasic.net/forum/viewtopic.php?f=8&t=19810

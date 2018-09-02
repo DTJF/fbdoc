@@ -11,8 +11,8 @@ execution.
 #INCLUDE ONCE "fbdoc_parser.bi"
 
 CONST _
-  LFN_FILE = "fb-doc.lfn" _ '*< File name for list of function names (caller / callees graphs)
- , LFN_SEP = !"\n"          '*< Separator for entries in file `fb-doc.lfn` (one character!).
+  LFN_FILE = "fbdoc.lfn" _ '*< File name for list of function names (caller / callees graphs)
+ , LFN_SEP = !"\n"         '*< Separator for entries in file `fbdoc.lfn` (one character!).
 
 
 /'* \brief Emit an error message to `STDERR` '/
@@ -80,7 +80,7 @@ TYPE Options
     /'* \brief Operate in list mode
 
     Read input from one or more files, write output to a single file
-    `fb-doc.lfn`. Generate a list of callee names in this file. When no
+    `fbdoc.lfn`. Generate a list of callee names in this file. When no
     file name or pattern is specified, all <em>*.bas</em> and
     <em>*.bi</em> files in the current folder gets parsed (mode
     \ref SecModList). '/

@@ -70,14 +70,14 @@ helps users to get involved in to the development process). Get your
 copy and change to the source tree by executing
 
 ~~~{.txt}
-git clone https://github.com/DTJF/fb-doc
-cd fb-doc
+git clone https://github.com/DTJF/fbdoc
+cd fbdoc
 ~~~
 
 ## ZIP  {#SubZip}
 
 As an alternative you can download a Zip archive by clicking the
-[Download ZIP](https://github.com/DTJF/fb-doc/archive/master.zip)
+[Download ZIP](https://github.com/DTJF/fbdoc/archive/master.zip)
 button on the \Proj website, and use your local Zip software to unpack
 the archive. Then change to the newly created folder.
 
@@ -159,7 +159,7 @@ make doc
 ~~~
 
 \note Find the HTML start file at `doxy/html/index.html`.
-\note Find the PDF file at `doxy/fb-doc.pdf`.
+\note Find the PDF file at `doxy/fbdoc.pdf`.
 
 Both targets can get build separately by executing
 
@@ -189,12 +189,12 @@ make deb
 Find the resulting files in the folder `debian` (the text `_V_A`
 get replaced by the project version and the system architecture):
 
-- fb-doc_V_A.deb: binary package
-- fb-doc-doc_V_A.deb: the HTML documentation package
-- fb-doc_V_A.tar.xz: source code package
-- fb-doc_V_A.build: log file of packaging process
-- fb-doc_V_A.changes: auxiliary file for auto-uploads
-- fb-doc_V_A.dsc: auxiliary file for auto-uploads
+- fbdoc_V_A.deb: binary package
+- fbdoc-doc_V_A.deb: the HTML documentation package
+- fbdoc_V_A.tar.xz: source code package
+- fbdoc_V_A.build: log file of packaging process
+- fbdoc_V_A.changes: auxiliary file for auto-uploads
+- fbdoc_V_A.dsc: auxiliary file for auto-uploads
 
 \note For first build and due to the self-hosting issue, you have to
       deactivate the `Build-Depends` checking. Therefor configure the
@@ -223,18 +223,18 @@ tools aren't installed.
 
 The source code is located in folder `src/bas`.
 Beside the module files this folder also contains a file named
-`fb-doc.bas`, which collects all modules files in to a single source
+`fbdoc.bas`, which collects all modules files in to a single source
 tree, in order to compile all-in-one by executing
 
 ~~~{.txt}
 cd src/bas
-fbc -w all fbdoc.bas -x fb-doc
+fbc -w all fbdoc.bas -x fbdoc
 ~~~
 
 This creates an executable binary named
 
-- `fb-doc` (on UNIX-like systems) or
-- `fb-doc.exe` (on other systems).
+- `fbdoc` (on UNIX-like systems) or
+- `fbdoc.exe` (on other systems).
 
 That's all you need to get started. Now you can use \Proj and check
 its features, see chapter \ref PagExamples for examples.
@@ -246,7 +246,7 @@ To install the program just copy the executable in to a directory of
 your system `PATH`. Ie. on Debian LINUX execute
 
 ~~~{.txt}
-cp src/bas/fb-doc /usr/local/bin
+cp src/bas/fbdoc /usr/local/bin
 ~~~
 
 
@@ -265,9 +265,9 @@ code listings gets fixed.
 
 ~~~{.txt}
 cd doxy
-fb-doc -l
+fbdoc -l
 doxygen
-fb-doc -s
+fbdoc -s
 ~~~
 
 \note Find the HTML start file at `doxy/html/index.html`. This does not
@@ -285,7 +285,7 @@ In order to uninstall just remove the executable. Ie. on Debian LINUX
 execute
 
 ~~~{.txt}
-sudo rm /usr/local/bin/fb-doc
+sudo rm /usr/local/bin/fbdoc
 ~~~
 
 
@@ -303,14 +303,14 @@ selected. In the newly opened dialog a click on `Add` creates a new
 item with an entry box, which get filled by
 
 ~~~{.txt}
-fb-doc --geany-mode "DoxygenTemplates"
+fbdoc --geany-mode "DoxygenTemplates"
 ~~~
 
 to use the emitter for Doxygen templates. In order to use the default
 emitter for gtk-doc templates just omit the quoted emitter name
 
 ~~~{.txt}
-fb-doc --geany-mode
+fbdoc --geany-mode
 ~~~
 
 \note This assumes that \Proj is installed in any system `PATH`.

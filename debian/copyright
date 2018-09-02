@@ -1,6 +1,6 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: fb-doc
-Source: <url://example.com>
+Upstream-Name: fbdoc
+Source: <https://github.com/dtjf/fbdoc>
 
 Files: *
 Copyright: 2016 Thomas Freiherr <Thomas.Freiherr@gmx.net>

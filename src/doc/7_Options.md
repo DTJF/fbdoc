@@ -85,7 +85,7 @@ make \Proj operate on FB source code.)
 <td> \ref SecModList
 <td> \ref SecEmmLfn
 <td> Doxyfile by default (or a list of file names or patterns)
-<td> file `fb-doc.lfn`
+<td> file `fbdoc.lfn`
 <tr>
 <td> \ref SecModSyntax
 <td> \ref SecEmmSyntax
@@ -153,7 +153,7 @@ get created in the output path (if not present).
 
 This run mode is designed to generate the list of function names file
 for the emitter \ref SecEmmCSource. Input gets read from files and all
-output gets sent to a single file called `fb-doc.lfn`. By default it
+output gets sent to a single file called `fbdoc.lfn`. By default it
 uses the emitter \ref SecEmmLfn.
 
 \Proj can support caller and callee graphs in documentation generated
@@ -161,12 +161,12 @@ by Doxygen backend. Therefor the function bodies in the intermediate
 format have to contain the calls to other functions, so that Doxygen
 can extract the relationships and create the graphs. In order to
 generate that calls, the emitter \ref SecEmmCSource reads the function
-names from the file `fb-doc.lfn`.
+names from the file `fbdoc.lfn`.
 
 When no files are specified at the command line like
 
 ~~~{.txt}
-fb-doc -l
+fbdoc -l
 ~~~
 
 then \Proj tries to load and parse the file `Doxyfile` in the current
@@ -253,9 +253,9 @@ get enclosed by quotes (single `&apos;` or double quotes `"`).
 Examples:
 
 ~~~{.txt}
-fb-doc --geany-mode --emitter "DoxygenTemplates"
-fb-doc --geany-mode 'DoxygenTemplates'
-fb-doc -g doxy
+fbdoc --geany-mode --emitter "DoxygenTemplates"
+fbdoc --geany-mode 'DoxygenTemplates'
+fbdoc -g doxy
 ~~~
 
 All three lines run \Proj in Geany mode on the input at `STDIN`. The
@@ -297,8 +297,8 @@ white space character. The name can get enclosed by quotes (single `'`
 or double `"` quotes). Examples:
 
 ~~~{.txt}
-fb-doc --emitter "SyntaxHighlighting" test.bas
-fb-doc -e syn test.bas
+fbdoc --emitter "SyntaxHighlighting" test.bas
+fbdoc -e syn test.bas
 ~~~
 
 Both lines run \Proj in default mode on file `test.bas`. The default
@@ -311,7 +311,7 @@ the inbuild emitter name. In order to use an external emitter the full
 file name has to get specified. Example:
 
 ~~~{.txt}
-fb-doc -e py_ctypes test.bas
+fbdoc -e py_ctypes test.bas
 ~~~
 
 This line runs \Proj in default mode on file `test.bas`. The default

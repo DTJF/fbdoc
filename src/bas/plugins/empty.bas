@@ -29,7 +29,7 @@ parameter to option `-e`. Ie. the emitter output for the context of
 this file can get written to a text file by
 
 ~~~{.txt}
-./fb-doc --emitter "empty" empty.bas > test.txt
+./fbdoc --emitter "empty" empty.bas > test.txt
 ~~~
 
 (LINUX example) and this will generate the following output in file
@@ -39,7 +39,7 @@ this file can get written to a text file by
 
 EMPTY_CTOR
 EMPTY_INIT
-EMPTY_INCLUDE: 77 "../bas/fb-doc_parser.bi"
+EMPTY_INCLUDE: 77 "../bas/fbdoc_parser.bi"
 EMPTY_FUNCTION: 89 empty_declare
 EMPTY_FUNCTION: 104 empty_function
 EMPTY_FUNCTION: 116 empty_enum

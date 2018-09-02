@@ -33,21 +33,21 @@ Otherwise you have to prepend the complete path to execute the binary.
 
 -# To output information about your executable binary execute
    ~~~{.txt}
-   $ fb-doc --version
-   fb-doc: version 0.4.0, License GPLv3
+   $ fbdoc --version
+   fbdoc: version 0.4.0, License GPLv3
         Copyright (C) 2012-2016 by Thomas{ At ]Freiherr{ at }gmx[ dOt ]net
      Compiled: 03-04-2016, 11:32:38 for UNIX/LINUX. (FreeBASIC 1.05.0)
    ~~~
 
 -# To output brief information about the available options execute
    ~~~{.txt}
-   $ fb-doc --help
-   fb-doc: version 0.4.0, License GPLv3
+   $ fbdoc --help
+   fbdoc: version 0.4.0, License GPLv3
            Copyright (C) 2012-2016 by Thomas{ At ]Freiherr{ at }gmx[ dOt ]net
    Command line tool for generating documentation from FreeBASIC source code.
 
    Usage
-     fb-doc [Options] [file specs]
+     fbdoc [Options] [file specs]
 
    Options:
     -h (--help)    : print this help text and stop
@@ -55,7 +55,7 @@ Otherwise you have to prepend the complete path to execute the binary.
           none         : file in --> STDOUT
     -f (--file-mode)   : file in --> file out
     -g (--geany-mode)  : STDIN --> STDOUT
-    -l (--list-mode)   : Doxgfile inputs --> fb-doc.lfn
+    -l (--list-mode)   : Doxgfile inputs --> fbdoc.lfn
     -s (--syntax-mode) : scan doxygen output, repair syntax highlighting
     -a (--asterix)     : prepend '* ' in ML comments (gtk-doc style)
     -c (--cstyle)      : emit real C types
@@ -65,20 +65,20 @@ Otherwise you have to prepend the complete path to execute the binary.
     -r (--recursiv)    : scan input files also in subfolders
     -t (--tree)        : scan source tree (follow #INCLUDEs)
    Examples:
-     fb-doc --geany-mode
+     fbdoc --geany-mode
          Get input from STDIN, prepend a matching comment block, emit to STDOUT
          (emits gtk-doc templates for ENUM, UNION, TYPE, SUB, FUNCTION, PROPERTY)
-     fb-doc -f -t MyProject.bas
+     fbdoc -f -t MyProject.bas
          Load MyProject.bas from current folder and follow source tree
          emit pseudo C code in ../c_src
    For details see file 'ReadMe.txt' or visit:
      http://www.freebasic.net/forum/viewtopic.php?f=8&t=19810 (en)
    ~~~
 
--# To see the intermediate format for a certain file (fb-doc.bas in this
+-# To see the intermediate format for a certain file (fbdoc.bas in this
    case) execute
    ~~~{.txt}
-   $ fb-doc fbdoc.bas
+   $ fbdoc fbdoc.bas
    ~~~
    The output in this default mode is a mixture of \Proj messages
    (`%src/bas/fbdoc.bas -->` and `done`, written to `STDERR`) and the
@@ -92,7 +92,7 @@ Otherwise you have to prepend the complete path to execute the binary.
    messages) you can use \ref SecModGeany and pipe the input to \Proj
    by executing
    ~~~{.txt}
-   $ fb-doc --geany-mode < fbdoc.bas
+   $ fbdoc --geany-mode < fbdoc.bas
    ~~~
    Compare the output with the original file and note the different
    format of the comments (starting with `/*!` and ending with `*/`)
@@ -101,7 +101,7 @@ Otherwise you have to prepend the complete path to execute the binary.
 -# You can also separate `STDERR` and `STDOUT` streams by writing the
    `STDOUT` output to a file, executing
    ~~~{.txt}
-   $ fb-doc fbdoc.bas > out.c
+   $ fbdoc fbdoc.bas > out.c
 
                              fbdoc.bas --> done
    ~~~
@@ -111,7 +111,7 @@ Otherwise you have to prepend the complete path to execute the binary.
 -# The file output can also get generated in \ref SecModFile by
    executing
    ~~~{.txt}
-   $ fb-doc --file-mode fbdoc.bas
+   $ fbdoc --file-mode fbdoc.bas
 
                              fbdoc.bas --> done
    ~~~
@@ -121,14 +121,14 @@ Otherwise you have to prepend the complete path to execute the binary.
    to overridde the default path and generate the file in the current
    directory use option \ref SecOptOutpath, like
    ~~~{.txt}
-   $ fb-doc --file-mode --outpath "." fbdoc.bas
+   $ fbdoc --file-mode --outpath "." fbdoc.bas
 
                              fbdoc.bas --> done
    ~~~
 
 -# To translate all source files in \ref SecModFile execute
    ~~~{.txt}
-   $ fb-doc --file-mode
+   $ fbdoc --file-mode
 
                        fbdoc_emit_gtk.bas --> done
                       fbdoc_emit_doxy.bas --> done
@@ -152,7 +152,7 @@ Otherwise you have to prepend the complete path to execute the binary.
    `*.bi` and operates on all of those files. In order to select
    specific files you can customize the patterns like
    ~~~{.txt}
-   $ fb-doc --file-mode "*emit*.bas" "*emit*.bi"
+   $ fbdoc --file-mode "*emit*.bas" "*emit*.bi"
 
                        fbdoc_emit_gtk.bas --> done
                       fbdoc_emit_doxy.bas --> done
@@ -170,16 +170,16 @@ Otherwise you have to prepend the complete path to execute the binary.
 -# To change the output format you can choose another emitter, ie. for
    html output execute
    ~~~{.txt}
-   $ fb-doc --emitter "Syntax" --geany-mode < fbdoc.bas
+   $ fbdoc --emitter "Syntax" --geany-mode < fbdoc.bas
    ~~~
    Alternative you can use the short form
    ~~~{.txt}
-   $ fb-doc --geany-mode "Syntax" < fbdoc.bas
+   $ fbdoc --geany-mode "Syntax" < fbdoc.bas
    ~~~
    In both cases the documentational comments gets stripped in the
    output. To add them execute
    ~~~{.txt}
-   $ fb-doc --geany-mode "Syntax" --doc-comments < fbdoc.bas
+   $ fbdoc --geany-mode "Syntax" --doc-comments < fbdoc.bas
    ~~~
 
 # Workflow  {#SecWorkflow}

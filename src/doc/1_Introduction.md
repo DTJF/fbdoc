@@ -131,7 +131,7 @@ operates (like Doxygen) on multiple files in one go.
 
 Here's a grafical overview on the \Proj data flow
 
-![Data Flow Diagram for fb-doc](Overview.png)
+![Data Flow Diagram for fbdoc](Overview.png)
 
 
 # About this Text  {#SecIntSelf}

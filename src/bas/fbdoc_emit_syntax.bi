@@ -65,7 +65,7 @@ TYPE Highlighter
   AS RepData PTR Symbols '*< A RepData class containing the list of linked symbols
   AS Parser PTR Pars '*< The parser to operate with
   AS ZSTRING PTR _
-      FBDOC_MARK = @"<!-- Syntax-highlighting by fb-doc -->" _ '*< Text to mark the output
+      FBDOC_MARK = @"<!-- Syntax-highlighting by fbdoc -->" _ '*< Text to mark the output
     , KEYW_A = @"<span class=""keyword"">"             _ '*< Code to start highlighting a keyword
     , KWTP_A = @"<span class=""keywordtype"">"         _ '*< Code to start highlighting a keywordtype
     , KWFL_A = @"<span class=""keywordflow"">"         _ '*< Code to start highlighting a flow keyword (not used yet)

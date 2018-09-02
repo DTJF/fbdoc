@@ -20,7 +20,7 @@ This file includes the main function to execute.
   "       none         : file in --> STDOUT" & NL & _
   " -f (--file-mode)   : file in --> file out" & NL & _
   " -g (--geany-mode)  : STDIN --> STDOUT" & NL & _
-  " -l (--list-mode)   : Doxgfile inputs --> fb-doc.lfn" & NL & _
+  " -l (--list-mode)   : Doxgfile inputs --> fbdoc.lfn" & NL & _
   " -s (--syntax-mode) : scan doxygen output, repair syntax highlighting" & NL & _
   " -a (--asterix)     : prepend '* ' in ML comments (gtk-doc style)" & NL & _
   " -c (--cstyle)      : emit real C types" & NL & _
