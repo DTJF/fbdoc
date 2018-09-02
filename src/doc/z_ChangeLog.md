@@ -3,7 +3,7 @@ Changelog & Credits {#PagChangeLog}
 \tableofcontents
 
 
-# Further Development  {#SecToDo}
+# Further Development # {#SecToDo}
 
 In combination with Doxygen \Proj is a powerful documentation system
 for FreeBASIC source code. This Doxygen support for FreeBASIC is much
@@ -30,24 +30,30 @@ or to the
 or feel free to send your ideas directly to the author (\Mail).
 
 
-# fbdoc-1.0 {#SecV-1-0}
+# fbdoc-1.0 # {#SecV-1-0}
 
 New:
 
 - renamed: fb-doc ==> fbdoc
+- file include for py_ctypes plugin
+- more plugin documentation
 
 Changes:
 
-- FIXME
+- versioned Debian package generation
 
 Bugfixes:
 
-- FIXME
+- Doxygen headlines style
+- better interaction with cmakefbc
+- logo for html documentation
+- folder cmake updated
+- optimizations for py_ctypes plugin
 
 Released on 2018 September.
 
 
-# fb-doc-0.4.2 {#SecV-0-4-2}
+# fb-doc-0.4.2 # {#SecV-0-4-2}
 
 New:
 
@@ -66,7 +72,7 @@ Bugfixes:
 Released on 2016 December, ??.
 
 
-# fb-doc-0.4.0 {#SecV-0-4-0}
+# fb-doc-0.4.0 # {#SecV-0-4-0}
 
 New:
 
@@ -108,7 +114,7 @@ Bugfixes:
 Released on 2015 October, ??.
 
 
-# fb-doc-0.2 {#SecV-0-2}
+# fb-doc-0.2 # {#SecV-0-2}
 
 New:
 
@@ -129,13 +135,13 @@ New:
 Released on 2013 June, 1.
 
 
-# fb-doc-0.0 {#SecV-0-0}
+# fb-doc-0.0 # {#SecV-0-0}
 
 Initial release on 2012 April, 29.
 
 
 
-# Credits {#SecCredits}
+# Credits # {#SecCredits}
 
 Thanks go to:
 
