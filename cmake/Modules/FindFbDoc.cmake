@@ -1,4 +1,4 @@
-# This script looks for fb-doc tool (http://github.com/DTJF/fbdoc) to
+# This script looks for fbdoc tool (http://github.com/DTJF/fbdoc) to
 # generate documentation by the Doxygen generator
 #
 # It defines the following variables:
