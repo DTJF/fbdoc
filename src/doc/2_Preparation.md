@@ -8,7 +8,7 @@ least the FB compiler has to be installed on the users system. Other
 tools are used by the author, here's how to get all components working.
 
 
-# Tools  {#SecTools}
+# Tools # {#SecTools}
 
 The following table lists all dependencies for \Proj and their
 category. The FreeBASIC compiler is mandatory (M), the others are
@@ -58,12 +58,12 @@ related websides, linked by the name in the first column.
    \note Omit `sudo` in case of non-LINUX systems.
 
 
-# Get Package  {#SecGet}
+# Get Package # {#SecGet}
 
 Depending on whether you installed the optional GIT package, there're
 two ways to get the \Proj package.
 
-## GIT  {#SubGit}
+## GIT ## {#SubGit}
 
 Using GIT is the prefered way to download the \Proj package (since it
 helps users to get involved in to the development process). Get your
@@ -74,7 +74,7 @@ git clone https://github.com/DTJF/fbdoc
 cd fbdoc
 ~~~
 
-## ZIP  {#SubZip}
+## ZIP ## {#SubZip}
 
 As an alternative you can download a Zip archive by clicking the
 [Download ZIP](https://github.com/DTJF/fbdoc/archive/master.zip)
@@ -82,13 +82,13 @@ button on the \Proj website, and use your local Zip software to unpack
 the archive. Then change to the newly created folder.
 
 
-# Build  {#SecBuild}
+# Build # {#SecBuild}
 
 Depending on whether the optional CMake package is installed
 (recommended), the \Proj executable can either get compiled by the
 build management scripts or has to get compiled manually.
 
-## CMake Build  {#SubCMake}
+## CMake Build ## {#SubCMake}
 
 The prefered way to build the executable and the documentation files is
 to use the scripts for the CMake build system. The CMake scripts check
@@ -104,13 +104,13 @@ This executable has to get built and installed before the doc target
 can get configured and used.
 
 
-### Executable  {#SubCmakeExe}
+### Executable ### {#SubCmakeExe}
 
 Either  in-source or out-of-source builds are supported. The later
 should be the prefered choise. Execute the following commands starting
 at the root directory of the package.
 
-#### In-Source-Build  {#SubCmakeISB}
+#### In-Source-Build #### {#SubCmakeISB}
 
 The following command triple will compile the executable in the source
 tree and install it on the system:
@@ -127,7 +127,7 @@ sudo make install
       and folders.
 
 
-#### Out-Of-Source-Build  {#SubCmakeOSB}
+#### Out-Of-Source-Build #### {#SubCmakeOSB}
 
 The following command quintuple will create a new *build* folder,
 change to that folder, compile the executable and install it on the
@@ -144,7 +144,7 @@ sudo make install
 \note Omit `sudo` in case of non-LINUX systems.
 
 
-### Documentation-Build  {#SubCmakeDoc}
+### Documentation-Build ### {#SubCmakeDoc}
 
 In order to build the documentation, all recommended packages listed in
 section \ref SecTools have to get installed. This also means that the
@@ -169,7 +169,7 @@ make doc_pdf
 ~~~
 
 
-### Debian packaging  {#SubDebPack}
+### Debian packaging ### {#SubDebPack}
 
 The project is prepared to build packages for Debian based Linux
 versions (ie. like Ubuntu, Mint, ...). It's beyond the scope of this
@@ -203,7 +203,7 @@ get replaced by the project version and the system architecture):
       variable any more.
 
 
-### Uninstall  {#SubCmakeUninstall}
+### Uninstall ### {#SubCmakeUninstall}
 
 In order to uninstall the package, remove the files listed in the
 file `install_manifest.txt`. Ie. on Debian LINUX (or Ubuntu) execute
@@ -213,13 +213,13 @@ sudo xargs rm < install_manifest.txt
 ~~~
 
 
-## Manual Build  {#SubManual}
+## Manual Build ## {#SubManual}
 
 Manual builds are laborious. They're necessary when the recommended
 tools aren't installed.
 
 
-### Executable  {#SubManExe}
+### Executable ### {#SubManExe}
 
 The source code is located in folder `src/bas`.
 Beside the module files this folder also contains a file named
@@ -240,7 +240,7 @@ That's all you need to get started. Now you can use \Proj and check
 its features, see chapter \ref PagExamples for examples.
 
 
-### Install  {#SubManInstall}
+### Install ### {#SubManInstall}
 
 To install the program just copy the executable in to a directory of
 your system `PATH`. Ie. on Debian LINUX execute
@@ -250,7 +250,7 @@ cp src/bas/fbdoc /usr/local/bin
 ~~~
 
 
-### Documentation  {#SubManDoc}
+### Documentation ### {#SubManDoc}
 
 In order to build the documentation, all recommended packages listed in
 section \ref SecTools have to get installed, exept CMake and cmakefbc.
@@ -279,7 +279,7 @@ fbdoc -s
       have to update this file manually.
 
 
-### Uninstall  {#SubManUninstall}
+### Uninstall ### {#SubManUninstall}
 
 In order to uninstall just remove the executable. Ie. on Debian LINUX
 execute
@@ -289,7 +289,7 @@ sudo rm /usr/local/bin/fbdoc
 ~~~
 
 
-# Geany IDE Installation  {#SecGeanyInstall}
+# Geany IDE Installation # {#SecGeanyInstall}
 
 \Proj can be used as a filter (= custom command) for Geany IDE. Using
 this feature, the current selection (a text fragment) can get sent to

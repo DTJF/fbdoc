@@ -31,7 +31,7 @@ used as well. It's beyond the scope of this document to cover all
 posibilities.
 
 
-# Execution  {#SecExecution}
+# Execution # {#SecExecution}
 
 The interaction between \Proj and a plugin passes several steps on
 different levels:
@@ -51,7 +51,7 @@ gets called in order to finish pending operations. The file processing
 step passes several substeps.
 
 
-## Global init phase  {#SubInit}
+## Global init phase ## {#SubInit}
 
 This steps at first level get executed once in the startup sequence.
 They're designed to connect the plugin to the calling \Proj instance,
@@ -60,18 +60,18 @@ understand). Finally at this level global operations can get started,
 ie. opening an output file.
 
 
-### Plugin Init  {#SubPluginInit}
+### Plugin Init ### {#SubPluginInit}
 
 The related slot in the emitter interface is EmitterInit().
 
 
-### Process Init  {#SubProcessInit}
+### Process Init ### {#SubProcessInit}
 
 The related slot in the emitter interface is EmitterIF::CTOR_().
 
 
 
-## File Processing  {#SubOperation}
+## File Processing ## {#SubOperation}
 
 This second level steps get executed multiple times, once for each file
 the calling \Proj instance is processing. It contains three substeps
@@ -86,12 +86,12 @@ the context of the source code input parsed by the calling \Proj
 instance.
 
 
-### File Init  {#SubFileInit}
+### File Init ### {#SubFileInit}
 
 The related slot in the emitter interface is EmitterIF::init_().
 
 
-### File Parsing  {#SubFileParsing}
+### File Parsing ### {#SubFileParsing}
 
 There're several functions related to that step in the emitter interface
 
@@ -106,12 +106,12 @@ There're several functions related to that step in the emitter interface
 - EmitterIF::Empty_() to create output for an empty input line (from STDIN)
 
 
-### File Exit  {#SubFileExit}
+### File Exit ### {#SubFileExit}
 
 The related slot in the emitter interface is EmitterIF::Exit_().
 
 
-## Global exit phase  {#SubExit}
+## Global exit phase ## {#SubExit}
 
 The first level step gets executed once after the calling \Proj
 instance processed all input files. It contains no substeps. A closure
@@ -122,7 +122,7 @@ information from several input files.
 The related slot in the emitter interface is EmitterIF::DTOR_().
 
 
-# Source Code  {#SecSourceCode}
+# Source Code # {#SecSourceCode}
 
 The main code to glue plugin code together with \Proj is in function
 EmitterInit(). When the command line specifies that \Proj should use a
@@ -147,7 +147,7 @@ store its pointer in the member variable Parser::UserTok (see file
 fbdoc_emit_syntax.bas as an example).
 
 
-# Usage  {#SecUsage}
+# Usage # {#SecUsage}
 
 In order to use a plugin, just call its emitter by the command line
 option \ref SecOptEmitter. \Proj checks the given name first against

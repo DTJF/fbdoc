@@ -1,0 +1,12 @@
+fb-doc (0.4.2) jessie; urgency=low
+
+  * CMake script updated
+  * fixed in src/bas/plugins/py_ctype.bas
+
+ -- Thomas Freiherr <Thomas.Freiherr@gmx.net>  Mon, 20 Aug 2018 12:28:50 +0200
+
+fb-doc (0.0.0) xenial; urgency=low
+
+  * Initial Release.
+
+ -- Thomas Freiherr <Thomas.Freiherr@gmx.net>  Fri, 09 Dec 2016 21:02:24 +0100

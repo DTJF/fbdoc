@@ -46,7 +46,7 @@ The steps to generate a well documented project are
 In case of \ref SubDoxygen step 3 can get integrated in step 4.
 
 
-# Executable  {#SecIntExe}
+# Executable # {#SecIntExe}
 
 \Proj is a multi functional tool, supporting the complete process of
 documenting any FB project. It gets shipped in this package as FB
@@ -75,7 +75,7 @@ generate different kinds of output formats, in order to
 - generate correct source code listings for Doxygen output (`SyntaxHighLighting`).
 
 
-## Run Modi vs. Emitters  {#SubIntRmEm}
+## Run Modi vs. Emitters ## {#SubIntRmEm}
 
 Each run mode has its default emitter. The following table shows the
 mapping, rows are run modi, columns are emitters.
@@ -95,7 +95,7 @@ Additionaly \Proj contains an interface for external emitters
 (plugins), loaded at run time.
 
 
-## Options vs. Run Modi and Emitters  {#SubIntOptions}
+## Options vs. Run Modi and Emitters ## {#SubIntOptions}
 
 Further options control the behaviour of the run mode (left justified)
 or the emitter (right justified), or override the default emitter
@@ -127,14 +127,14 @@ and parses (partialy) the Doxygen configuration file, in order to
 determine some related settings, folders and file patterns. Then it
 operates (like Doxygen) on multiple files in one go.
 
-## Data Flow chart  {#SubIntData}
+## Data Flow chart ## {#SubIntData}
 
 Here's a grafical overview on the \Proj data flow
 
 ![Data Flow Diagram for fbdoc](Overview.png)
 
 
-# About this Text  {#SecIntSelf}
+# About this Text # {#SecIntSelf}
 
 Finally some words about this documentation (the text you're currently
 reading). It's self-hosted. \Proj is used to build its own
