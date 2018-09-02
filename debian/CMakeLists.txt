@@ -18,6 +18,7 @@ IF(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   ADD_CUSTOM_TARGET(deb
     COMMAND cp    compat.${osvers} compat
     COMMAND cp   control.${osvers} control
+    COMMAND cat   control.packages >> control
     COMMAND cp changelog.${osvers} changelog
     COMMAND cd ${CMAKE_SOURCE_DIR} && ${deb_exe} ${DEBUILD_FLAGS}
     )
@@ -41,6 +42,7 @@ ADD_CUSTOM_TARGET(deb rm -rf ${PROJ_NAME}
   COMMAND cd ${CMAKE_SOURCE_DIR} && cp -r ${src} ${bdir}
   COMMAND cp    ${CMAKE_CURRENT_SOURCE_DIR}/compat.${osvers} ${debdir}/compat
   COMMAND cp   ${CMAKE_CURRENT_SOURCE_DIR}/control.${osvers} ${debdir}/control
+  COMMAND cat  ${CMAKE_CURRENT_SOURCE_DIR}/control.packages >> ${debdir}/control
   COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/changelog.${osvers} ${debdir}/changelog
   COMMAND cd ${PROJ_NAME} && ${deb_exe} ${DEBUILD_FLAGS}
   )

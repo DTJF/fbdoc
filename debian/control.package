@@ -1,0 +1,23 @@
+
+Package: fbdoc
+Architecture: any
+Recommends: freebasic (>= 1.0.0)
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Documentation tool for FreeBASIC source code
+ Welcome to the fbdoc package. It's a cross-platform multifunctional
+ tool, mainly for generating documentation from and for FreeBASIC (= FB)
+ source code, but useful for other pruposes as well, ie. like generating
+ header files. Rather than creating the documentation output directly,
+ fbdoc is designed to close the gap between FB and C syntax to allow for
+ using any C / C++ documentation tool-chain. Also it supports the
+ creation of documentational comments in the source and it can get
+ extended via external plugins.
+
+Package: fbdoc-doc
+Section: doc
+Suggests: fbdoc
+Architecture: all
+Depends: ${misc:Depends}
+Description: html documentation for fbdoc
+ Html documentation for fbdoc, a multi functional tool to generate
+ documentation and language bindings from and for FreeBASIC source code.
