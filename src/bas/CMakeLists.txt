@@ -25,9 +25,10 @@ SET(EXT_SRC
 
 # fbdoc[.exe]: compile and link the final executable
 ADD_EXECUTABLE(${PROJ_NAME} ${BAS_SRC})
+SET(CMAKE_EXE_LINKER_FLAGS "-Wl -z,relro") # must override global flags
 SET_TARGET_PROPERTIES(${PROJ_NAME} PROPERTIES
   COMPILE_FLAGS "-m fbdoc_main"
-  LINK_FLAGS "-export -Wl -z,relro"
+  LINK_FLAGS "-export"
   )
 
 ADD_Fbc_SRC_DEPS(${PROJ_NAME})

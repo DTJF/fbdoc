@@ -5,6 +5,8 @@ SET(bas
   py_ctypes
   )
 
+SET(CMAKE_SHARED_LINKER_FLAGS "-Wl -z,relro") # must override global flags
+
 # compile and link the plugins
 FOREACH(tar ${bas})
   ADD_LIBRARY(${tar} SHARED ${tar}.bas)
