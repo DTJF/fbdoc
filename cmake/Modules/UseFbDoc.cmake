@@ -93,7 +93,7 @@ ALIASES += \"Mail=${PROJ_MAIL}\" \\
   FILE(WRITE ${doxyext} #                           write extension file
 "
 @INCLUDE = ${ARG_DOXYFILE}
-EXTENSION_MAPPING      = bi=C++ bas=C++
+EXTENSION_MAPPING      += bi=C++ bas=C++
 OUTPUT_DIRECTORY=${CMAKE_CURRENT_BINARY_DIR}
 FILTER_PATTERNS        = \"*.bas=\\\"${filt_cmd}\\\"\" \\
                           \"*.bi=\\\"${filt_cmd}\\\"\"
@@ -119,13 +119,13 @@ GENERATE_RTF     = NO
       )
   IF(NOT ARG_NO_WWW) # generate target doc_www (mirror local tree to server)
     IF(NOT ARG_MIRROR_CMD)
-      SET(ARG_MIRROR_CMD MirrorDoc.sh '--reverse --delete --verbose ${CMAKE_CURRENT_BINARY_DIR}/html public_html/Projekte/${PROJ_NAME}/doc/html')
+      SET(ARG_MIRROR_CMD MirrorDoc.sh --reverse --delete --verbose ${CMAKE_CURRENT_BINARY_DIR}/html public_html/Projekte/${PROJ_NAME}/doc/html)
     ENDIF()
     SET(wwwfile ${CMAKE_CURRENT_BINARY_DIR}/UseFbDoc~doc_www~target~touch)
     ADD_CUSTOM_COMMAND(OUTPUT ${wwwfile}
-      #COMMAND ${ARG_MIRROR_CMD}
-      #COMMAND ${CMAKE_COMMAND} -E touch ${wwwfile}
-      COMMAND ${CMAKE_COMMAND} -E time ${ARG_MIRROR_CMD} > ${wwwfile}
+      COMMAND ${ARG_MIRROR_CMD}
+      COMMAND ${CMAKE_COMMAND} -E touch ${wwwfile}
+      VERBATIM
       )
     ADD_CUSTOM_TARGET(doc_www DEPENDS ${wwwfile})
     ADD_DEPENDENCIES(doc_www doc_htm)
