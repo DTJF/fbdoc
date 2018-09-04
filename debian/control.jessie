@@ -1,9 +1,9 @@
-Source: fb-doc
+Source: fbdoc
 Section: devel
 Priority: extra
 Maintainer: Thomas Freiherr <Thomas.Freiherr@gmx.net>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev, cmake (>= 2.8.3), cmakefbc (>= 0.6.0), freebasic (>= 1.0.0), fbdoc (>= 0.4.2), doxygen (>= 1.8.1), graphviz (>= 2.26.3)
-Standards-Version: 3.9.7
-Homepage: https://github.com/DTJF/fb-doc
-#Vcs-Git: git://git.debian.org/collab-maint/fb-doc.git
-#Vcs-Browser: http://git.debian.org/?p=collab-maint/fb-doc.git;a=summary
+Build-Depends: debhelper (>= 10.0.0), autotools-dev, cmake (>= 2.8.3), cmakefbc (>= 1.0), freebasic (>= 1.0.0), fbdoc (>= 1.0), doxygen (>= 1.8.1), graphviz (>= 2.26.3)
+Standards-Version: 3.9.6
+Homepage: https://github.com/DTJF/fbdoc
+#Vcs-Git: git://git.debian.org/collab-maint/fbdoc.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/fbdoc.git;a=summary

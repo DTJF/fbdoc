@@ -1,6 +1,11 @@
 fbdoc for Debian
 -----------------
 
-<possible notes regarding this package - if none, delete this file>
+Multifunctional tool for FreeBASIC (FB) source code, ie. for bridging
+to documentation systems for C syntax, like Doxygen. It parses FB
+source code and generates various output, depending on the emitter in
+use. External emitters (plugins) extend the functionality. For details
+check the online documentation at
+http://users.freebasic-portal.de/tjf/Projekte/fbdoc/doc/html.
 
  -- Arend Lammertink <lamare@gmail.com>  Thu, 22 Sep 2016 20:44:40 +0000

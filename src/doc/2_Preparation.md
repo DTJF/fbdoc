@@ -69,10 +69,8 @@ Using GIT is the prefered way to download the \Proj package (since it
 helps users to get involved in to the development process). Get your
 copy and change to the source tree by executing
 
-~~~{.txt}
-git clone https://github.com/DTJF/fbdoc
-cd fbdoc
-~~~
+    git clone https://github.com/DTJF/fbdoc
+    cd fbdoc
 
 ## ZIP ## {#SubZip}
 
@@ -115,11 +113,9 @@ at the root directory of the package.
 The following command triple will compile the executable in the source
 tree and install it on the system:
 
-~~~{.txt}
-cmake .
-make
-sudo make install
-~~~
+    cmake .
+    make
+    sudo make install
 
 \note Omit `sudo` in case of non-LINUX systems.
 
@@ -133,13 +129,11 @@ The following command quintuple will create a new *build* folder,
 change to that folder, compile the executable and install it on the
 system:
 
-~~~{.txt}
-mkdir build
-cd build
-cmake ..
-make
-sudo make install
-~~~
+    mkdir build
+    cd build
+    cmake ..
+    make
+    sudo make install
 
 \note Omit `sudo` in case of non-LINUX systems.
 
@@ -154,19 +148,15 @@ The following command will build the documentation in form of an HTML
 file tree and in form of a PDF file (either in-source or
 out-of-source):
 
-~~~{.txt}
-make doc
-~~~
+    make doc
 
 \note Find the HTML start file at `doxy/html/index.html`.
 \note Find the PDF file at `doxy/fbdoc.pdf`.
 
 Both targets can get build separately by executing
 
-~~~{.txt}
-make doc_htm
-make doc_pdf
-~~~
+    make doc_htm
+    make doc_pdf
 
 
 ### Debian packaging ### {#SubDebPack}
@@ -182,9 +172,7 @@ dependencies listed above. Then adapt the files in folder debian and
 execute the following command (either in-source or out-of-source in the
 build folder):
 
-~~~{.txt}
-make deb
-~~~
+    make deb
 
 Find the resulting files in the folder `debian` (the text `_V_A`
 get replaced by the project version and the system architecture):
@@ -208,9 +196,7 @@ get replaced by the project version and the system architecture):
 In order to uninstall the package, remove the files listed in the
 file `install_manifest.txt`. Ie. on Debian LINUX (or Ubuntu) execute
 
-~~~{.txt}
-sudo xargs rm < install_manifest.txt
-~~~
+    sudo xargs rm < install_manifest.txt
 
 
 ## Manual Build ## {#SubManual}
@@ -226,10 +212,8 @@ Beside the module files this folder also contains a file named
 `fbdoc.bas`, which collects all modules files in to a single source
 tree, in order to compile all-in-one by executing
 
-~~~{.txt}
-cd src/bas
-fbc -w all fbdoc.bas -x fbdoc
-~~~
+    cd src/bas
+    fbc -w all fbdoc.bas -x fbdoc
 
 This creates an executable binary named
 
@@ -245,9 +229,7 @@ its features, see chapter \ref PagExamples for examples.
 To install the program just copy the executable in to a directory of
 your system `PATH`. Ie. on Debian LINUX execute
 
-~~~{.txt}
-cp src/bas/fbdoc /usr/local/bin
-~~~
+    cp src/bas/fbdoc /usr/local/bin
 
 
 ### Documentation ### {#SubManDoc}
@@ -263,12 +245,10 @@ out-of-source). Privious to the Doxygen run the list of function names
 get updated and after the run the syntax highlighting of the source
 code listings gets fixed.
 
-~~~{.txt}
-cd doxy
-fbdoc -l
-doxygen
-fbdoc -s
-~~~
+    cd doxy
+    fbdoc -l
+    doxygen
+    fbdoc -s
 
 \note Find the HTML start file at `doxy/html/index.html`. This does not
       create a PDF file by default. In order to get this format, you've
@@ -284,9 +264,7 @@ fbdoc -s
 In order to uninstall just remove the executable. Ie. on Debian LINUX
 execute
 
-~~~{.txt}
-sudo rm /usr/local/bin/fbdoc
-~~~
+    sudo rm /usr/local/bin/fbdoc
 
 
 # Geany IDE Installation # {#SecGeanyInstall}
@@ -302,16 +280,12 @@ To get this working, Geany has to get started and the menu item `Edit
 selected. In the newly opened dialog a click on `Add` creates a new
 item with an entry box, which get filled by
 
-~~~{.txt}
-fbdoc --geany-mode "DoxygenTemplates"
-~~~
+    fbdoc --geany-mode "DoxygenTemplates"
 
 to use the emitter for Doxygen templates. In order to use the default
 emitter for gtk-doc templates just omit the quoted emitter name
 
-~~~{.txt}
-fbdoc --geany-mode
-~~~
+    fbdoc --geany-mode
 
 \note This assumes that \Proj is installed in any system `PATH`.
       Otherwise the complete path to the executable has to get
