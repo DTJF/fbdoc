@@ -280,7 +280,7 @@ OPTIMIZE_OUTPUT_VHDL   = NO
 # Note that for custom extensions you also need to set FILE_PATTERNS otherwise
 # the files are not read by doxygen.
 
-EXTENSION_MAPPING      = bi=C++ bas=C++
+EXTENSION_MAPPING      =
 
 # If the MARKDOWN_SUPPORT tag is enabled then doxygen pre-processes all comments
 # according to the Markdown format, which allows for more readable
@@ -871,15 +871,14 @@ INPUT_FILTER           =
 # filters are used. If the FILTER_PATTERNS tag is empty or if none of the
 # patterns match the file name, INPUT_FILTER is applied.
 
-FILTER_PATTERNS        = *.bas=fbdoc \
-                         *.bi=fbdoc
+FILTER_PATTERNS        =
 
 # If the FILTER_SOURCE_FILES tag is set to YES, the input filter (if set using
 # INPUT_FILTER ) will also be used to filter the input files that are used for
 # producing the source files to browse (i.e. when SOURCE_BROWSER is set to YES).
 # The default value is: NO.
 
-FILTER_SOURCE_FILES    = YES
+FILTER_SOURCE_FILES    =
 
 # The FILTER_SOURCE_PATTERNS tag can be used to specify source filters per file
 # pattern. A pattern will override the setting for FILTER_PATTERN (if any) and
@@ -887,8 +886,7 @@ FILTER_SOURCE_FILES    = YES
 # *.ext= (so without naming a filter).
 # This tag requires that the tag FILTER_SOURCE_FILES is set to YES.
 
-FILTER_SOURCE_PATTERNS = *.bas=fbdoc \
-                         *.bi=fbdoc
+FILTER_SOURCE_PATTERNS =
 
 # If the USE_MDFILE_AS_MAINPAGE tag refers to the name of a markdown file that
 # is part of the input, its contents will be placed on the main page
