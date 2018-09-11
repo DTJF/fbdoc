@@ -2,9 +2,11 @@ $ cat .gitignore
 
 # Can ignore specific files
 Makefile
-info.txt
+CMakeCache.txt
 cmake_install.cmake
 install_manifest.txt
+CPack*
+info.txt
 
 fbdoc
 fbdoc.geany
