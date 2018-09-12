@@ -49,6 +49,7 @@ Bugfixes:
 - logo for html documentation
 - folder cmake updated
 - optimizations for py_ctypes plugin
+- fixes in src/bas/plugins/py_ctype.bas
 
 Released on 2018 September.
 

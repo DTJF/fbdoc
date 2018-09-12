@@ -2,7 +2,7 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+#SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 # constants
 SET(PROJ_NAME "fbdoc"              CACHE STRING "project name" FORCE)

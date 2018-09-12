@@ -1,3 +1,20 @@
+fbdoc (1.0.0a) jessie; urgency=low
+
+  * NMU updated sources
+  * CMake script updated
+  * fixes in src/bas/plugins/py_ctype.bas
+  * renamed: fb-doc ==> fbdoc
+  * file include for py_ctypes plugin
+  * more plugin documentation
+  * versioned Debian package generation
+  * Doxygen headlines style
+  * better interaction with cmakefbc
+  * logo for html documentation
+  * folder cmake updated
+  * optimizations for py_ctypes plugin
+
+ -- Thomas Freiherr <Thomas.Freiherr@gmx.net>  Wed, 12 Sep 2018 09:38:25 +0200
+
 fb-doc (0.0.0) wheezy; urgency=low
 
   * Initial Release.
