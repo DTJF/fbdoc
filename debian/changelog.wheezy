@@ -1,4 +1,4 @@
-fbdoc (1.0.0a) jessie; urgency=low
+fbdoc (1.0.0a) wheezy; urgency=low
 
   * NMU updated sources
   * CMake script updated
