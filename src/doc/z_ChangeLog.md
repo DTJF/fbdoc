@@ -30,6 +30,23 @@ or to the
 or feel free to send your ideas directly to the author (\Mail).
 
 
+# fbdoc-1.0.2 # {#SecV-1-0-2}
+
+New:
+
+- TYPE ALIAS for plugin py_ctypes.bas
+
+Changes:
+
+- FIXME
+
+Bugfixes:
+
+- FIXME
+
+Released on 2018 ???.
+
+
 # fbdoc-1.0 # {#SecV-1-0}
 
 New:

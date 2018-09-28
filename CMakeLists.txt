@@ -7,7 +7,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 # constants
 SET(PROJ_NAME "fbdoc"              CACHE STRING "project name" FORCE)
 SET(PROJ_DESC "FreeBASIC documentation tool" CACHE STRING "project description" FORCE)
-SET(PROJ_VERS "1.0.0"              CACHE STRING "project version" FORCE) #!3-numbers!
+SET(PROJ_VERS "1.0.1"              CACHE STRING "project version" FORCE) #!3-numbers!
 SET(PROJ_AUTH "DTJF"               CACHE STRING "project authors" FORCE)
 SET(PROJ_MAIL "Thomas{ At ]Freiherr{ at }gmx[ dOt ]net"  CACHE STRING "project mail address" FORCE)
 SET(PROJ_WEBS "http://github.com/DTJF/fbdoc" CACHE STRING "project website" FORCE)
