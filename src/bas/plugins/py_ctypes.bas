@@ -204,28 +204,48 @@ SUB py_function CDECL(BYVAL P AS Parser PTR)
   WITH *P '&Parser* P;
     VAR sym = .SubStr(IIF(.NamTok[3] = .TOK_DOT, .NamTok + 6, .NamTok)) _
       , typ = ""
-    IF .TypTok THEN
-      typ = genCType(P)
-      IF typ = "c_char_p" THEN
-        typ =    "if sizeof(c_int) == sizeof(c_void_p):" _
-        & NL & "      " & sym & ".restype = ReturnString" _
-        & NL & "  else:" _
-        & NL & "      " & sym & ".restype = String" _
-        & NL & "      " & sym & ".errcheck = ReturnString"
-      ELSE
-        typ = sym & ".restype = " & typ
-      END IF
-    ELSE
-      typ = sym & ".restype = None"
-    END IF
+    'IF *.StaTok = .TOK_TYP THEN
+      'IF .TypTok THEN typ = genCType(P) else typ = "None"
+      'T2 = ""
+      'IF .ParTok THEN .parseListPara(@py_entryListPara())
+      'Code(NL & sym & " = CFUNCTYPE(" &  & ")")
+    'END IF
+    'IF .TypTok THEN
+      'typ = genCType(P)
+      'IF typ = "c_char_p" THEN
+        'typ =    "if sizeof(c_int) == sizeof(c_void_p):" _
+        '& NL & "    " & sym & ".restype = ReturnString" _
+        '& NL & "  else:" _
+        '& NL & "    " & sym & ".restype = String" _
+        '& NL & "    " & sym & ".errcheck = ReturnString"
+      'ELSE
+        'typ = sym & ".restype = " & typ
+      'END IF
+    'ELSE
+      'typ = sym & ".restype = None"
+    'END IF
+    IF .TypTok THEN typ = genCType(P) else typ = "None"
     T2 = ""
     IF .ParTok THEN .parseListPara(@py_entryListPara())
 
     NEW_ENTRY
-    Code(NL & "if hasattr(_libs['" & LIBRARY & "'], '" & sym & "'):" _
-       & NL & "  " & sym & " = _libs['" & LIBRARY & "']." & sym _
-       & NL & "  " & sym & ".argtypes = [" & MID(T2, 3) & "]" _
-       & NL & "  " & typ)
+    IF *.StaTok = .TOK_TYPE THEN
+      Code(NL & sym & " = CFUNCTYPE(" & typ & ", " & MID(T2, 3) & ")")
+    else
+      IF typ = "c_char_p" THEN
+        typ =    "if sizeof(c_int) == sizeof(c_void_p):" _
+        & NL & "    " & sym & ".restype = ReturnString" _
+        & NL & "  else:" _
+        & NL & "    " & sym & ".restype = String" _
+        & NL & "    " & sym & ".errcheck = ReturnString"
+      ELSE
+        typ = sym & ".restype = " & typ
+      END IF
+      Code(NL & "if hasattr(_libs['" & LIBRARY & "'], '" & sym & "'):" _
+         & NL & "  " & sym & " = _libs['" & LIBRARY & "']." & sym _
+         & NL & "  " & sym & ".argtypes = [" & MID(T2, 3) & "]" _
+         & NL & "  " & typ)
+    end if
   END WITH
 END SUB
 

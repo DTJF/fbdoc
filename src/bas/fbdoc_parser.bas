@@ -513,14 +513,14 @@ FUNCTION Parser.TYPE_() AS INTEGER
       IF MSG_ERROR >= demuxTyp()          THEN RETURN Errr("type expected")
       IF *Tk = TOK_WORD THEN NamTok = Tk  ELSE RETURN Errr("name expected")
       skipOverComma()
-      IF Emit->Decl_ THEN Emit->Decl_(@THIS)                     :
+      IF Emit->Decl_ THEN Emit->Decl_(@THIS)
                                                RETURN MSG_ERROR
     ELSE
       IF *Tk = TOK_WORD THEN NamTok = Tk : SKIP ELSE RETURN Errr("name expected")
       IF *Tk = TOK_AS THEN
         IF MSG_ERROR >= demuxTyp()        THEN RETURN Errr("type expected")
         skipOverComma()
-        IF Emit->Decl_ THEN Emit->Decl_(@THIS)                     :
+        IF Emit->Decl_ THEN Emit->Decl_(@THIS)
                                                RETURN MSG_ERROR
       END IF
     END IF
