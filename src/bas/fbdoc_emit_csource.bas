@@ -249,7 +249,7 @@ SUB c_decl_ CDECL(BYVAL P AS Parser PTR)
     IF     .FunTok THEN : OPT->CreateFunction(P)
     ELSEIF .TypTok THEN : OPT->CreateVariable(P)
     ELSE
-      IF 0 = .ListCount THEN Code("VAR ")
+      IF 0 = .ListCount ANDALSO *.StaTok = .TOK_VAR THEN Code("VAR ")
                              Code(.SubStr(.NamTok))
       IF .BitTok THEN        Code(.BitIni)
       IF .IniTok THEN        CreateIni(P)
