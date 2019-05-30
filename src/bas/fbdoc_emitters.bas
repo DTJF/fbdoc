@@ -54,13 +54,14 @@ SUB emit_comments CDECL(BYVAL P AS Parser PTR, BYVAL Stop_ AS INTEGER)
       CASE ASC("/") : IF .Buf[i + 1] <> ASC("'") THEN EXIT SELECT
         i += 2
         VAR c = IIF(.Buf[i] = OPT->JoComm, i + 1, 0)
-        IF c THEN Code("/*!")
+        IF c THEN Code(*IIF(OPT->Types = OPT->C_STYLE ,@"/**", @"/*!"))
         DO
           SELECT CASE AS CONST .Buf[i]
           CASE 0 : EXIT DO
           CASE ASC(!"\n") : IF 0 = c THEN Code(NL) : EXIT SELECT
             Code(MID(.Buf, c + 1, i - c + 1))
             c = i + 1
+            IF .Buf[c] = ASC("'") ANDALSO .Buf[c + 1] = ASC("/") THEN EXIT SELECT
             IF OPT->Asterix THEN Code("* ")
           CASE ASC("'")
             SELECT CASE AS CONST .Buf[i + 1]
@@ -282,6 +283,7 @@ Exeptions handled in this SUB:
 
  - TypTok = 0: no type, emit only the name (with a space in from)
  - NymTok = 0: no name, emit type and exit
+ - ParTok <> 0: parameter list, emit name and exit (no default value)
 
 '/
 SUB cCreateTypNam CDECL(BYVAL P AS Parser PTR)
@@ -314,11 +316,16 @@ SUB cCreateTypNam CDECL(BYVAL P AS Parser PTR)
     IF .NamTok > .TypTok _
       THEN emit_comments(P, .NamTok[1])
 
-    SELECT CASE AS CONST *.StaTok
-    CASE .TOK_TYPE, .TOK_DIM, .TOK_RDIM, .TOK_COMM, .TOK_EXRN
-      IF .FunTok THEN Code("(") : cNam(P) : Code(")") : EXIT SUB
-    END SELECT
+    IF .FunTok THEN
+      SELECT CASE AS CONST *.StaTok
+      CASE .TOK_TYPE, .TOK_DIM, .TOK_RDIM, .TOK_COMM, .TOK_EXRN
+        FOR i AS INTEGER = 1 TO .PtrCount : Code("*") : NEXT
+        .PtrCount = 0
+        Code(" (*") : cNam(P) : Code(")") : EXIT SUB
+      END SELECT
+    END IF
     IF .NamTok THEN cNam(P)
+    IF .ParTok THEN EXIT SUB
     IF .BitTok THEN Code(.BitIni)
     IF .DimTok THEN cArrDim(P) ': Code()
     IF .IniTok THEN CreateIni(P)
@@ -350,11 +357,12 @@ SUB cppEntryListParameter CDECL(BYVAL P AS Parser PTR)
       IF .By_Tok THEN Code(.SubStr(.By_Tok) & "_")
       Code(.SubStr(.As_Tok) & "_")
       cppCreateTypNam(P)
-    ELSEIF *.NamTok = .TOK_3DOT THEN
-      Code("...)") : EXIT SUB
+    ELSE
+      IF *.NamTok = .TOK_3DOT  THEN Code("...") _
+                               ELSE Code("void")
     END IF
 
-    IF *.CurTok <> .TOK_BRCLO      THEN Code(", ") : EXIT SUB
+    IF *.CurTok <> .TOK_BRCLO THEN Code(", ") : EXIT SUB
     emit_comments(P, .CurTok[1]) : Code(")")
   END WITH
 END SUB
@@ -382,10 +390,9 @@ SUB cEntryListParameter CDECL(BYVAL P AS Parser PTR)
       cCreateFunction(P)
     ELSEIF .TypTok THEN
       cCreateTypNam(P)
-    ELSEIF .NamTok = .TOK_3DOT THEN
-      Code("...")
     ELSE
-      Code("void")
+      IF *.NamTok = .TOK_3DOT  THEN Code("...") _
+                               ELSE Code("void")
     END IF
 
     IF *.CurTok <> .TOK_BRCLO      THEN Code(", ") : EXIT SUB

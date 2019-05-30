@@ -42,9 +42,9 @@ Changes:
 
 Bugfixes:
 
-- FIXME
+- C_STYLE output improved
 
-Released on 2018 ???.
+Released on 2019 ???.
 
 
 # fbdoc-1.0 # {#SecV-1-0}

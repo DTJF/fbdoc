@@ -325,6 +325,17 @@ on non-LINUX systems) has to be located in the current folder.
 Related run modi: all (\ref SecModDef, \ref SecModFile, \ref SecModList, \ref SecModSyntax, \ref SecModGeany)
 
 
+## --ListFunctionNames (-L) ## {#SecOptListfile}
+
+This option makes \Proj to use a customized path and name for the file
+containing the list of function names. The option is used to override
+the default setting in #LFN_FILE. The new path and name gets specified
+behind the option, separated by a white space character. The path can
+get enclosed by quotes (single `'` or double `"` quotes).
+
+Related run modi: \ref SecModFile, \ref SecModList
+
+
 ## --outpath (-o) ## {#SecOptOutpath}
 
 This option makes \Proj to use a customized path for file output. Each

@@ -352,7 +352,6 @@ SUB Options.FileModi()
     END SELECT
   END IF
   OutPath = addPath(cupa, OutPath)
-
   IF RunMode = DEF_MODE THEN
     Ocha = FREEFILE
     OPEN CONS FOR OUTPUT AS #Ocha
