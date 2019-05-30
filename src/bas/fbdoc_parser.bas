@@ -211,7 +211,6 @@ list doesn't start with 'AS', or the next token isn't a word.
 '/
 FUNCTION Parser.demuxTyp(BYVAL DeclMod AS INTEGER = 0) AS INTEGER
   VAR t = Tk
-  ParTok = 0
   CalTok = 0
   AliTok = 0
   TypTok = 0

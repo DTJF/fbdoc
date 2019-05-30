@@ -352,9 +352,17 @@ SUB c_Block CDECL(BYVAL P AS Parser PTR)
     CASE ELSE : Code("-???-")
     END SELECT
 
+    VAR fin = "}"
+    IF OPT->Types = OPT->C_STYLE ANDALSO LEN(.BlockNam) THEN
+      SELECT CASE AS CONST IIF(.LevelCount, *.Tk1, *.StaTok)
+      CASE .TOK_TYPE, .TOK_CLAS, .TOK_ENUM, .TOK_UNIO
+        fin &= " " & .BlockNam
+      END SELECT
+    END IF
+
     emit_comments(P, .Tk1[1])
     IF .LevelCount THEN Code(STRING(.LevelCount * 2, " "))
-    Code("};")
+    Code(fin & ";")
   END WITH
 END SUB
 
