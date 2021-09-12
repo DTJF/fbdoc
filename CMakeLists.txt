@@ -14,7 +14,7 @@ SET(PROJ_WEBS "http://github.com/DTJF/fbdoc" CACHE STRING "project website" FORC
 SET(PROJ_LICE "GPLv3"              CACHE STRING "project licence" FORCE)
 #STRING(TIMESTAMP tmp "%Y" UTC)
 #SET(PROJ_YEAR "${tmp}"             CACHE STRING "project year" FORCE)
-SET(PROJ_YEAR "2020"             CACHE STRING "project year" FORCE)
+SET(PROJ_YEAR "2021"             CACHE STRING "project year" FORCE)
 
 FUNCTION(MSG_LOG Txt)
   FILE(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeOutput.log "${Txt}\n\n")
