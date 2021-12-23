@@ -258,12 +258,11 @@ This SUB controls the complete repairing process
 
 '/
 SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
-   Var doxy = NEW DoxyUDT(Fnam) _
-     , recu = OPT->InRecursiv _
-     , tree = OPT->InTree
-
   MSG_END(PROJ_NAME & " syntax highlighting")
-  MSG_LINE("Doxyfile " & Fnam)
+  Var doxy = NEW DoxyUDT(Fnam) _
+    , recu = OPT->InRecursiv _
+    , tree = OPT->InTree
+
   WHILE doxy->Length
     GenHtm = doxy->Flag(GENERATE_HTML) AND _
              doxy->Flag(SOURCE_BROWSER)
@@ -277,7 +276,9 @@ SUB Highlighter.doDoxy(BYREF Fnam AS STRING)
 
     FbPath = doxy->Tag(INPUT_TAG)
     OPT->InRecursiv = doxy->Flag(RECURSIVE)
-    OPT->DoCom = IIF(OPT->DoCom + doxy->Flag(STRIP_CODE_COMMENTS), OPT->DoCom, 1)
+    OPT->DoCom = IIF(OPT->DoCom, OPT->DoCom _
+               , IIF(LEN(doxy->Tags(STRIP_CODE_COMMENTS)), 1-doxy->Flag(STRIP_CODE_COMMENTS), 0))
+
     MSG_LINE("FB source " & FbPath)
     CHDIR(OPT->StartPath)
     IF CHDIR(FbPath) THEN MSG_CONT("error (couldn't change directory)") : EXIT WHILE

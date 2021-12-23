@@ -142,7 +142,7 @@ TYPE Options
 #ENDIF
   AS INTEGER _
        Asterix = 0 _ '*< comment block style for emitter \ref SecEmmCSource
-       , DoCom = 0 _ '*< include documentational comments in source code (\ref SecEmmSyntax)
+       , DoCom = 0 _ '*< flag for including documentational comments in source code (\ref SecEmmSyntax)
   , AllCallees = 0 _ '*< export external callee names as well (mode \ref SecModList)
   , InRecursiv = 0 _ '*< flag set when InFiles should get scaned recursiv in subfolders (option \ref SecOptRecursiv)
       , InTree = 0 _ '*< flag set when source tree should get scanned (option \ref SecOptTree)

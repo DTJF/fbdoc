@@ -11,6 +11,7 @@ The Doxyfile is used in modes \ref SecModList and \ref SecModSyntax.
 '/
 
 #INCLUDE ONCE "fbdoc_doxyfile.bi"
+#INCLUDE ONCE "fbdoc_options.bi"
 
 '* transfer a tag from a subfile to the current level
 #DEFINE PULL_TAG(_N_) IF LEN(d->Tags(_N_)) THEN Tags(_N_) = MKI(aa) & d->Tag(_N_)
@@ -32,6 +33,7 @@ by the member function Search().
 
 '/
 CONSTRUCTOR DoxyUDT(BYREF Fnam AS STRING)
+  MSG_LINE("Doxyfile " & Fnam)
   VAR fnr = FREEFILE
   IF OPEN(Fnam FOR INPUT AS fnr) THEN Errr = "error (couldn't open)" : EXIT CONSTRUCTOR
 
@@ -128,8 +130,7 @@ error checking agianst index out of range).
 PROPERTY DoxyUDT.Flag(BYVAL I AS INTEGER) AS BYTE
   SELECT CASE UCASE(MID(Tags(I), LEN(INTEGER) + 1))
   CASE "YES", "Y", "TRUE" : RETURN 1
-  CASE ELSE               : RETURN 0
-  END SELECT
+  END SELECT : RETURN 0
 END PROPERTY
 
 
