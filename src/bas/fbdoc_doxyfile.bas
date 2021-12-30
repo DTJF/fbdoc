@@ -14,7 +14,7 @@ The Doxyfile is used in modes \ref SecModList and \ref SecModSyntax.
 #INCLUDE ONCE "fbdoc_options.bi"
 
 '* transfer a tag from a subfile to the current level
-#DEFINE PULL_TAG(_N_) IF LEN(d->Tags(_N_)) THEN Tags(_N_) = MKI(aa) & d->Tag(_N_)
+'#DEFINE PULL_TAG(_N_) IF LEN(d->Tags(_N_)) THEN Tags(_N_) = MKI(aa) & d->Tag(_N_)
 '* search for a tag in current file add if non-existent or newer
 #DEFINE GET_TAG(_N_) t = Search(#_N_, a) : IF LEN(t) ANDALSO a > CVI(LEFT(Tags(_N_), LEN(INTEGER))) THEN Tags(_N_) = MKI(a) & t
 
@@ -56,21 +56,9 @@ CONSTRUCTOR DoxyUDT(BYREF Fnam AS STRING)
     a += 9
     VAR e = INSTR(a, *Doxy, !"\n")
     VAR d = NEW DoxyUDT(TRIM(MID(*Doxy, a, e - a), ANY !"= \v\t\\"))
-    PULL_TAG(GENERATE_HTML)
-    PULL_TAG(SOURCE_BROWSER)
-    PULL_TAG(STRIP_CODE_COMMENTS)
-    PULL_TAG(GENERATE_LATEX)
-    PULL_TAG(LATEX_SOURCE_CODE)
-    PULL_TAG(GENERATE_XML)
-    PULL_TAG(XML_PROGRAMLISTING)
-    PULL_TAG(INPUT_TAG)
-    PULL_TAG(RECURSIVE)
-    PULL_TAG(OUTPUT_DIRECTORY)
-    PULL_TAG(HTML_OUTPUT)
-    PULL_TAG(HTML_FILE_EXTENSION)
-    PULL_TAG(CREATE_SUBDIRS)
-    PULL_TAG(LATEX_OUTPUT)
-    PULL_TAG(XML_OUTPUT)
+    FOR i AS long = 0 TO ubound(d->Tags) ' transfer tags one level up, new position a
+      IF LEN(d->Tags(i)) THEN Tags(i) = MKI(a) & d->Tag(i)
+    NEXT
     DELETE d
     a = INSTR(e + 1, *Doxy, "@INCLUDE")
   WEND
